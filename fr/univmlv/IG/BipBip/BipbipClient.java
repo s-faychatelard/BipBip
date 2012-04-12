@@ -1,5 +1,6 @@
 package fr.univmlv.IG.BipBip;
 
+import java.awt.Point;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
@@ -7,6 +8,8 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
+
+import javax.swing.JFrame;
 
 public class BipbipClient {
 
@@ -52,5 +55,14 @@ public class BipbipClient {
 		client.submit(EventType.RADAR_FIXE,35,10,new Date());
         client.submit(EventType.TRAVAUX,122,-20,new Date());
         client.getInfo(1,23);
+        
+
+        JFrame frame = new JFrame("BipBip Client");
+        frame.setSize(800, 600);
+        MapPanel map = new MapPanel(new Point(1063208, 721344), 13);
+        map.getOverlayPanel().setVisible(false);
+        frame.getContentPane().add(map);
+        frame.setVisible(true);
+        
 	}
 }

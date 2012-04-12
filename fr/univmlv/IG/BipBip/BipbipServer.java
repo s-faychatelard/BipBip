@@ -1,11 +1,16 @@
 package fr.univmlv.IG.BipBip;
 
+import java.awt.Point;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Locale;
 import java.util.Scanner;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 
 public class BipbipServer {
 
@@ -92,6 +97,18 @@ public class BipbipServer {
         BipbipServer server = new BipbipServer(6996);
         server.serve();
         Scanner scanner=new Scanner(System.in);
+        
+        JFrame frame = new JFrame("BipBip Server");
+        frame.setSize(800, 600);
+        JSplitPane splitPane = new JSplitPane();
+        JPanel leftPanel = new JPanel();
+        MapPanel map = new MapPanel(new Point(1063208, 721344), 13);
+        map.getOverlayPanel().setVisible(false);
+        splitPane.add(leftPanel, JSplitPane.LEFT);
+        splitPane.add(map, JSplitPane.RIGHT);
+        frame.getContentPane().add(splitPane);
+        frame.setVisible(true);
+        
         while (scanner.hasNextLine()) {
             String line=scanner.nextLine();
             if (line.equalsIgnoreCase("exit")) {
