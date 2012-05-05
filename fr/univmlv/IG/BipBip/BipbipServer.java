@@ -8,9 +8,14 @@ import java.nio.channels.SocketChannel;
 import java.util.Locale;
 import java.util.Scanner;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+
+import fr.univmlv.IG.BipBip.Tooltip.Tooltip;
+import fr.univmlv.IG.BipBip.Tooltip.TooltipListener;
 
 public class BipbipServer {
 
@@ -102,12 +107,48 @@ public class BipbipServer {
         frame.setSize(800, 600);
         JSplitPane splitPane = new JSplitPane();
         JPanel leftPanel = new JPanel();
-        MapPanel map = new MapPanel(new Point(1063208, 721344), 13);
+        final MapPanel map = new MapPanel(new Point(1063208, 721344), 13);
         map.getOverlayPanel().setVisible(false);
         splitPane.add(leftPanel, JSplitPane.LEFT);
         splitPane.add(map, JSplitPane.RIGHT);
         frame.getContentPane().add(splitPane);
         frame.setVisible(true);
+        
+        /* Tooltip */
+        Tooltip tooltipAlert = new Tooltip();
+        tooltipAlert.addButton(new ImageIcon(Main.class.getResource("alert-fixe.png")), "Radar fixe");
+        tooltipAlert.addButton(new ImageIcon(Main.class.getResource("alert-mobile.png")), "Radar mobile");
+        tooltipAlert.addButton(new ImageIcon(Main.class.getResource("alert-accident.png")), "Accident");
+        tooltipAlert.addButton(new ImageIcon(Main.class.getResource("alert-travaux.png")), "Travaux");
+        tooltipAlert.addButton(new ImageIcon(Main.class.getResource("alert-divers.png")), "Divers").setLast(true);
+        tooltipAlert.setLocation(280, 70);
+        map.add(tooltipAlert);
+        
+        tooltipAlert.addTooltipListener(new TooltipListener() {
+			@Override
+			public void eventSelectedAtIndex(int index) {
+				switch (index) {
+				case 0:
+					JOptionPane.showMessageDialog(map, "Add fixe");
+					break;
+				case 1:
+					JOptionPane.showMessageDialog(map, "Add mobile");
+					break;
+				case 2:
+					JOptionPane.showMessageDialog(map, "Add accident");
+					break;
+				case 3:
+					JOptionPane.showMessageDialog(map, "Add travaux");
+					break;
+				case 4:
+					JOptionPane.showMessageDialog(map, "Add divers");
+					break;
+				default:
+					assert(0==1);
+					break;
+				}
+			}
+		});
         
         while (scanner.hasNextLine()) {
             String line=scanner.nextLine();
