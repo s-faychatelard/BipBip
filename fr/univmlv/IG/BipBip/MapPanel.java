@@ -176,7 +176,7 @@ public class MapPanel extends JPanel {
     private static final int PREFERRED_HEIGHT = 200;
 
 
-    private static final int ANIMATION_FPS = 15, ANIMATION_DURARTION_MS = 500;
+    private static final int ANIMATION_FPS = 15, ANIMATION_DURARTION_MS = 100;
     
 
 
@@ -1565,7 +1565,7 @@ public class MapPanel extends JPanel {
 		 */
 		private static final long serialVersionUID = 1L;
 		private EditorPane editorPane = new EditorPane();
-        private JComboBox searchBox = new JComboBox();
+        private JComboBox<String> searchBox = new JComboBox<String>();
 
         private String oldSearch = "";
         private ArrayList<SearchResult> results = new ArrayList<SearchResult>();
@@ -1653,7 +1653,7 @@ public class MapPanel extends JPanel {
                     private StringBuilder chars;
                     public void startElement(String uri, String localName, String qName, Attributes attributes) {
                         pathStack.add(qName);
-                        String path = getPath();
+                        //String path = getPath();
                         if ("named".equals(qName)) {
                             SearchResult result = new SearchResult();
                             result.setType(attributes.getValue("type"));
@@ -1682,12 +1682,12 @@ public class MapPanel extends JPanel {
                         if(chars != null)
                             chars.append(ch, start, length);
                     }
-                    private String getPath() {
+                    /*private String getPath() {
                         StringBuilder sb = new StringBuilder();
                         for (String p : pathStack)
                             sb.append("/").append(p);
                         return sb.toString();
-                    }
+                    }*/
                     private double tryDouble(String s) {
                         try {
                             return Double.valueOf(s);
@@ -1729,7 +1729,7 @@ public class MapPanel extends JPanel {
                     try {
                         editorPane.setText(html_);
                         editorPane.setCaretPosition(0);
-                        DefaultComboBoxModel comboBoxModel = (DefaultComboBoxModel)searchBox.getModel();
+                        DefaultComboBoxModel<String> comboBoxModel = (DefaultComboBoxModel<String>)searchBox.getModel();
                         comboBoxModel.removeElement(newSearch);
                         comboBoxModel.addElement(newSearch);
                     } finally {
@@ -1955,10 +1955,9 @@ public class MapPanel extends JPanel {
             return menuBar;
         }
 
-        private boolean isWebstart() {
+        /*private boolean isWebstart() {
             return System.getProperty("javawebstart.version") != null && System.getProperty("javawebstart.version").length() > 0;
-        }
-
+        }*/
     }
 
     public static MapPanel createMapPanel(Point mapPosition, int zoom) {

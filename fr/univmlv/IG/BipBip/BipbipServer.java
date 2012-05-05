@@ -115,6 +115,7 @@ public class BipbipServer {
         JPanel leftPanel = new JPanel();
         final MapPanel map = new MapPanel(new Point(1063208, 721344), 13);
         map.getOverlayPanel().setVisible(false);
+        map.getControlPanel().setVisible(false);
         splitPane.add(leftPanel, JSplitPane.LEFT);
         splitPane.add(map, JSplitPane.RIGHT);
         frame.getContentPane().add(splitPane);
@@ -215,6 +216,15 @@ public class BipbipServer {
 	        offset+=30;
 		}
 		map.repaint();
+		
+		//TODO must be use to update pin position and other element position
+		/*map.addPropertyChangeListener("mapPosition", new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				map.repaint();
+			}
+		});*/
+		
 		/* Just for clear pins on click outside of anything */
         map.addMouseListener(new MouseListener() {
 			
@@ -226,6 +236,7 @@ public class BipbipServer {
 			
 			@Override
 			public void mousePressed(MouseEvent e) {
+				map.remove(tooltipAlert);
 				for(Pin pin : pins) {
 					pin.clear();
 				}
