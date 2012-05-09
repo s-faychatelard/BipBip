@@ -11,6 +11,12 @@ import java.util.Scanner;
 
 import javax.swing.JFrame;
 
+import fr.univmlv.IG.BipBip.Command.ClientCommand;
+import fr.univmlv.IG.BipBip.Command.Event;
+import fr.univmlv.IG.BipBip.Command.EventType;
+import fr.univmlv.IG.BipBip.Command.NetUtil;
+import fr.univmlv.IG.BipBip.Command.ServerCommand;
+
 public class BipbipClient {
 
 	private final InetSocketAddress server;

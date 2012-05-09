@@ -1,4 +1,4 @@
-package fr.univmlv.IG.BipBip;
+package fr.univmlv.IG.BipBip.Command;
 
 import java.io.IOException;
 import java.nio.channels.SocketChannel;

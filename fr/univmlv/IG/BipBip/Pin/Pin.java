@@ -10,6 +10,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import fr.univmlv.IG.BipBip.Command.EventType;
 import fr.univmlv.IG.BipBip.Tooltip.Tooltip;
 import fr.univmlv.IG.BipBip.Tooltip.TooltipListener;
 
@@ -17,15 +18,8 @@ public class Pin extends JPanel {
 	
 	private static final long serialVersionUID = -4087568813531690419L;
 	private final Collection<PinListener> pinListeners = new ArrayList<>();
+	private Point coords;
 
-	public enum PinType {
-		FIXE,
-		MOBILE,
-		ACCIDENT,
-		TRAVAUX,
-		DIVERS
-	}
-	
 	private static JButton pinButton;
 	private final Tooltip tooltipConfirm = new Tooltip();
 	private static final ImageIcon fixe = new ImageIcon(Pin.class.getResource("pin-fixe.png"));
@@ -34,8 +28,12 @@ public class Pin extends JPanel {
 	private static final ImageIcon travaux = new ImageIcon(Pin.class.getResource("pin-travaux.png"));
 	private static final ImageIcon divers = new ImageIcon(Pin.class.getResource("pin-divers.png"));
 	
-	public Pin(PinType type, String tooltipText) {
+	public Pin(Point coords, EventType type, String tooltipText) {
 		super();
+		
+		/* Save coords */
+		this.coords = coords;
+		this.setLocation(coords);
 		
 		/* Configure panel */
 		this.setOpaque(false);
@@ -47,11 +45,11 @@ public class Pin extends JPanel {
 		pinButton.setToolTipText(tooltipText);
 		int tooltipOffset=0;
 		switch (type) {
-		case FIXE:
+		case RADAR_FIXE:
 			pinButton.setIcon(fixe);
 			tooltipOffset = 5;
 			break;
-		case MOBILE:
+		case RADAR_MOBILE:
 			pinButton.setIcon(mobile);
 			tooltipOffset = 10;
 			break;
@@ -137,6 +135,16 @@ public class Pin extends JPanel {
 	
 	public void clear() {
 		this.remove(tooltipConfirm);
+	}
+	
+	public void setCoords(Point coords) {
+		this.coords = coords;
+		this.setLocation(coords);
+		this.repaint();
+	}
+	
+	public Point getCoords() {
+		return this.coords;
 	}
 	
 	@Override

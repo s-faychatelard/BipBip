@@ -1,13 +1,18 @@
 package fr.univmlv.IG.BipBip;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -17,9 +22,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
+import fr.univmlv.IG.BipBip.Command.ClientCommand;
+import fr.univmlv.IG.BipBip.Command.EventType;
+import fr.univmlv.IG.BipBip.Command.NetUtil;
 import fr.univmlv.IG.BipBip.Pin.Pin;
 import fr.univmlv.IG.BipBip.Pin.PinListener;
-import fr.univmlv.IG.BipBip.Pin.Pin.PinType;
 import fr.univmlv.IG.BipBip.Tooltip.Tooltip;
 import fr.univmlv.IG.BipBip.Tooltip.TooltipListener;
 
@@ -111,6 +118,9 @@ public class BipbipServer {
         
         JFrame frame = new JFrame("BipBip Server");
         frame.setSize(800, 600);
+        frame.setLayout(new BorderLayout());
+        
+        /* SplitPane */
         JSplitPane splitPane = new JSplitPane();
         JPanel leftPanel = new JPanel();
         final MapPanel map = new MapPanel(new Point(1063208, 721344), 13);
@@ -118,16 +128,20 @@ public class BipbipServer {
         map.getControlPanel().setVisible(false);
         splitPane.add(leftPanel, JSplitPane.LEFT);
         splitPane.add(map, JSplitPane.RIGHT);
-        frame.getContentPane().add(splitPane);
-        frame.setVisible(true);
+        frame.getContentPane().add(splitPane, BorderLayout.CENTER);
+        
+        /* Bottom bar */
+        BottomBar bottomBar = new BottomBar();
+        bottomBar.setPreferredSize(new Dimension(1, 30));
+        frame.getContentPane().add(bottomBar, BorderLayout.SOUTH);
         
         /* Tooltip */
         final Tooltip tooltipAlert = new Tooltip();
-        tooltipAlert.addButton(new ImageIcon(Main.class.getResource("alert-fixe.png")), "Radar fixe");
-        tooltipAlert.addButton(new ImageIcon(Main.class.getResource("alert-mobile.png")), "Radar mobile");
-        tooltipAlert.addButton(new ImageIcon(Main.class.getResource("alert-accident.png")), "Accident");
-        tooltipAlert.addButton(new ImageIcon(Main.class.getResource("alert-travaux.png")), "Travaux");
-        tooltipAlert.addButton(new ImageIcon(Main.class.getResource("alert-divers.png")), "Divers").setLast(true);
+        tooltipAlert.addButton(new ImageIcon(BipbipServer.class.getResource("alert-fixe.png")), "Radar fixe");
+        tooltipAlert.addButton(new ImageIcon(BipbipServer.class.getResource("alert-mobile.png")), "Radar mobile");
+        tooltipAlert.addButton(new ImageIcon(BipbipServer.class.getResource("alert-accident.png")), "Accident");
+        tooltipAlert.addButton(new ImageIcon(BipbipServer.class.getResource("alert-travaux.png")), "Travaux");
+        tooltipAlert.addButton(new ImageIcon(BipbipServer.class.getResource("alert-divers.png")), "Divers").setLast(true);
         
         tooltipAlert.addTooltipListener(new TooltipListener() {
 			@Override
@@ -160,27 +174,27 @@ public class BipbipServer {
 		int offset=150;
 		for(int i=0; i<5;i++) {
 			/* Choose its type */
-			PinType type=null;
+			EventType type=null;
 			String typeString=null;
 			switch (i) {
 			case 0:
-				type = PinType.FIXE;
+				type = EventType.RADAR_FIXE;
 				typeString = "Fixe";
 				break;
 			case 1:
-				type = PinType.MOBILE;
+				type = EventType.RADAR_MOBILE;
 				typeString = "Mobile";
 				break;
 			case 2:
-				type = PinType.ACCIDENT;
+				type = EventType.ACCIDENT;
 				typeString = "Accident";
 				break;
 			case 3:
-				type = PinType.TRAVAUX;
+				type = EventType.TRAVAUX;
 				typeString = "Travaux";
 				break;
 			case 4:
-				type = PinType.DIVERS;
+				type = EventType.DIVERS;
 				typeString = "Divers";
 				break;
 			default:
@@ -190,8 +204,7 @@ public class BipbipServer {
 			final String str = typeString;
 			
 			/* Create pin */
-			Pin pin = new Pin(type, "Cliquez pour valider ou supprimer");
-			pin.setLocation(offset, 320);
+			Pin pin = new Pin(map.computePosition(new Point.Double(-179.93579864501953, 85.04629880476317)), type, "Cliquez pour valider ou supprimer");
 	        map.add(pin);
 	        pin.addPinListener(new PinListener() {
 	        	@Override
@@ -215,28 +228,42 @@ public class BipbipServer {
 	        pins.add(pin);
 	        offset+=30;
 		}
-		map.repaint();
 		
 		//TODO must be use to update pin position and other element position
-		/*map.addPropertyChangeListener("mapPosition", new PropertyChangeListener() {
+		map.addPropertyChangeListener("mapPosition", new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
+				System.out.println("la");
+				for(Pin pin : pins) {
+					pin.setCoords(map.computePosition(new Point.Double(-179.93579864501953, 85.04629880476317)));
+					pin.repaint();
+				}
 				map.repaint();
 			}
-		});*/
+		});
 		
 		/* Just for clear pins on click outside of anything */
         map.addMouseListener(new MouseListener() {
-			
+        	private long previousTime = 0;
+        	private Point previousPosition;
+        	
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
+				long currentTime = new Date().getTime();
+				if (currentTime - previousTime > 200 && previousPosition.equals(e.getPoint())) {
+					tooltipAlert.setLocation(e.getX(), e.getY());
+					System.out.println(map.getLongitudeLatitude(e.getPoint()));
+		        	map.add(tooltipAlert);
+				}
+				else {
+					map.remove(tooltipAlert);
+				}
 			}
 			
 			@Override
 			public void mousePressed(MouseEvent e) {
-				map.remove(tooltipAlert);
+				previousTime = new Date().getTime();
+				previousPosition = e.getPoint();
 				for(Pin pin : pins) {
 					pin.clear();
 				}
@@ -244,23 +271,17 @@ public class BipbipServer {
 			}
 			
 			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseExited(MouseEvent e) {}
 			
 			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseEntered(MouseEvent e) {}
 			
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				tooltipAlert.setLocation(e.getX(), e.getY());
-		        map.add(tooltipAlert);
-			}
+			public void mouseClicked(MouseEvent e) {}
 		});
+        
+        map.repaint();
+        frame.setVisible(true);
         
         while (scanner.hasNextLine()) {
             String line=scanner.nextLine();
