@@ -126,6 +126,7 @@ public class BipbipServer {
         final MapPanel map = new MapPanel(new Point(1063208, 721344), 13);
         map.getOverlayPanel().setVisible(false);
         map.getControlPanel().setVisible(false);
+        map.setUseAnimations(false);
         splitPane.add(leftPanel, JSplitPane.LEFT);
         splitPane.add(map, JSplitPane.RIGHT);
         frame.getContentPane().add(splitPane, BorderLayout.CENTER);
@@ -171,7 +172,6 @@ public class BipbipServer {
         
         /* Create all type of pins */
 		final ArrayList<Pin> pins = new ArrayList<>();
-		int offset=150;
 		for(int i=0; i<5;i++) {
 			/* Choose its type */
 			EventType type=null;
@@ -204,7 +204,8 @@ public class BipbipServer {
 			final String str = typeString;
 			
 			/* Create pin */
-			Pin pin = new Pin(map.computePosition(new Point.Double(-179.93579864501953, 85.04629880476317)), type, "Cliquez pour valider ou supprimer");
+			Pin pin = new Pin(new Point.Double(2.58, 48.8429), type, "Cliquez pour valider ou supprimer");
+			pin.setLocation(MapPanel.lon2position(pin.getCoords().x, map.getZoom()) - map.getMapPosition().x, MapPanel.lat2position(pin.getCoords().y, map.getZoom()) - map.getMapPosition().y);
 	        map.add(pin);
 	        pin.addPinListener(new PinListener() {
 	        	@Override
@@ -226,18 +227,17 @@ public class BipbipServer {
 				}
 			});
 	        pins.add(pin);
-	        offset+=30;
 		}
 		
 		//TODO must be use to update pin position and other element position
 		map.addPropertyChangeListener("mapPosition", new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
-				System.out.println("la");
 				for(Pin pin : pins) {
-					pin.setCoords(map.computePosition(new Point.Double(-179.93579864501953, 85.04629880476317)));
+					pin.setLocation(MapPanel.lon2position(pin.getCoords().x, map.getZoom()) - map.getMapPosition().x, MapPanel.lat2position(pin.getCoords().y, map.getZoom()) - map.getMapPosition().y);
 					pin.repaint();
 				}
+				tooltipAlert.setLocation(MapPanel.lon2position(tooltipAlert.getCoords().x, map.getZoom()) - map.getMapPosition().x, MapPanel.lat2position(tooltipAlert.getCoords().y, map.getZoom()) - map.getMapPosition().y);
 				map.repaint();
 			}
 		});
@@ -252,10 +252,10 @@ public class BipbipServer {
 				long currentTime = new Date().getTime();
 				if (currentTime - previousTime > 200 && previousPosition.equals(e.getPoint())) {
 					tooltipAlert.setLocation(e.getX(), e.getY());
-					System.out.println(map.getLongitudeLatitude(e.getPoint()));
+					tooltipAlert.setCoords(map.getLongitudeLatitude(new Point(e.getPoint().x + map.getMapPosition().x, e.getPoint().y + map.getMapPosition().y)));
 		        	map.add(tooltipAlert);
 				}
-				else {
+				else if (previousPosition.equals(e.getPoint())) {
 					map.remove(tooltipAlert);
 				}
 			}

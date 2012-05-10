@@ -18,7 +18,7 @@ public class Pin extends JPanel {
 	
 	private static final long serialVersionUID = -4087568813531690419L;
 	private final Collection<PinListener> pinListeners = new ArrayList<>();
-	private Point coords;
+	private Point.Double coords = new Point.Double(0,0);
 
 	private static JButton pinButton;
 	private final Tooltip tooltipConfirm = new Tooltip();
@@ -28,12 +28,11 @@ public class Pin extends JPanel {
 	private static final ImageIcon travaux = new ImageIcon(Pin.class.getResource("pin-travaux.png"));
 	private static final ImageIcon divers = new ImageIcon(Pin.class.getResource("pin-divers.png"));
 	
-	public Pin(Point coords, EventType type, String tooltipText) {
+	public Pin(Point.Double coords, EventType type, String tooltipText) {
 		super();
 		
 		/* Save coords */
 		this.coords = coords;
-		this.setLocation(coords);
 		
 		/* Configure panel */
 		this.setOpaque(false);
@@ -137,13 +136,11 @@ public class Pin extends JPanel {
 		this.remove(tooltipConfirm);
 	}
 	
-	public void setCoords(Point coords) {
+	public void setCoords(Point.Double coords) {
 		this.coords = coords;
-		this.setLocation(coords);
-		this.repaint();
 	}
 	
-	public Point getCoords() {
+	public Point.Double getCoords() {
 		return this.coords;
 	}
 	

@@ -20,6 +20,7 @@ public class Tooltip extends JPanel {
 	
 	private final Collection<TooltipListener> tooltipListeners = new ArrayList<>();
 	private final ArrayList<JButton> buttons = new ArrayList<>();
+	private Point.Double coords = new Point.Double(0,0);
 	private int width = 82;
 	
 	private static final int height = 51;
@@ -71,6 +72,14 @@ public class Tooltip extends JPanel {
 	public void fireSelectedAtIndex(int index) {
 		for(TooltipListener listener : tooltipListeners)
 			listener.eventSelectedAtIndex(index);
+	}
+	
+	public void setCoords(Point.Double coords) {
+		this.coords = coords;
+	}
+	
+	public Point.Double getCoords() {
+		return this.coords;
 	}
 	
 	@Override
