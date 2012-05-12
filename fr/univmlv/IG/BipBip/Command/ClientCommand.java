@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 
+import fr.univmlv.IG.BipBip.Event.Event;
+import fr.univmlv.IG.BipBip.Event.EventType;
+
 public enum ClientCommand {
     
     SUBMIT {

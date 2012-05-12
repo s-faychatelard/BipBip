@@ -1,6 +1,8 @@
 package fr.univmlv.IG.BipBip.Tooltip;
 
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -13,13 +15,15 @@ import java.util.Collection;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JPanel;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 
-public class Tooltip extends JPanel {
+public class Tooltip extends JComponent {
 	private static final long serialVersionUID = 3292202175247078445L;
 	
-	private final Collection<TooltipListener> tooltipListeners = new ArrayList<>();
-	private final ArrayList<JButton> buttons = new ArrayList<>();
+	private final Collection<TooltipListener> tooltipListeners = new ArrayList<TooltipListener>();
+	private final ArrayList<JButton> buttons = new ArrayList<JButton>();
+	private JLabel label = null;
 	private Point.Double coords = new Point.Double(0,0);
 	private int width = 82;
 	
@@ -27,6 +31,7 @@ public class Tooltip extends JPanel {
 	private static final Image left = new ImageIcon(Tooltip.class.getResource("tooltip-left.png")).getImage();
 	private static final Image right = new ImageIcon(Tooltip.class.getResource("tooltip-right.png")).getImage();
 	private static final Image arrow = new ImageIcon(Tooltip.class.getResource("tooltip-arrow.png")).getImage();
+	private static final Image lblBg = new ImageIcon(Tooltip.class.getResource("tooltip-bg.png")).getImage();
 
 	public Tooltip() {
 		super();
@@ -38,6 +43,11 @@ public class Tooltip extends JPanel {
 		tooltipListeners.add(listener);
 	}
 	
+	protected void fireSelectedAtIndex(int index) {
+		for(TooltipListener listener : tooltipListeners)
+			listener.eventSelectedAtIndex(index);
+	}
+	
 	private void reorganizeButtons() {
 		int offset=4;
 		for(JButton btn : buttons) {
@@ -45,6 +55,24 @@ public class Tooltip extends JPanel {
 			offset+=btn.getWidth();
 		}
 		width = offset + 4;
+	}
+	
+	public JLabel addLabel(String text) {
+		label = new JLabel("<html><font color='white'>" + text + "</font></html>");
+		label.setFont(new Font("Arial", Font.BOLD, 12));
+		label.setLocation(4, 0);
+		this.setLabelText(text);
+		this.add(label);
+		return label;
+	}
+	
+	public void setLabelText(String text) {
+		if (label!=null) {
+			label.setText("<html><font color='white'>" + text + "</font></html>");
+			FontMetrics metrics = label.getFontMetrics(label.getFont());
+			label.setSize(metrics.stringWidth(text), 40);
+			width = label.getWidth() + 8;
+		}
 	}
 
 	public TooltipButton addButton(Icon icon, String tooltipText) {
@@ -65,13 +93,7 @@ public class Tooltip extends JPanel {
 				fireSelectedAtIndex(index);
 			}
 		});
-		this.setLocation(this.getLocation());
 		return button;
-	}
-	
-	public void fireSelectedAtIndex(int index) {
-		for(TooltipListener listener : tooltipListeners)
-			listener.eventSelectedAtIndex(index);
 	}
 	
 	public void setCoords(Point.Double coords) {
@@ -123,5 +145,9 @@ public class Tooltip extends JPanel {
 		g2d.drawImage(right, this.getWidth() - right.getWidth(null), 0, null);
 		
 		g2d.drawImage(arrow, super.getWidth()/2 - arrow.getWidth(null)/2, this.getHeight() - arrow.getHeight(null), null);
+		
+		/* Draw lbl background */
+		if (label != null)
+			g2d.drawImage(lblBg, label.getLocation().x, label.getLocation().y, label.getWidth(), left.getHeight(null), null);
 	}
 }

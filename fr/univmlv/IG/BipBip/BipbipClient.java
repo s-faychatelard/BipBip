@@ -12,10 +12,11 @@ import java.util.Scanner;
 import javax.swing.JFrame;
 
 import fr.univmlv.IG.BipBip.Command.ClientCommand;
-import fr.univmlv.IG.BipBip.Command.Event;
-import fr.univmlv.IG.BipBip.Command.EventType;
 import fr.univmlv.IG.BipBip.Command.NetUtil;
 import fr.univmlv.IG.BipBip.Command.ServerCommand;
+import fr.univmlv.IG.BipBip.Event.Event;
+import fr.univmlv.IG.BipBip.Event.EventType;
+import fr.univmlv.IG.BipBip.Map.MapPanel;
 
 public class BipbipClient {
 
@@ -56,13 +57,6 @@ public class BipbipClient {
     }
 	
 	public static void main(String[] args) throws IOException {
-		BipbipClient client = new BipbipClient("localhost", 6996);
-		client.connect();
-		client.submit(EventType.RADAR_FIXE,35,10,new Date());
-        client.submit(EventType.TRAVAUX,122,-20,new Date());
-        client.getInfo(1,23);
-        
-
         JFrame frame = new JFrame("BipBip Client");
         frame.setSize(800, 600);
         MapPanel map = new MapPanel(new Point(1063208, 721344), 13);
@@ -70,5 +64,10 @@ public class BipbipClient {
         frame.getContentPane().add(map);
         frame.setVisible(true);
         
+        BipbipClient client = new BipbipClient("localhost", 6996);
+		client.connect();
+		client.submit(EventType.RADAR_FIXE,35,10,new Date());
+        client.submit(EventType.TRAVAUX,122,-20,new Date());
+        client.getInfo(1,23);
 	}
 }

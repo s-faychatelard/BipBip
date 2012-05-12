@@ -1,34 +1,36 @@
 package fr.univmlv.IG.BipBip;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Scanner;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
+
+import fr.univmlv.IG.BipBip.Bottombar.BottomBar;
 import fr.univmlv.IG.BipBip.Command.ClientCommand;
-import fr.univmlv.IG.BipBip.Command.EventType;
 import fr.univmlv.IG.BipBip.Command.NetUtil;
-import fr.univmlv.IG.BipBip.Pin.Pin;
-import fr.univmlv.IG.BipBip.Pin.PinListener;
-import fr.univmlv.IG.BipBip.Tooltip.Tooltip;
-import fr.univmlv.IG.BipBip.Tooltip.TooltipListener;
+import fr.univmlv.IG.BipBip.Event.EventModelImpl;
+import fr.univmlv.IG.BipBip.Map.Map;
+import fr.univmlv.IG.BipBip.Map.MapPanel;
+import fr.univmlv.IG.BipBip.Map.TimelineMap;
+import fr.univmlv.IG.BipBip.Table.Table;
 
 public class BipbipServer {
 
@@ -36,6 +38,9 @@ public class BipbipServer {
 
     private final ServerSocketChannel ssc;
 
+    private static final ImageIcon time = new ImageIcon(BipbipServer.class.getResource("icon-time.png"));
+	private static final ImageIcon realtime = new ImageIcon(BipbipServer.class.getResource("icon-realtime.png"));
+    
     public BipbipServer(int port) throws IOException {
         ssc = ServerSocketChannel.open();
         ssc.socket().bind(new InetSocketAddress(port), MAX_CONNECTIONS);
@@ -108,188 +113,149 @@ public class BipbipServer {
 
 
     public static void main(String[] args) throws IOException {
+    	
+    	/* Global frame */
+        JFrame frame = new JFrame("BipBip Server");
+        frame.setSize(1024, 768);
+        frame.setMinimumSize(new Dimension(800, 600));
+        frame.setLayout(new BorderLayout());
+        frame.setLocationRelativeTo(frame.getRootPane());
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        /* Default content panel */
+        final JPanel content = new JPanel(new BorderLayout());
+        content.setPreferredSize(new Dimension(800, 600));
+        
+        /* Overlay panel*/
+        final JPanel overlayPanel = new JPanel(null);
+        overlayPanel.setPreferredSize(new Dimension(800, 600));
+        overlayPanel.setOpaque(false);
+        
+        /* Layered Panel */
+        JLayeredPane layeredPanel = new JLayeredPane();
+        layeredPanel.setLayout(new LayeredLayoutManager());
+        layeredPanel.add(content,Integer.valueOf(0));
+        layeredPanel.add(overlayPanel, Integer.valueOf(1));
+        frame.getContentPane().add(layeredPanel, BorderLayout.CENTER);
+        
+        /* Events */
+        EventModelImpl events = new EventModelImpl();
+        
+        /* Left panel */
+        final Table table = new Table(events);
+        
+        /* Center panel */
+        final Map map = new Map(events);
+        map.getMapPanel().setMinimumSize(new Dimension(300, 300));
+        
+        /* SplitPane */
+        final SplitPane splitPane = new SplitPane();
+        splitPane.add(table.getPanel(), JSplitPane.LEFT);
+        splitPane.add(map.getMapPanel(), JSplitPane.RIGHT);
+        content.add(splitPane, BorderLayout.CENTER);
+        
+        /* Timeline map */
+        final TimelineMap timelineMap = new TimelineMap(events);
+        timelineMap.getMapPanel().setMinimumSize(new Dimension(300, 300));
+        
+        /* Bottom bar */
+        final BottomBar bottomBar = new BottomBar(overlayPanel, timelineMap);
+        bottomBar.setPreferredSize(new Dimension(1, 30));
+        bottomBar.addText("Pour ajouter une nouvelle alerte, faites un clic prolongé sur le lieu de l'alerte, puis choisissez son type.");
+        content.add(bottomBar, BorderLayout.SOUTH);
+        
+        /* Switcher between Time view and Current view */
+        final JButton btn = new JButton(time);
+        btn.setToolTipText("Ouvrir la timeline");
+        btn.setSize(34, 30);
+        btn.setLocation(20, 20);
+        btn.setOpaque(false);
+        btn.setContentAreaFilled(false);
+        btn.setBorderPainted(false);
+        btn.setFocusable(false);
+        btn.setRolloverEnabled(false);
+        map.getMapPanel().add(btn);
+        btn.addActionListener(new ActionListener() {
+        	
+        	//TODO need to be put on time
+        	private long startTime = new Date().getTime();
+			
+        	@Override
+			public void actionPerformed(ActionEvent e) {
+				for (Component component : content.getComponents()) {
+					if (component instanceof JSplitPane) {
+						btn.setIcon(realtime);
+						btn.setToolTipText("Revenir à la vue en temps réel");
+						timelineMap.getMapPanel().add(btn);
+						
+						content.remove(component);
+						bottomBar.getTimeSlider().setMinAndMax(startTime, new Date().getTime());
+						bottomBar.addTimeSlider(bottomBar.getTimeSlider());
+						bottomBar.repaint();
+						content.add(timelineMap.getMapPanel(), BorderLayout.CENTER);
+						content.revalidate();
+						content.repaint();
+					}
+					else if (component instanceof MapPanel) {
+						btn.setIcon(time);
+						btn.setToolTipText("Ouvrir la timeline");
+						map.getMapPanel().add(btn);
+						
+						content.remove(component);
+				        bottomBar.addText("Pour ajouter une nouvelle alerte, faites un clic prolongé sur le lieu de l'alerte, puis choisissez son type.");
+				        bottomBar.repaint();
+				        content.add(splitPane, BorderLayout.CENTER);
+				        content.revalidate();
+				        content.repaint();
+					}
+				}
+			}
+		});
+       
+        frame.setVisible(true);
+        
+        JFrame.getWindows()[0].addWindowListener(new WindowListener() {
+			@Override
+			public void windowOpened(WindowEvent e) {
+				System.out.println("windowOpened");
+			}
+			
+			@Override
+			public void windowIconified(WindowEvent e) {
+				System.out.println("windowIconified");
+			}
+			
+			@Override
+			public void windowDeiconified(WindowEvent e) {
+				System.out.println("windowDeiconified");
+			}
+			
+			@Override
+			public void windowDeactivated(WindowEvent e) {
+				System.out.println("windowDeactivated");
+			}
+			
+			@Override
+			public void windowClosing(WindowEvent e) {
+				System.out.println("windowClosing");
+			}
+			
+			@Override
+			public void windowClosed(WindowEvent e) {
+				System.out.println("windowClosed");
+			}
+			
+			@Override
+			public void windowActivated(WindowEvent e) {
+				System.out.println("windowActivated");
+			}
+		});
+    
         /* Our protocol requires that we work with the US locale for
          * both doubles and dates
          */
         Locale.setDefault(Locale.US);
         BipbipServer server = new BipbipServer(6996);
         server.serve();
-        Scanner scanner=new Scanner(System.in);
-        
-        JFrame frame = new JFrame("BipBip Server");
-        frame.setSize(800, 600);
-        frame.setLayout(new BorderLayout());
-        
-        /* SplitPane */
-        JSplitPane splitPane = new JSplitPane();
-        JPanel leftPanel = new JPanel();
-        final MapPanel map = new MapPanel(new Point(1063208, 721344), 13);
-        map.getOverlayPanel().setVisible(false);
-        map.getControlPanel().setVisible(false);
-        map.setUseAnimations(false);
-        splitPane.add(leftPanel, JSplitPane.LEFT);
-        splitPane.add(map, JSplitPane.RIGHT);
-        frame.getContentPane().add(splitPane, BorderLayout.CENTER);
-        
-        /* Bottom bar */
-        BottomBar bottomBar = new BottomBar();
-        bottomBar.setPreferredSize(new Dimension(1, 30));
-        frame.getContentPane().add(bottomBar, BorderLayout.SOUTH);
-        
-        /* Tooltip */
-        final Tooltip tooltipAlert = new Tooltip();
-        tooltipAlert.addButton(new ImageIcon(BipbipServer.class.getResource("alert-fixe.png")), "Radar fixe");
-        tooltipAlert.addButton(new ImageIcon(BipbipServer.class.getResource("alert-mobile.png")), "Radar mobile");
-        tooltipAlert.addButton(new ImageIcon(BipbipServer.class.getResource("alert-accident.png")), "Accident");
-        tooltipAlert.addButton(new ImageIcon(BipbipServer.class.getResource("alert-travaux.png")), "Travaux");
-        tooltipAlert.addButton(new ImageIcon(BipbipServer.class.getResource("alert-divers.png")), "Divers").setLast(true);
-        
-        tooltipAlert.addTooltipListener(new TooltipListener() {
-			@Override
-			public void eventSelectedAtIndex(int index) {
-				switch (index) {
-				case 0:
-					JOptionPane.showMessageDialog(map, "Add fixe");
-					break;
-				case 1:
-					JOptionPane.showMessageDialog(map, "Add mobile");
-					break;
-				case 2:
-					JOptionPane.showMessageDialog(map, "Add accident");
-					break;
-				case 3:
-					JOptionPane.showMessageDialog(map, "Add travaux");
-					break;
-				case 4:
-					JOptionPane.showMessageDialog(map, "Add divers");
-					break;
-				default:
-					assert(0==1);
-					break;
-				}
-			}
-		});
-        
-        /* Create all type of pins */
-		final ArrayList<Pin> pins = new ArrayList<>();
-		for(int i=0; i<5;i++) {
-			/* Choose its type */
-			EventType type=null;
-			String typeString=null;
-			switch (i) {
-			case 0:
-				type = EventType.RADAR_FIXE;
-				typeString = "Fixe";
-				break;
-			case 1:
-				type = EventType.RADAR_MOBILE;
-				typeString = "Mobile";
-				break;
-			case 2:
-				type = EventType.ACCIDENT;
-				typeString = "Accident";
-				break;
-			case 3:
-				type = EventType.TRAVAUX;
-				typeString = "Travaux";
-				break;
-			case 4:
-				type = EventType.DIVERS;
-				typeString = "Divers";
-				break;
-			default:
-				assert(0==1);
-				break;
-			}
-			final String str = typeString;
-			
-			/* Create pin */
-			Pin pin = new Pin(new Point.Double(2.58, 48.8429), type, "Cliquez pour valider ou supprimer");
-			pin.setLocation(MapPanel.lon2position(pin.getCoords().x, map.getZoom()) - map.getMapPosition().x, MapPanel.lat2position(pin.getCoords().y, map.getZoom()) - map.getMapPosition().y);
-	        map.add(pin);
-	        pin.addPinListener(new PinListener() {
-	        	@Override
-	        	public void eventSelected() {
-	        		for(Pin pin : pins) {
-						pin.clear();
-					}
-	        		map.repaint();
-	        	}
-	        	
-				@Override
-				public void eventConfirm(boolean confirm) {
-					String res;
-					if(confirm)
-						res="confirmed";
-					else
-						res="deleted";
-					JOptionPane.showMessageDialog(map, str + " " + res);
-				}
-			});
-	        pins.add(pin);
-		}
-		
-		//TODO must be use to update pin position and other element position
-		map.addPropertyChangeListener("mapPosition", new PropertyChangeListener() {
-			@Override
-			public void propertyChange(PropertyChangeEvent evt) {
-				for(Pin pin : pins) {
-					pin.setLocation(MapPanel.lon2position(pin.getCoords().x, map.getZoom()) - map.getMapPosition().x, MapPanel.lat2position(pin.getCoords().y, map.getZoom()) - map.getMapPosition().y);
-					pin.repaint();
-				}
-				tooltipAlert.setLocation(MapPanel.lon2position(tooltipAlert.getCoords().x, map.getZoom()) - map.getMapPosition().x, MapPanel.lat2position(tooltipAlert.getCoords().y, map.getZoom()) - map.getMapPosition().y);
-				map.repaint();
-			}
-		});
-		
-		/* Just for clear pins on click outside of anything */
-        map.addMouseListener(new MouseListener() {
-        	private long previousTime = 0;
-        	private Point previousPosition;
-        	
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				long currentTime = new Date().getTime();
-				if (currentTime - previousTime > 200 && previousPosition.equals(e.getPoint())) {
-					tooltipAlert.setLocation(e.getX(), e.getY());
-					tooltipAlert.setCoords(map.getLongitudeLatitude(new Point(e.getPoint().x + map.getMapPosition().x, e.getPoint().y + map.getMapPosition().y)));
-		        	map.add(tooltipAlert);
-				}
-				else if (previousPosition.equals(e.getPoint())) {
-					map.remove(tooltipAlert);
-				}
-			}
-			
-			@Override
-			public void mousePressed(MouseEvent e) {
-				previousTime = new Date().getTime();
-				previousPosition = e.getPoint();
-				for(Pin pin : pins) {
-					pin.clear();
-				}
-				map.repaint();
-			}
-			
-			@Override
-			public void mouseExited(MouseEvent e) {}
-			
-			@Override
-			public void mouseEntered(MouseEvent e) {}
-			
-			@Override
-			public void mouseClicked(MouseEvent e) {}
-		});
-        
-        map.repaint();
-        frame.setVisible(true);
-        
-        while (scanner.hasNextLine()) {
-            String line=scanner.nextLine();
-            if (line.equalsIgnoreCase("exit")) {
-                scanner.close();
-                System.exit(0);
-            }
-            System.err.println("Unknown command: "+line);
-        }
     }
 }

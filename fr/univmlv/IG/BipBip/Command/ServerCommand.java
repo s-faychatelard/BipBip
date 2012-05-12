@@ -3,7 +3,11 @@ package fr.univmlv.IG.BipBip.Command;
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
+
+import fr.univmlv.IG.BipBip.Event.Event;
+import fr.univmlv.IG.BipBip.Event.EventType;
 
 public enum ServerCommand {
     
@@ -39,7 +43,7 @@ public enum ServerCommand {
                 if (!scanner.hasNext() || !scanner.next().equals(ServerCommand.INFO.name())) {
                     throw new IOException("Missing INFO answer");
                 }
-                list.add((Event) ServerCommand.INFO.handle(sc,scanner));
+                list.add((Event)ServerCommand.INFO.handle(sc,scanner));
             }
             return list;
         }
@@ -80,7 +84,7 @@ public enum ServerCommand {
             } catch (NumberFormatException e) {
                 throw new IOException("Missing Y coordinate");
             }
-            return new Event(event,x,y);
+            return new Event(event,new Date().getTime(),x,y);
         }
         
     };
