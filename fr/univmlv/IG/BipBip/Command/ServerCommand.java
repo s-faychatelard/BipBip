@@ -3,9 +3,9 @@ package fr.univmlv.IG.BipBip.Command;
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Scanner;
 
+import fr.univmlv.IG.BipBip.BipbipClient;
 import fr.univmlv.IG.BipBip.Event.Event;
 import fr.univmlv.IG.BipBip.Event.EventType;
 
@@ -26,8 +26,8 @@ public enum ServerCommand {
          * INFO EVENT_TYPE X Y
          */
         @Override
-        public ArrayList<Event> handle(SocketChannel sc, Scanner scanner) throws IOException {
-            if (!scanner.hasNextLine()) throw new IOException("Invalid command");
+        public void handle(SocketChannel sc, Scanner scanner) throws IOException {
+            if (!scanner.hasNextLine()) throw new IOException("INFOS : Invalid command");
             String line=scanner.nextLine();
             int n;
             try {
@@ -38,16 +38,13 @@ public enum ServerCommand {
             } catch (NumberFormatException e) {
                 throw new IOException("Invalid integer value: "+line);
             }
-            ArrayList<Event> list=new ArrayList<Event>();
             for (int i=0;i<n;i++) {
                 if (!scanner.hasNext() || !scanner.next().equals(ServerCommand.INFO.name())) {
                     throw new IOException("Missing INFO answer");
                 }
-                list.add((Event)ServerCommand.INFO.handle(sc,scanner));
+                ServerCommand.INFO.handle(sc,scanner);
             }
-            return list;
-        }
-                
+        }              
     },
     
     INFO {
@@ -60,8 +57,8 @@ public enum ServerCommand {
          * where X and Y are double
          */
         @Override
-        public Event handle(SocketChannel sc, Scanner scanner) throws IOException {
-            if (!scanner.hasNext()) throw new IOException("Invalid command");
+        public void handle(SocketChannel sc, Scanner scanner) throws IOException {
+            if (!scanner.hasNext()) throw new IOException("INFO : Invalid command");
             EventType event;
             double x,y;
             try {
@@ -84,23 +81,72 @@ public enum ServerCommand {
             } catch (NumberFormatException e) {
                 throw new IOException("Missing Y coordinate");
             }
-            return new Event(event,new Date().getTime(),x,y);
+            
+            // Verify if it is not a doubl
+            // TODO can be ameliorate with clustering
+            Event evt = new Event(event, x, y);
+            for (Event e : BipbipClient.events.getEvents()) {
+    			if (e.equals(evt)) {
+    				return;
+    			}
+    		}
+            BipbipClient.events.addEvent(new Event(event, x, y));
         }
-        
+    },
+    
+    REMOVE {
+
+        /**
+         * A REMOVE command is supposed to have the following form:
+         * 
+         * REMOVE EVENT_TYPE X Y
+         * 
+         * where X and Y are double
+         */
+        @Override
+        public void handle(SocketChannel sc, Scanner scanner) throws IOException {
+            if (!scanner.hasNext()) throw new IOException("REMOVE : Invalid command");
+            EventType event;
+            double x,y;
+            try {
+                event=EventType.valueOf(scanner.next());
+            } catch (IllegalArgumentException e) {
+                throw new IOException("Invalid event type");
+            }
+            String tmp=scanner.next();
+            try {
+                x=Double.parseDouble(tmp);
+            } catch (NumberFormatException e) {
+                throw new IOException("Missing X coordinate");
+            }
+            tmp=scanner.nextLine();
+            while (tmp.startsWith(" ")) {
+                tmp=tmp.substring(1);
+            }
+            try {
+                y=Double.parseDouble(tmp);
+            } catch (NumberFormatException e) {
+                throw new IOException("Missing Y coordinate");
+            }
+            
+            BipbipClient.events.remove(new Event(event, x, y));
+        }
     };
     
-    public abstract Object handle(SocketChannel sc,Scanner scanner) throws IOException;
+    public abstract void handle(SocketChannel sc,Scanner scanner) throws IOException;
     
-    public static void sendInfos(SocketChannel sc,ArrayList<Event> list) throws IOException {
+    public static void sendInfos(SocketChannel sc, ArrayList<Event> list) throws IOException {
         NetUtil.writeLine(sc,"INFOS "+list.size());
         for (Event e:list) {
-            sendEventInfo(sc,e);
+            sendInfo(sc,e);
         }
     }
 
-    private static void sendEventInfo(SocketChannel sc, Event e) throws IOException {
+    public static void sendInfo(SocketChannel sc, Event e) throws IOException {
         NetUtil.writeLine(sc,"INFO "+e.getType().name()+" "+e.getX()+" "+e.getY());
     }
     
-
+    public static void remove(SocketChannel sc, Event e) throws IOException {
+        NetUtil.writeLine(sc,"REMOVE "+e.getType().name()+" "+e.getX()+" "+e.getY());
+    }
 }

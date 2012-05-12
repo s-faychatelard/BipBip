@@ -3,9 +3,9 @@ package fr.univmlv.IG.BipBip.Command;
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Scanner;
 
+import fr.univmlv.IG.BipBip.BipbipServer;
 import fr.univmlv.IG.BipBip.Event.Event;
 import fr.univmlv.IG.BipBip.Event.EventType;
 
@@ -23,10 +23,9 @@ public enum ClientCommand {
          */
         @Override
         public void handle(SocketChannel sc, Scanner scanner) throws IOException {
-            if (!scanner.hasNext()) throw new IOException("Invalid command");
+            if (!scanner.hasNext()) throw new IOException("SUBMIT Invalid command");
             EventType event;
             double x,y;
-            Date date;
             try {
                 event=EventType.valueOf(scanner.next());
             } catch (IllegalArgumentException e) {
@@ -40,30 +39,51 @@ public enum ClientCommand {
                 throw new IOException("Missing Y coordinate");
             }
             y=scanner.nextDouble();
-            if (!scanner.hasNext()) {
-                throw new IOException("Missing time coordinate");
-            }
-            String d=scanner.nextLine();
-            try {
-                /* We have to remove leading spaces, because they
-                 * will disturb DateFormat.parse()
-                 */
-                while (d.startsWith(" ")) {
-                    d=d.substring(1);
-                }
-                date=NetUtil.getDateformat().parse(d);
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new IOException("Invalid date: "+d);
-            }
-            /**
-             * Customize from here 
-             *
-             * ...
-             */
-            System.err.println("CLIENT: SUBMIT "+event.name()+" "+x+" "+y+" "+NetUtil.getDateformat().format(date));
+            
+            // A client send a new Event we need to check if is not already on our list
+            // TODO can be ameliorate with clustering
+            Event evt = new Event(event, x, y);
+            for (Event e : BipbipServer.events.getEvents()) {
+    			if (e.equals(evt)) {
+    				return;
+    			}
+    		}
+            BipbipServer.events.addEvent(evt);
         }
-                
+    },
+    
+    CONFIRM {
+        /**
+         * A CONFIRM command is supposed to have the following form:
+         * 
+         * CONFIRM EVENT X Y DATE
+         * 
+         * where X and Y are double, and DATE is a full Date in the US locale.
+         * 
+         * CONFIRM is used by a client that want to confirm the existence of something
+         */
+        @Override
+        public void handle(SocketChannel sc, Scanner scanner) throws IOException {
+            if (!scanner.hasNext()) throw new IOException("CONFIRM Invalid command");
+            EventType event;
+            double x,y;
+            try {
+                event=EventType.valueOf(scanner.next());
+            } catch (IllegalArgumentException e) {
+                throw new IOException("Invalid event type");
+            }
+            if (!scanner.hasNextDouble()) {
+                throw new IOException("Missing X coordinate");
+            }
+            x=scanner.nextDouble();
+            if (!scanner.hasNextDouble()) {
+                throw new IOException("Missing Y coordinate");
+            }
+            y=scanner.nextDouble();
+            
+            // A client confirm an alert
+            BipbipServer.events.confirm(new Event(event, x, y));
+        }
     },
     
     NOT_SEEN {
@@ -79,10 +99,9 @@ public enum ClientCommand {
          */
         @Override
         public void handle(SocketChannel sc, Scanner scanner) throws IOException {
-            if (!scanner.hasNext()) throw new IOException("Invalid command");
+            if (!scanner.hasNext()) throw new IOException("NOT_SEEN Invalid command");
             EventType event;
             double x,y;
-            Date date;
             try {
                 event=EventType.valueOf(scanner.next());
             } catch (IllegalArgumentException e) {
@@ -96,34 +115,13 @@ public enum ClientCommand {
                 throw new IOException("Missing Y coordinate");
             }
             y=scanner.nextDouble();
-            if (!scanner.hasNext()) {
-                throw new IOException("Missing time coordinate");
-            }
-            String d=scanner.nextLine();
-            try {
-                /* We have to remove leading spaces, because they
-                 * will disturb DateFormat.parse()
-                 */
-                while (d.startsWith(" ")) {
-                    d=d.substring(1);
-                }
-                date=NetUtil.getDateformat().parse(d);
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new IOException("Invalid date: "+d);
-            }
-            /**
-             * Customize from here 
-             *
-             * ...
-             */
-            System.err.println("CLIENT: NOT_SEEN "+event.name()+" "+x+" "+y+" "+NetUtil.getDateformat().format(date));
+            
+            // A client declare an event not seen
+            BipbipServer.events.unconfirm(new Event(event, x, y));
         }
-                
     },
 
     GET_INFO {
-
         /**
          * A GET_INFO command is supposed to have the following form:
          * 
@@ -133,38 +131,26 @@ public enum ClientCommand {
          */
         @Override
         public void handle(SocketChannel sc, Scanner scanner) throws IOException {
-            double x,y;
-            if (!scanner.hasNextDouble()) throw new IOException("Missing X coordinate");
-            x=scanner.nextDouble();
-            if (!scanner.hasNextDouble()) throw new IOException("Missing Y coordinate");
-            y=scanner.nextDouble();
-            /**
-             * Customize from here 
-             *
-             * ...
-             */
-            System.err.println("CLIENT: GET_INFO "+x+" "+y);
-            ArrayList<Event> list =new ArrayList<Event>();
-            list.add(new Event(EventType.TRAVAUX,3,4));
-            list.add(new Event(EventType.RADAR_FIXE,30,-46));
-            list.add(new Event(EventType.RADAR_MOBILE,333,8));
-            ServerCommand.sendInfos(sc, list);
+            ServerCommand.sendInfos(sc, new ArrayList<Event>(BipbipServer.events.getEvents()));
         }
-        
     };
     
     public abstract void handle(SocketChannel sc,Scanner scanner) throws IOException;
     
-    public static void submit(SocketChannel sc,EventType event,double x,double y,Date date) throws IOException {
-        NetUtil.writeLine(sc,"SUBMIT "+event.name()+" "+x+" "+y+" "+NetUtil.getDateformat().format(date));
+    public static void submit(SocketChannel sc,EventType event,double x,double y) throws IOException {
+        NetUtil.writeLine(sc,"SUBMIT "+event.name()+" "+x+" "+y);
     }
     
-    public static void notSeen(SocketChannel sc,EventType event,double x,double y,Date date) throws IOException {
-        NetUtil.writeLine(sc,"NOT_SEEN "+event.name()+" "+x+" "+y+" "+NetUtil.getDateformat().format(date));
+    public static void confirm(SocketChannel sc,EventType event,double x,double y) throws IOException {
+        NetUtil.writeLine(sc,"CONFIRM "+event.name()+" "+x+" "+y);
+    }
+    
+    public static void notSeen(SocketChannel sc,EventType event,double x,double y) throws IOException {
+        NetUtil.writeLine(sc,"NOT_SEEN "+event.name()+" "+x+" "+y);
     }
 
-    public static void getInfo(SocketChannel sc,double x,double y) throws IOException {
-        NetUtil.writeLine(sc,"GET_INFO "+x+" "+y);
+    public static void getInfo(SocketChannel sc) throws IOException {
+        NetUtil.writeLine(sc,"GET_INFO");
     }
     
 

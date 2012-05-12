@@ -42,9 +42,20 @@ public class TableModel extends AbstractTableModel {
 			}
 			
 			@Override
+			public void eventModifyed(Event event, int index) {
+				TableModel.this.fireTableRowsUpdated(index, index);
+			}
+			
+			@Override
 			public void eventRemoved(int index) {
 				TableModel.this.fireTableRowsDeleted(index, index);
 			}
+			
+			@Override
+			public void eventConfirmed(int index) {}
+			
+			@Override
+			public void eventUnconfirmed(int index) {}
 		});
 	}
 	

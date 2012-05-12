@@ -36,7 +36,7 @@ public class TimeSlider extends JComponent {
 		this.timelineMap = timelineMap;
 		
         tooltipText.addLabel("  ");
-        tooltipText.setLocation(88, 0);
+        tooltipText.setLocation(93, 0);
         
         final JPanel overlay = overlayPanel;
         this.addMouseListener(new MouseListener() {

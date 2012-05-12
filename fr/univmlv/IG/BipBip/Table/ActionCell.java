@@ -10,6 +10,7 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -19,13 +20,29 @@ public class ActionCell extends JPanel {
 	private final JButton btnEdit;
 	private final JButton btnDelete;
 	private final Collection<ActionCellListener> actionCellListeners = new ArrayList<ActionCellListener>();
+	
+	private static final ImageIcon trash = new ImageIcon(ActionCell.class.getResource("icon-trash.png"));
+	private static final ImageIcon edit = new ImageIcon(ActionCell.class.getResource("icon-edit.png"));
 
 	public ActionCell(final int index, ActionCellListener listener) {
 		this.setLayout(new FlowLayout());
 		this.addActionCellListener(listener);
 		
-		btnEdit = new JButton("Edit");
-		btnDelete = new JButton("Del");
+		btnEdit = new JButton(edit);
+		btnDelete = new JButton(trash);
+		
+		btnEdit.setOpaque(false);
+		btnEdit.setContentAreaFilled(false);
+		btnEdit.setBorderPainted(false);
+		btnEdit.setFocusable(false);
+		btnEdit.setRolloverEnabled(false);
+		
+		btnDelete.setOpaque(false);
+		btnDelete.setContentAreaFilled(false);
+		btnDelete.setBorderPainted(false);
+		btnDelete.setFocusable(false);
+		btnDelete.setRolloverEnabled(false);
+		
 		this.add(btnEdit);
 		this.add(btnDelete);
 		

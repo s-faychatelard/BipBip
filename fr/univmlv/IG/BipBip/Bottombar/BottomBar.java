@@ -33,9 +33,9 @@ public class BottomBar extends JComponent {
 		this.removeAll();
 		timeSlider.setPreferredSize(new Dimension(this.getWidth() - 150, this.getHeight() - 10));
 		
-		this.add(Box.createRigidArea(new Dimension(80,0)));
+		this.add(Box.createRigidArea(new Dimension(85,0)));
 		this.add(timeSlider);
-		this.add(Box.createRigidArea(new Dimension(80,0)));
+		this.add(Box.createRigidArea(new Dimension(85,0)));
 	}
 	
 	public void addText(String text) {

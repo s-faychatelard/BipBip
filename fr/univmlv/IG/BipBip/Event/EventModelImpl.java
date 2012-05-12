@@ -36,9 +36,24 @@ public class EventModelImpl implements EventModel {
 			listener.eventAdded(event, index);
 	}
 	
+	protected void fireEventModify(Event event, int index) {
+		for(EventModelListener listener : eventModelListeners)
+			listener.eventModifyed(event, index);
+	}
+	
 	protected void fireEventRemoved(int position) {
 		for(EventModelListener listener : eventModelListeners)
 			listener.eventRemoved(position);
+	}
+	
+	public void fireEventConfirmed(int position) {
+		for(EventModelListener listener : eventModelListeners)
+			listener.eventConfirmed(position);
+	}
+	
+	public void fireEventUnconfirmed(int position) {
+		for(EventModelListener listener : eventModelListeners)
+			listener.eventUnconfirmed(position);
 	}
 	
 	/* Implements */
@@ -55,10 +70,51 @@ public class EventModelImpl implements EventModel {
 		allEvents.add(event);
 		this.fireEventAdded(events.get(events.size()-1), events.size()-1);
 	}
+	
+	@Override
+	public void modifyEvent(int index, Event event) {
+		events.remove(index);
+		events.add(index, event);
+	}
 
 	@Override
 	public void remove(int i) {
-		events.remove(i);
 		this.fireEventRemoved(i);
+		events.get(i).invalidate();
+		events.remove(i);
+	}
+	
+	@Override
+	public void remove(Event event) {
+		for (Event e : events) {
+			if (e.equals(event)) {
+				this.remove(events.indexOf(e));
+				break;
+			}
+		}
+	}
+	
+	@Override
+	public void confirm(Event event) {
+		for (Event e : events) {
+			if (e.equals(event)) {
+				e.incrementCounter();
+				this.fireEventConfirmed(events.indexOf(e));
+				break;
+			}
+		}
+	}
+	
+	@Override
+	public void unconfirm(Event event) {
+		for (Event e : events) {
+			if (e.equals(event)) {
+				e.decrementCounter();
+				this.fireEventUnconfirmed(events.indexOf(e));
+				if (e.getDateErrone() != 0)
+					this.remove(events.indexOf(e));
+				break;
+			}
+		}
 	}
 }

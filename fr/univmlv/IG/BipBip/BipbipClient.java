@@ -1,30 +1,37 @@
 package fr.univmlv.IG.BipBip;
 
-import java.awt.Point;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
 import javax.swing.JFrame;
 
+import fr.univmlv.IG.BipBip.Bottombar.BottomBar;
 import fr.univmlv.IG.BipBip.Command.ClientCommand;
 import fr.univmlv.IG.BipBip.Command.NetUtil;
 import fr.univmlv.IG.BipBip.Command.ServerCommand;
 import fr.univmlv.IG.BipBip.Event.Event;
+import fr.univmlv.IG.BipBip.Event.EventModelImpl;
+import fr.univmlv.IG.BipBip.Event.EventModelListener;
 import fr.univmlv.IG.BipBip.Event.EventType;
-import fr.univmlv.IG.BipBip.Map.MapPanel;
+import fr.univmlv.IG.BipBip.Map.Map;
 
 public class BipbipClient {
 
 	private final InetSocketAddress server;
 	Charset charset = Charset.forName("UTF8");
 	private SocketChannel sc;
-	private Scanner scanner;
-    
+
+	/* Events */
+	public static EventModelImpl events = new EventModelImpl();
+
+	private static final String bottomBarText = "Pour ajouter une nouvelle alerte, faites un clic prolongé sur le lieu de l'alerte, puis choisissez son type.";
+
 	public BipbipClient(String host, int port) {
 		this.server = new InetSocketAddress(host, port);
 	}
@@ -32,42 +39,121 @@ public class BipbipClient {
 	public void connect() throws IOException {
 		sc = SocketChannel.open();
 		sc.connect(server);
-		scanner=new Scanner(sc,NetUtil.getCharset().name());
 	}
-	
-	public void submit(EventType event,double x,double y,Date date) throws IOException {
-        ClientCommand.submit(sc, event, x, y, date);
-    }
 
-	@SuppressWarnings("unchecked")
-    public void getInfo(double x,double y) throws IOException {
-	    ClientCommand.getInfo(sc,x,y);
-	    if (!scanner.hasNext() || !scanner.next().equals(ServerCommand.INFOS.name())) {
-	        throw new IOException("Server did not respond to the GET_INFO query");
-	    }
-        ArrayList<Event> list=(ArrayList<Event>) ServerCommand.INFOS.handle(sc, scanner);
-        System.out.println("SERVER: INFOS "+list.size());
-        for (Event e:list) {
-            System.out.println("SERVER: INFO "+e.getType().name()+" "+x+" "+y);
-        }
+	public void submit(EventType event,double x,double y) throws IOException {
+		ClientCommand.submit(sc, event, x, y);
 	}
-	
-	public void close() throws IOException {
-        sc.close();
-    }
-	
+
+	public void confirm(EventType event,double x,double y) throws IOException {
+		ClientCommand.confirm(sc, event, x, y);
+	}
+
+	public void unconfirm(EventType event,double x,double y) throws IOException {
+		ClientCommand.notSeen(sc, event, x, y);
+	}
+
+	public void getInfos() throws IOException {
+		events.addEventListener(new EventModelListener() {
+
+			@Override
+			public void eventsAdded(List<? extends Event> events) {
+				try {
+					for(Event e : events)
+						BipbipClient.this.submit(e.getType(), e.getX(), e.getY());
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+			
+			@Override
+			public void eventAdded(Event event, int index) {
+				try {
+					BipbipClient.this.submit(event.getType(), event.getX(), event.getY());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+			@Override
+			public void eventRemoved(int index) {
+				// Do nothing, you are a client and you cannot remove an event
+			}
+
+			@Override
+			public void eventModifyed(Event event, int index) {
+				// Do nothing, you are a client and you cannot modify an event
+			}
+
+			@Override
+			public void eventConfirmed(int index) {
+				try {
+					BipbipClient.this.confirm(events.getEvents().get(index).getType(), events.getEvents().get(index).getX(), events.getEvents().get(index).getY());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+			@Override
+			public void eventUnconfirmed(int index) {
+				try {
+					BipbipClient.this.unconfirm(events.getEvents().get(index).getType(), events.getEvents().get(index).getX(), events.getEvents().get(index).getY());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		 Scanner scanner = new Scanner(sc,NetUtil.getCharset().name());
+	        try {
+	            while (scanner.hasNextLine()) {
+	                String line = scanner.nextLine();
+	                Scanner tmp_scanner=new Scanner(line);
+	                if (!tmp_scanner.hasNext()) break;
+	                String foo=tmp_scanner.next();
+	                try {
+	                    ServerCommand cmd=ServerCommand.valueOf(foo);
+	                    cmd.handle(sc,tmp_scanner);
+	                } catch (IllegalArgumentException e) {
+	                    throw new IOException("Invalid command: "+foo);
+	                }
+	            }
+	        } catch (IOException ie) {
+	            ie.printStackTrace();
+	        } finally {
+	            try {
+	                scanner.close();
+	                sc.close();
+	            } catch (IOException ignored) {
+	                ignored.printStackTrace();
+	            }
+	        }
+	}
+
 	public static void main(String[] args) throws IOException {
-        JFrame frame = new JFrame("BipBip Client");
-        frame.setSize(800, 600);
-        MapPanel map = new MapPanel(new Point(1063208, 721344), 13);
-        map.getOverlayPanel().setVisible(false);
-        frame.getContentPane().add(map);
-        frame.setVisible(true);
-        
-        BipbipClient client = new BipbipClient("localhost", 6996);
+		/* Global frame */
+		JFrame frame = new JFrame("BipBip Client");
+		frame.setSize(1024, 768);
+		frame.setMinimumSize(new Dimension(800, 600));
+		frame.setLayout(new BorderLayout());
+		frame.setLocationRelativeTo(frame.getRootPane());
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		/* Center panel */
+		final Map map = new Map(events);
+		map.getMapPanel().setMinimumSize(new Dimension(300, 300));
+		frame.getContentPane().add(map.getMapPanel(), BorderLayout.CENTER);
+
+		/* Bottom bar */
+		final BottomBar bottomBar = new BottomBar(null, null);
+		bottomBar.setPreferredSize(new Dimension(1, 30));
+		bottomBar.addText(bottomBarText);
+		frame.getContentPane().add(bottomBar, BorderLayout.SOUTH);
+
+		frame.setVisible(true);
+
+		BipbipClient client = new BipbipClient("localhost", 6996);
 		client.connect();
-		client.submit(EventType.RADAR_FIXE,35,10,new Date());
-        client.submit(EventType.TRAVAUX,122,-20,new Date());
-        client.getInfo(1,23);
+		client.getInfos();
 	}
 }

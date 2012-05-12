@@ -59,7 +59,7 @@ public class Tooltip extends JComponent {
 	
 	public JLabel addLabel(String text) {
 		label = new JLabel("<html><font color='white'>" + text + "</font></html>");
-		label.setFont(new Font("Arial", Font.BOLD, 12));
+		label.setFont(new Font("Arial", Font.BOLD, 11));
 		label.setLocation(4, 0);
 		this.setLabelText(text);
 		this.add(label);

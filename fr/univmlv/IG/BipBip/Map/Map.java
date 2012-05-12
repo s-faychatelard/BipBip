@@ -79,11 +79,21 @@ public class Map {
 			public void eventsAdded(List<? extends Event> events) {
 				for(Event event : events)
 					Map.this.addPin(event);
+				map.repaint();
 			}
 			
 			@Override
 			public void eventAdded(Event event, int index) {
 				Map.this.addPin(event);
+				map.repaint();
+			}
+			
+			@Override
+			public void eventModifyed(Event event, int index) {
+				map.remove(pins.get(index));
+				pins.remove(index);
+				Map.this.addPin(event, index);
+				map.repaint();
 			}
 			
 			@Override
@@ -92,6 +102,12 @@ public class Map {
 				pins.remove(index);
 				map.repaint();
 			}
+			
+			@Override
+			public void eventConfirmed(int index) {}
+			
+			@Override
+			public void eventUnconfirmed(int index) {}
 		});
 		
 		/* Replace pins and tooltip on map position event */
@@ -145,8 +161,8 @@ public class Map {
 			public void mouseClicked(MouseEvent e) {}
 		});
 	}
-
-	public void addPin(Event event) {
+	
+	public void addPin(Event event, int index) {
 		/* Create pin */
 		final Pin pin = new Pin(new Point.Double(event.getX(), event.getY()), event.getType(), "Cliquez pour valider ou supprimer");
 		pin.setLocation(MapPanel.lon2position(pin.getCoords().x, map.getZoom()) - map.getMapPosition().x, MapPanel.lat2position(pin.getCoords().y, map.getZoom()) - map.getMapPosition().y);
@@ -162,16 +178,19 @@ public class Map {
         	
 			@Override
 			public void eventConfirm(boolean confirm) {
-				if(confirm)
-					Map.this.events.getEvents().get(pins.indexOf(pin)).incrementCounter();
+				if(confirm) {
+					((EventModelImpl)events).confirm(Map.this.events.getEvents().get(pins.indexOf(pin)));
+				}
 				else {
-					Map.this.events.getEvents().get(pins.indexOf(pin)).decrementCounter();
-					if (Map.this.events.getEvents().get(pins.indexOf(pin)).getDateErrone() != 0)
-						Map.this.events.remove(pins.indexOf(pin));
+					((EventModelImpl)events).unconfirm(Map.this.events.getEvents().get(pins.indexOf(pin)));
 				}
 			}
 		});
         pins.add(pin);
+	}
+
+	public void addPin(Event event) {
+		this.addPin(event, pins.size());
 	}
 	
 	public MapPanel getMapPanel() {
