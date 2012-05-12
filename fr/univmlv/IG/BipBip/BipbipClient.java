@@ -54,6 +54,15 @@ public class BipbipClient {
 	}
 
 	public void getInfos() throws IOException {
+		Scanner scanner = new Scanner(sc,NetUtil.getCharset().name());
+
+		/* Get all events */
+		ClientCommand.getInfo(sc);
+		if (!scanner.hasNext() || !scanner.next().equals(ServerCommand.INFOS.name())) {
+			throw new IOException("Server did not respond to the GET_INFO query");
+		}
+		ServerCommand.INFOS.handle(sc, scanner);
+
 		events.addEventListener(new EventModelListener() {
 
 			@Override
@@ -65,7 +74,7 @@ public class BipbipClient {
 					e1.printStackTrace();
 				}
 			}
-			
+
 			@Override
 			public void eventAdded(Event event, int index) {
 				try {
@@ -103,31 +112,29 @@ public class BipbipClient {
 				}
 			}
 		});
-		
-		 Scanner scanner = new Scanner(sc,NetUtil.getCharset().name());
-	        try {
-	            while (scanner.hasNextLine()) {
-	                String line = scanner.nextLine();
-	                Scanner tmp_scanner=new Scanner(line);
-	                if (!tmp_scanner.hasNext()) break;
-	                String foo=tmp_scanner.next();
-	                try {
-	                    ServerCommand cmd=ServerCommand.valueOf(foo);
-	                    cmd.handle(sc,tmp_scanner);
-	                } catch (IllegalArgumentException e) {
-	                    throw new IOException("Invalid command: "+foo);
-	                }
-	            }
-	        } catch (IOException ie) {
-	            ie.printStackTrace();
-	        } finally {
-	            try {
-	                scanner.close();
-	                sc.close();
-	            } catch (IOException ignored) {
-	                ignored.printStackTrace();
-	            }
-	        }
+		try {
+			while (scanner.hasNextLine()) {
+				String line = scanner.nextLine();
+				Scanner tmp_scanner=new Scanner(line);
+				if (!tmp_scanner.hasNext()) break;
+				String foo=tmp_scanner.next();
+				try {
+					ServerCommand cmd=ServerCommand.valueOf(foo);
+					cmd.handle(sc,tmp_scanner);
+				} catch (IllegalArgumentException e) {
+					throw new IOException("Invalid command: "+foo);
+				}
+			}
+		} catch (IOException ie) {
+			ie.printStackTrace();
+		} finally {
+			try {
+				scanner.close();
+				sc.close();
+			} catch (IOException ignored) {
+				ignored.printStackTrace();
+			}
+		}
 	}
 
 	public static void main(String[] args) throws IOException {

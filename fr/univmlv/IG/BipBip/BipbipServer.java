@@ -213,8 +213,7 @@ public class BipbipServer {
         btn.setRolloverEnabled(false);
         map.getMapPanel().add(btn);
         btn.addActionListener(new ActionListener() {
-        	
-        	//TODO need to be put on time
+
         	private long startTime = new Date().getTime();
 			
         	@Override

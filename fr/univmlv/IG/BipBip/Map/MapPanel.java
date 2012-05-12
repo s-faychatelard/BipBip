@@ -527,7 +527,6 @@ public class MapPanel extends JPanel {
                     Rectangle magnifyRegion = new Rectangle(mapPanel.magnifyRegion);
                     magnifyRegion.translate(-mapPosition.x, -mapPosition.y);
                     g.setColor(Color.yellow);
-                    // TODO: continue here later
                     //System.err.println("fill : " + mapPosition);
                     //System.err.println("fill : " + magnifyRegion);
                     //g.fillRect(magnifyRegion.x, magnifyRegion.y, magnifyRegion.width, magnifyRegion.height);
