@@ -1,12 +1,17 @@
 package fr.univmlv.IG.BipBip.Table;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.table.AbstractTableModel;
 
+import fr.univmlv.IG.BipBip.BipbipServer;
+import fr.univmlv.IG.BipBip.EditDialog.EditDialog;
+import fr.univmlv.IG.BipBip.EditDialog.EditDialog.AnswerEditDialog;
 import fr.univmlv.IG.BipBip.Event.Event;
 import fr.univmlv.IG.BipBip.Event.EventModelListener;
 import fr.univmlv.IG.BipBip.Event.EventModel;
@@ -15,6 +20,8 @@ import fr.univmlv.IG.BipBip.Map.Map;
 
 public class TableModel extends AbstractTableModel {
 	private static final long serialVersionUID = -3121191093975659662L;
+	
+	private final Collection<TableListener> tableListeners = new ArrayList<TableListener>();
 	
 	private final String[] columns = { "Longitude", "Latitude", "Date", "Type", "Actions" };
 	private final ImageIcon fixe = new ImageIcon(Map.class.getResource("alert-fixe.png"));
@@ -59,6 +66,16 @@ public class TableModel extends AbstractTableModel {
 		});
 	}
 	
+	public void addTableListener(TableListener listener) {
+		tableListeners.add(listener);
+	}
+	
+	protected void fireLocateEventAtIndex(int index) {
+		for (TableListener listener : tableListeners) {
+			listener.eventLocateEventAtIndex(index);
+		}
+	}
+	
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
 		if (columns[columnIndex].compareTo("Actions") == 0)
@@ -93,11 +110,21 @@ public class TableModel extends AbstractTableModel {
 				@Override
 				public void eventEdit(int index) {
 					System.out.println("Edit " + index);
+					EditDialog editDialog = new EditDialog(BipbipServer.frame, ((EventModelImpl)events).getEvents().get(index), true);
+					if (editDialog.getAnswer() == AnswerEditDialog.SAVE) {
+						System.out.println("Save change");
+						((EventModelImpl)events).modifyEvent(index, editDialog.getEvent());
+					}
 				}
 				
 				@Override
 				public void eventDelete(int index) {
 					((EventModelImpl)events).remove(index);
+				}
+				
+				@Override
+				public void eventLocate(int index) {
+					TableModel.this.fireLocateEventAtIndex(index);
 				}
 			});
 		default:
@@ -127,6 +154,6 @@ public class TableModel extends AbstractTableModel {
 			 return Icon.class;
 		if(columns[columnIndex].compareTo("Actions") == 0)
 			 return ActionCell.class; 
-		return "".getClass();
+		return String.class;
 	}
 }

@@ -186,7 +186,7 @@ public class Map {
 				}
 			}
 		});
-        pins.add(pin);
+        pins.add(index, pin);
 	}
 
 	public void addPin(Event event) {

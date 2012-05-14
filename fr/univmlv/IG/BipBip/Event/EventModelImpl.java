@@ -85,8 +85,8 @@ public class EventModelImpl implements EventModel {
 	
 	@Override
 	public void modifyEvent(int index, Event event) {
-		this.events.remove(index);
-		this.events.add(index, event);
+		this.events.get(index).updateEvent(event);
+		this.fireEventModify(this.events.get(index), index);
 	}
 
 	@Override

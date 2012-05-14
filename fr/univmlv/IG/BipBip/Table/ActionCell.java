@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 public class ActionCell extends JPanel {
 	private static final long serialVersionUID = -6646136351553964151L;
 	
+	private final JButton btnLocate;
 	private final JButton btnEdit;
 	private final JButton btnDelete;
 	private final Collection<ActionCellListener> actionCellListeners = new ArrayList<ActionCellListener>();
@@ -28,8 +29,15 @@ public class ActionCell extends JPanel {
 		this.setLayout(new FlowLayout());
 		this.addActionCellListener(listener);
 		
+		btnLocate = new JButton(edit);
 		btnEdit = new JButton(edit);
 		btnDelete = new JButton(trash);
+		
+		btnLocate.setOpaque(false);
+		btnLocate.setContentAreaFilled(false);
+		btnLocate.setBorderPainted(false);
+		btnLocate.setFocusable(false);
+		btnLocate.setRolloverEnabled(false);
 		
 		btnEdit.setOpaque(false);
 		btnEdit.setContentAreaFilled(false);
@@ -43,12 +51,21 @@ public class ActionCell extends JPanel {
 		btnDelete.setFocusable(false);
 		btnDelete.setRolloverEnabled(false);
 		
+		this.add(btnLocate);
 		this.add(btnEdit);
 		this.add(btnDelete);
 		
+		btnLocate.setPreferredSize(new Dimension(30, 30));
 		btnEdit.setPreferredSize(new Dimension(30, 30));
 		btnDelete.setPreferredSize(new Dimension(30, 30));
-		this.setPreferredSize(new Dimension(60, 30));
+		this.setPreferredSize(new Dimension(90, 30));
+		
+		btnLocate.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ActionCell.this.fireEventLocate(index);
+			}
+		});
 		
 		btnEdit.addActionListener(new ActionListener() {
 			@Override
@@ -81,6 +98,7 @@ public class ActionCell extends JPanel {
 			public void mouseClicked(MouseEvent e) {}
 		};
 		
+		btnLocate.addMouseListener(defaultMouseListener);
 		btnEdit.addMouseListener(defaultMouseListener);
 		btnDelete.addMouseListener(defaultMouseListener);
 		this.addMouseListener(defaultMouseListener);
@@ -88,6 +106,11 @@ public class ActionCell extends JPanel {
 	
 	private void addActionCellListener(ActionCellListener listener) {
 		actionCellListeners.add(listener);
+	}
+	
+	protected void fireEventLocate(int index) {
+		for(ActionCellListener listener : actionCellListeners)
+			listener.eventLocate(index);
 	}
 	
 	protected void fireEventEdit(int index) {

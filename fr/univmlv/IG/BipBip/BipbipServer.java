@@ -40,6 +40,7 @@ import fr.univmlv.IG.BipBip.Map.Map;
 import fr.univmlv.IG.BipBip.Map.MapPanel;
 import fr.univmlv.IG.BipBip.Map.TimelineMap;
 import fr.univmlv.IG.BipBip.Table.Table;
+import fr.univmlv.IG.BipBip.Table.TableListener;
 
 public class BipbipServer {
 
@@ -47,8 +48,9 @@ public class BipbipServer {
 
 	private final ServerSocketChannel ssc;
 
-	/* Events */
+	/* Static object */
 	public static EventModelImpl events = new EventModelImpl();
+	public static JFrame frame;
 
 	private static final ImageIcon time = new ImageIcon(BipbipServer.class.getResource("icon-time.png"));
 	private static final ImageIcon realtime = new ImageIcon(BipbipServer.class.getResource("icon-realtime.png"));
@@ -161,7 +163,7 @@ public class BipbipServer {
 
 	public static void main(String[] args) throws IOException {
 		/* Global frame */
-		JFrame frame = new JFrame("BipBip Server");
+		frame = new JFrame("BipBip Server");
 		frame.setSize(1024, 768);
 		frame.setMinimumSize(new Dimension(800, 600));
 		frame.setLayout(new BorderLayout());
@@ -184,12 +186,22 @@ public class BipbipServer {
 		layeredPanel.add(overlayPanel, Integer.valueOf(1));
 		frame.getContentPane().add(layeredPanel, BorderLayout.CENTER);
 
-		/* Left panel */
-		final Table table = new Table(events);
-
 		/* Center panel */
 		final Map map = new Map(events);
 		map.getMapPanel().setMinimumSize(new Dimension(300, 300));
+		
+		/* Left panel */
+		final Table table = new Table(events);
+		table.getModel().addTableListener(new TableListener() {
+			
+			@Override
+			public void eventLocateEventAtIndex(int index) {
+				//TODO corriger l'erreur
+				int x = MapPanel.lon2position(events.getEvents().get(index).getX(), map.getMapPanel().getZoom());
+				int y = MapPanel.lat2position(events.getEvents().get(index).getY(), map.getMapPanel().getZoom());
+				map.getMapPanel().setMapPosition(x, y);
+			}
+		});
 
 		/* SplitPane */
 		final SplitPane splitPane = new SplitPane();

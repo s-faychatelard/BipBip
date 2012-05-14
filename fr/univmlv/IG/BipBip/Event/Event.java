@@ -55,6 +55,12 @@ public class Event {
     	this.dateErrone = new Date().getTime();
     }
     
+    public void updateEvent(Event newEvent) {
+    	this.type = newEvent.type;
+    	this.x = newEvent.x;
+    	this.y = newEvent.y;
+    }
+    
     private void setDateErrone(long dateErrone) {
     	this.dateErrone = dateErrone;
     }
