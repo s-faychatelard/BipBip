@@ -4,6 +4,8 @@ import java.awt.Point;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import fr.univmlv.IG.BipBip.Event.Event;
 import fr.univmlv.IG.BipBip.Event.EventModel;
@@ -36,11 +38,17 @@ public class TimelineMap {
 		});
 	}
 	
-	public void setTime(long time) {
+	public void setTime(int day, int hour) {
 		ArrayList<Pin> tmpPins = new ArrayList<Pin>();
 		for (Event e : events.getEventsFromBeginning()) {
-			if (e.getDate() < time && (e.getDateErrone() == 0 || e.getDateErrone() > time))
+			GregorianCalendar cEvent = new GregorianCalendar();
+			cEvent.setTimeInMillis(e.getDate());
+			
+			GregorianCalendar cEventEnd = new GregorianCalendar();
+			cEventEnd.setTimeInMillis(e.getDateErrone());
+			if (day == cEvent.get(Calendar.DAY_OF_WEEK) && hour == cEvent.get(Calendar.HOUR_OF_DAY)) {
 				tmpPins.add(this.createPin(e));
+			}
 		}
 		for (Pin p : pins)
 			map.remove(p);
