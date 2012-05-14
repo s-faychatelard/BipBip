@@ -22,6 +22,7 @@ public class ActionCell extends JPanel {
 	private final JButton btnDelete;
 	private final Collection<ActionCellListener> actionCellListeners = new ArrayList<ActionCellListener>();
 	
+	private static final ImageIcon locate = new ImageIcon(ActionCell.class.getResource("icon-locate.png"));
 	private static final ImageIcon trash = new ImageIcon(ActionCell.class.getResource("icon-trash.png"));
 	private static final ImageIcon edit = new ImageIcon(ActionCell.class.getResource("icon-edit.png"));
 
@@ -29,7 +30,7 @@ public class ActionCell extends JPanel {
 		this.setLayout(new FlowLayout());
 		this.addActionCellListener(listener);
 		
-		btnLocate = new JButton(edit);
+		btnLocate = new JButton(locate);
 		btnEdit = new JButton(edit);
 		btnDelete = new JButton(trash);
 		
