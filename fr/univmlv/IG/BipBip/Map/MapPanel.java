@@ -130,6 +130,8 @@ public class MapPanel extends JPanel {
 
     /* constants ... */
     private static final TileServer[] TILESERVERS = {
+    	//new TileServer("http://otile1.mqcdn.com/tiles/1.0.0/osm/", 18),
+    	//new TileServer("http://a.tile.opencyclemap.org/cycle/", 18),
         new TileServer("http://tile.openstreetmap.org/", 18),
         new TileServer("http://tah.openstreetmap.org/Tiles/tile/", 17),
     };

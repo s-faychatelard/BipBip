@@ -54,6 +54,10 @@ public class Event {
     public void invalidate() {
     	this.dateErrone = new Date().getTime();
     }
+    
+    private void setDateErrone(long dateErrone) {
+    	this.dateErrone = dateErrone;
+    }
 
 	@Override
 	public int hashCode() {
@@ -91,8 +95,25 @@ public class Event {
 		return true;
 	}
 	
+	public static Event fromString(String str) {
+		String []elements = str.split(";");
+		double x=0,y=0;
+		EventType type=null;
+		long date=0,dateErrone=0;
+		for (int i=0; i<elements.length; i++) {
+			date = Long.valueOf(elements[0]);
+			dateErrone = Long.valueOf(elements[1]);
+			type = EventType.valueOf(elements[2]);
+			x = Double.valueOf(elements[3]);
+			y = Double.valueOf(elements[4]);
+		}
+		Event evt = new Event(type, date, x, y);
+		evt.setDateErrone(dateErrone);
+		return evt;
+	}
+	
 	@Override
 	public String toString() {
-		return this.getType() + " " + this.getX() + " " + this.getY();
+		return this.date + ";" + this.dateErrone + ";" + this.getType().name() + ";" + this.getX() + ";" + this.getY();
 	}
 }

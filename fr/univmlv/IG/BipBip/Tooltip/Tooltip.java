@@ -49,12 +49,12 @@ public class Tooltip extends JComponent {
 	}
 	
 	private void reorganizeButtons() {
-		int offset=4;
+		int offset=left.getWidth(null);
 		for(JButton btn : buttons) {
 			btn.setLocation(offset, 0);
 			offset+=btn.getWidth();
 		}
-		width = offset + 4;
+		width = offset + right.getWidth(null);
 	}
 	
 	public JLabel addLabel(String text) {
