@@ -220,8 +220,6 @@ public class BipbipServer {
 		map.getMapPanel().add(btn);
 		btn.addActionListener(new ActionListener() {
 
-			private long startTime = new Date().getTime();
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				for (Component component : content.getComponents()) {
@@ -231,7 +229,7 @@ public class BipbipServer {
 						timelineMap.getMapPanel().add(btn);
 
 						content.remove(component);
-						bottomBar.getTimeSlider().setMinAndMax(startTime, new Date().getTime());
+						bottomBar.getTimeSlider().setMinAndMax(events.getMin(), new Date().getTime());
 						bottomBar.addTimeSlider(bottomBar.getTimeSlider());
 						bottomBar.repaint();
 						content.add(timelineMap.getMapPanel(), BorderLayout.CENTER);
@@ -290,7 +288,7 @@ public class BipbipServer {
 						events.addEvent(evt);
 					}
 				} catch (FileNotFoundException e1) {
-					throw new RuntimeException("Cannot load cache");
+					// Nothing to do, it is probably normal
 				} catch (IOException e1) {
 					throw new RuntimeException("Cannot load cache");
 				}

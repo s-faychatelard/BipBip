@@ -21,6 +21,15 @@ public class EventModelImpl implements EventModel {
 		return Collections.unmodifiableList(allEvents);
 	}
 	
+	public long getMin() {
+		long min=Long.MAX_VALUE;
+		for (Event evt : allEvents) {
+			if (evt.getDate() < min)
+				min = evt.getDate();
+		}
+		return min;
+	}
+	
 	/* Listeners */
 	public void addEventListener(EventModelListener listener) {
 		eventModelListeners.add(listener);
@@ -66,8 +75,11 @@ public class EventModelImpl implements EventModel {
 	
 	@Override
 	public void addEvent(Event event) {
-		this.events.add(event);
 		this.allEvents.add(event);
+		/* Do not load if it is already invalid */
+		if (event.getDateErrone() != 0)
+			return;
+		this.events.add(event);
 		this.fireEventAdded(events.get(events.size()-1), events.size()-1);
 	}
 	
