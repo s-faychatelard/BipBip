@@ -196,9 +196,8 @@ public class BipbipServer {
 			
 			@Override
 			public void eventLocateEventAtIndex(int index) {
-				//TODO corriger l'erreur
-				int x = MapPanel.lon2position(events.getEvents().get(index).getX(), map.getMapPanel().getZoom());
-				int y = MapPanel.lat2position(events.getEvents().get(index).getY(), map.getMapPanel().getZoom());
+				int x = MapPanel.lon2position(events.getEvents().get(index).getX(), map.getMapPanel().getZoom()) - map.getMapPanel().getWidth()/2;
+				int y = MapPanel.lat2position(events.getEvents().get(index).getY(), map.getMapPanel().getZoom()) - map.getMapPanel().getHeight()/2;
 				map.getMapPanel().setMapPosition(x, y);
 			}
 		});
