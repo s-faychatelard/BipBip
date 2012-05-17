@@ -18,6 +18,11 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 
+/**
+ * This class create an graphic element with differents button or text.
+ * 
+ * @author sfaychat & djubeau
+ */
 public class Tooltip extends JComponent {
 	private static final long serialVersionUID = 3292202175247078445L;
 	
@@ -33,21 +38,37 @@ public class Tooltip extends JComponent {
 	private static final Image arrow = new ImageIcon(Tooltip.class.getResource("tooltip-arrow.png")).getImage();
 	private static final Image lblBg = new ImageIcon(Tooltip.class.getResource("tooltip-bg.png")).getImage();
 
+	/**
+	 * Create a tooltip with no layout
+	 */
 	public Tooltip() {
 		super();
 		this.setOpaque(false);
 		this.setLayout(null);
 	}
 	
+	/**
+	 * Add an event listener for buttons inside the tooltip
+	 * 
+	 * @param listener
+	 */
 	public void addTooltipListener(TooltipListener listener) {
 		tooltipListeners.add(listener);
 	}
 	
+	/**
+	 * Fire a select event
+	 * 
+	 * @param index of the button clicked
+	 */
 	protected void fireSelectedAtIndex(int index) {
 		for(TooltipListener listener : tooltipListeners)
 			listener.eventSelectedAtIndex(index);
 	}
 	
+	/**
+	 * This method reorganize all buttons in the tooltip
+	 */
 	private void reorganizeButtons() {
 		int offset=left.getWidth(null);
 		for(JButton btn : buttons) {
@@ -57,6 +78,12 @@ public class Tooltip extends JComponent {
 		width = offset + right.getWidth(null);
 	}
 	
+	/**
+	 * Add a text inside the tooltip, the text replace all buttons.
+	 * 
+	 * @param text to print
+	 * @return the label
+	 */
 	public JLabel addLabel(String text) {
 		label = new JLabel("<html><font color='white'>" + text + "</font></html>");
 		label.setFont(new Font("Arial", Font.BOLD, 11));
@@ -66,6 +93,11 @@ public class Tooltip extends JComponent {
 		return label;
 	}
 	
+	/**
+	 * Set the text label, you must call previously addLabel method.
+	 * 
+	 * @param text
+	 */
 	public void setLabelText(String text) {
 		if (label!=null) {
 			label.setText("<html><font color='white'>" + text + "</font></html>");
@@ -75,10 +107,26 @@ public class Tooltip extends JComponent {
 		}
 	}
 
+	/**
+	 * Add a button to the tooltip, this replace all label.
+	 * 
+	 * @param icon of the button
+	 * @param tooltipText text of the TooltipButton print on rollover
+	 * 
+	 * @return the tooltip button
+	 */
 	public TooltipButton addButton(Icon icon, String tooltipText) {
 		return this.addButton(icon, tooltipText, buttons.size());
 	}
 	
+	/**
+	 * Add a button to the tooltip at a specific index
+	 * 
+	 * @param icon of the button
+	 * @param tooltipText text of the TooltipButton print on rollover
+	 * @param index
+	 * @return
+	 */
 	public TooltipButton addButton(Icon icon, String tooltipText, final int index) {
 		TooltipButton button = new TooltipButton(icon);
         button.setToolTipText(tooltipText);
@@ -96,44 +144,82 @@ public class Tooltip extends JComponent {
 		return button;
 	}
 	
+	/**
+	 * Set the latitude and longitude of the tooltip
+	 * 
+	 * @param coords of the tooltip
+	 */
 	public void setCoords(Point.Double coords) {
 		this.coords = coords;
 	}
 	
+	/**
+	 * Get the latitude and longitude of the tooltip
+	 * 
+	 * @return the coordinate of the tooltip
+	 */
 	public Point.Double getCoords() {
 		return this.coords;
 	}
 	
+	/**
+	 * Set the position of the tooltip in the JComponent
+	 *
+	 * @param x
+	 * @param y
+	 */
 	@Override
 	public void setLocation(int x, int y) {
 		this.setLocation(new Point(x, y));
 	}
 	
+	/**
+	 * Set the position of the tooltip in the JComponent
+	 *
+	 * @param p
+	 */
 	@Override
 	public void setLocation(Point p) {
 		super.setLocation(p.x - this.getWidth()/2, p.y - this.getHeight());
 	}
 	
+	/**
+	 * Get the position of the tooltip in the JComponent
+	 */
 	@Override
 	public Point getLocation() {
 		return new Point(super.getLocation().x + this.getWidth()/2, super.getLocation().y + this.getHeight());
 	}
 	
+	/**
+	 * Get the size of the tooltip
+	 */
 	@Override
 	public Dimension getSize() {
 		return new Dimension(width, height);
 	}
 	
+	/**
+	 * Get the width of the tooltip
+	 */
 	@Override
 	public int getWidth() {
 		return width;
 	}
 	
+	/**
+	 * Get the height of the tooltip
+	 */
 	@Override
 	public int getHeight() {
 		return height;
 	}
 	
+	/**
+	 * Paint component
+	 * 
+	 * Repaint the background and the arrow of the tooltip
+	 */
 	@Override
 	public void paintComponent(Graphics g) {
 		this.setSize(width, height);
