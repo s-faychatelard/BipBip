@@ -24,10 +24,10 @@ public enum ClientCommand {
         @Override
         public void handle(SocketChannel sc, Scanner scanner) throws IOException {
             if (!scanner.hasNext()) throw new IOException("SUBMIT Invalid command");
-            EventType event;
+            EventType eventType;
             double x,y;
             try {
-                event=EventType.valueOf(scanner.next());
+                eventType=EventType.valueOf(scanner.next());
             } catch (IllegalArgumentException e) {
                 throw new IOException("Invalid event type");
             }
@@ -42,7 +42,7 @@ public enum ClientCommand {
             
             // A client send a new Event we need to check if is not already on our list
             // TODO can be ameliorate with clustering
-            Event evt = new Event(event, x, y);
+            Event evt = new Event(eventType, x, y);
             for (Event e : BipbipServer.events.getEvents()) {
     			if (e.equals(evt)) {
     				return;

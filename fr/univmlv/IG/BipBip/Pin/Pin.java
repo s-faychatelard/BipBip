@@ -26,7 +26,7 @@ public class Pin extends JComponent {
 	private final Collection<PinListener> pinListeners = new ArrayList<PinListener>();
 	private Point.Double coords = new Point.Double(0,0);
 
-	private static JButton pinButton;
+	private final JButton pinButton;
 	private final Tooltip tooltipConfirm = new Tooltip();
 	private static final ImageIcon fixe = new ImageIcon(Pin.class.getResource("pin-fixe.png"));
 	private static final ImageIcon mobile = new ImageIcon(Pin.class.getResource("pin-mobile.png"));
@@ -162,6 +162,10 @@ public class Pin extends JComponent {
 
 	public Point.Double getCoords() {
 		return this.coords;
+	}
+	
+	public JButton getButton() {
+		return pinButton;
 	}
 
 	@Override

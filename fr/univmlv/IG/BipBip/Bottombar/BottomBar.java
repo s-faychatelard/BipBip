@@ -29,7 +29,7 @@ public class BottomBar extends JComponent {
 		timeSlider = new TimeSlider(overlayPanel, timelineMap);
 	}
 	
-	public void addTimeSlider(TimeSlider timeSlider) {
+	public void addTimeSlider(TimeSlider timeSlider) { // TODO generic
 		this.removeAll();
 		timeSlider.setPreferredSize(new Dimension(this.getWidth() - 150, this.getHeight() - 10));
 		

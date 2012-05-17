@@ -49,7 +49,7 @@ public class TableModel extends AbstractTableModel {
 			}
 			
 			@Override
-			public void eventModifyed(Event event, int index) {
+			public void eventModified(Event event, int index) {
 				TableModel.this.fireTableRowsUpdated(index, index);
 			}
 			
@@ -106,7 +106,7 @@ public class TableModel extends AbstractTableModel {
 				return divers;
 			}
 		case 4:
-			return new ActionCell(rowIndex, new ActionCellListener() {
+			return new ActionCell(rowIndex, new ActionCellListener() { // TODO
 				@Override
 				public void eventEdit(int index) {
 					System.out.println("Edit " + index);
