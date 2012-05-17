@@ -34,6 +34,12 @@ public class TimeSlider extends JComponent {
 	
 	private static final String[] days = { "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"};
 
+	/**
+	 * Create a TimeSlider
+	 * 
+	 * @param overlayPanel, the overlayPanel is for the tooltip of the TimeSlider
+	 * @param timelineMap, the map for the TimeSlider
+	 */
 	public TimeSlider(JPanel overlayPanel, TimelineMap timelineMap) {
 		this.timelineMap = timelineMap;
 		
@@ -87,6 +93,12 @@ public class TimeSlider extends JComponent {
 		});
 	}
 	
+	/**
+	 * Call when the mouse is moved
+	 * It calculate the day and the hour of the current mouse position
+	 * 
+	 * @param mouseX is the x position of the mouse
+	 */
 	private void updatePosition(int mouseX) {
 		int posX = mouseX;
 		if (posX + TimeSlider.this.getX() < TimeSlider.this.getX() + TimeSlider.this.getParent().getX() + OFFSET_X) {
@@ -99,6 +111,12 @@ public class TimeSlider extends JComponent {
 		updateDate(posX);
 	}
 	
+	/**
+	 * Call by the updatePosition to update the pins on the TimelineMap
+	 * It updates the label of the tooltip and call the timelineMap to update the pins
+	 * 
+	 * @param posX is the x position of the mouse
+	 */
 	private void updateDate(int posX) {
 		int sliderDateSize = NB_DAY_PER_WEEK * NB_HOUR_PER_DAY - 1;
 		int date = -1 + (int) (((double)(sliderDateSize / (double)(TimeSlider.this.getWidth() - OFFSET_X - OFFSET_Y))) * posX);
@@ -112,6 +130,9 @@ public class TimeSlider extends JComponent {
 		this.timelineMap.setTime(day, hour);
 	}
 	
+	/**
+	 * Paint component
+	 */
 	@Override
 	public void paintComponent(Graphics g) {
 		Graphics2D g2d = (Graphics2D)g;

@@ -77,7 +77,7 @@ public class EventModelImpl implements EventModel {
 	public void addEvent(Event event) {
 		this.allEvents.add(event);
 		/* Do not load if it is already invalid */
-		if (event.getDateErrone() != 0)
+		if (event.getEndDate() != 0)
 			return;
 		this.events.add(event);
 		this.fireEventAdded(events.get(events.size()-1), events.size()-1);
@@ -123,7 +123,7 @@ public class EventModelImpl implements EventModel {
 			if (e.equals(event)) {
 				e.decrementCounter();
 				this.fireEventUnconfirmed(events.indexOf(e));
-				if (e.getDateErrone() != 0)
+				if (e.getEndDate() != 0)
 					this.remove(events.indexOf(e));
 				break;
 			}

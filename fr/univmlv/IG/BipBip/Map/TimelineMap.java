@@ -45,7 +45,7 @@ public class TimelineMap {
 			cEvent.setTimeInMillis(e.getDate());
 			
 			GregorianCalendar cEventEnd = new GregorianCalendar();
-			cEventEnd.setTimeInMillis(e.getDateErrone());
+			cEventEnd.setTimeInMillis(e.getEndDate());
 			if (day == cEvent.get(Calendar.DAY_OF_WEEK) && hour == cEvent.get(Calendar.HOUR_OF_DAY)) {
 				tmpPins.add(this.createPin(e));
 			}

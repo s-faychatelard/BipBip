@@ -14,6 +14,9 @@ public class SplitPane extends JSplitPane {
 	
 	private static final Image bg = new ImageIcon(SplitPane.class.getResource("splitdivider-bg.png")).getImage();
 
+	/**
+	 * Create a JSplitPane with a cusomize divider
+	 */
 	public SplitPane() {
 		this.setContinuousLayout(true);
 		this.setBorder(null);

@@ -63,6 +63,9 @@ public class BipbipServer {
 		ssc.socket().bind(new InetSocketAddress(port), MAX_CONNECTIONS);
 	}
 
+	/**
+	 * Wait connection and serve a client as soon as possible
+	 */
 	public void serve() {
 		for (int i=0; i<MAX_CONNECTIONS; i++) {
 			new Thread() {
@@ -86,9 +89,14 @@ public class BipbipServer {
 		}
 	}
 
+	/**
+	 * Serve a client 
+	 * 
+	 * @param sc channel of the client
+	 */
 	private void serveClient(final SocketChannel sc) {
 
-		/* Push new information */
+		/* Push new information on event */
 		events.addEventListener(new EventModelListener() {
 
 			@Override
@@ -134,6 +142,7 @@ public class BipbipServer {
 			}
 		});
 
+		/* Wait command from client */
 		Scanner scanner = new Scanner(sc,NetUtil.getCharset().name());
 		try {
 			while (scanner.hasNextLine()) {
@@ -160,6 +169,12 @@ public class BipbipServer {
 		}
 	}
 
+	/**
+	 * Create the window
+	 * 
+	 * @param args
+	 * @throws IOException
+	 */
 	public static void main(String[] args) throws IOException {
 		/* Global frame */
 		frame = new JFrame("BipBip Server");

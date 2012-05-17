@@ -7,10 +7,18 @@ public class Event {
     private EventType type;
     private double x,y;
     private long date;
-    private long dateErrone=0;
+    private long endDate=0;
     
     //TODO implement number of users which alert
     
+    /**
+     * Create an event
+     * 
+     * @param type of the event
+     * @param date of the event
+     * @param x longitude of the event
+     * @param y latitude of the event
+     */
     public Event(EventType type, long date, double x,double y) {
         this.type=type;
         this.date = date;
@@ -18,51 +26,104 @@ public class Event {
         this.y=y;
     }
     
+    /**
+     * Create an event
+     * 
+     * @param type of the event
+     * @param x longitude of the event
+     * @param y latitude of the event
+     */
     public Event(EventType type, double x,double y) {
     	this(type, new Date().getTime(), x, y);
     }
 
+    /**
+     * Get the type of the event
+     * 
+     * @return the type
+     */
     public EventType getType() {
         return type;
     }
 
+    /**
+     * Get the longitude of the event
+     * 
+     * @return the longitude
+     */
     public double getX() {
         return x;
     }
 
+    /**
+     * Get the latitude of the event
+     * 
+     * @return the latitude
+     */
     public double getY() {
         return y;
     }
     
+    /**
+     * Get the begin date
+     * This is a timestamp
+     * 
+     * @return the begin date 
+     */
     public long getDate() {
     	return this.date;
     }
     
-    public long getDateErrone() {
-    	return this.dateErrone;
+    /**
+     * Get the end date of the event
+     * This is a timestamp
+     * 
+     * @return the end date
+     */
+    public long getEndDate() {
+    	return this.endDate;
     }
     
+    /**
+     * This is call on a confirmation from a client
+     */
     public void incrementCounter() {
     	// TODO count users
     }
     
+    /**
+     * This is call when a client unconfirm the event
+     */
     public void decrementCounter() {
     	// TODO count users
     	this.invalidate();
     }
     
+    /**
+     * Set the event has ended
+     */
     public void invalidate() {
-    	this.dateErrone = new Date().getTime();
+    	this.endDate = new Date().getTime();
     }
     
+    /**
+     * Update the event
+     * 
+     * @param newEvent is the new value of the event
+     */
     public void updateEvent(Event newEvent) {
     	this.type = newEvent.type;
     	this.x = newEvent.x;
     	this.y = newEvent.y;
     }
     
-    private void setDateErrone(long dateErrone) {
-    	this.dateErrone = dateErrone;
+    /**
+     * Set the end date of the event
+     * 
+     * @param endDate
+     */
+    private void setEndDate(long endDate) {
+    	this.endDate = endDate;
     }
 
 	@Override
@@ -70,7 +131,7 @@ public class Event {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + (int) (date ^ (date >>> 32));
-		result = prime * result + (int) (dateErrone ^ (dateErrone >>> 32));
+		result = prime * result + (int) (endDate ^ (endDate >>> 32));
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(x);
@@ -101,25 +162,36 @@ public class Event {
 		return true;
 	}
 	
+	/**
+	 * Create an event from a formatted string
+	 * Date;EndDate;Type;X;Y
+	 * 
+	 * @param str
+	 * @return the generate event
+	 */
 	public static Event fromString(String str) {
 		String []elements = str.split(";");
 		double x=0,y=0;
 		EventType type=null;
-		long date=0,dateErrone=0;
+		long date=0,endDate=0;
 		for (int i=0; i<elements.length; i++) {
 			date = Long.valueOf(elements[0]);
-			dateErrone = Long.valueOf(elements[1]);
+			endDate = Long.valueOf(elements[1]);
 			type = EventType.valueOf(elements[2]);
 			x = Double.valueOf(elements[3]);
 			y = Double.valueOf(elements[4]);
 		}
 		Event evt = new Event(type, date, x, y);
-		evt.setDateErrone(dateErrone);
+		evt.setEndDate(endDate);
 		return evt;
 	}
 	
+	/**
+	 * Create a formatted string of the event
+	 * Date;EndDate;Type;X;Y
+	 */
 	@Override
 	public String toString() {
-		return this.date + ";" + this.dateErrone + ";" + this.getType().name() + ";" + this.getX() + ";" + this.getY();
+		return this.date + ";" + this.endDate + ";" + this.getType().name() + ";" + this.getX() + ";" + this.getY();
 	}
 }
