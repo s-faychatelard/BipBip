@@ -22,8 +22,8 @@ public class EditDialog extends JDialog implements ActionListener {
 
 	private final Event event;
 	private JPanel panel = null;
-	private JButton yesButton = null;
-	private JButton noButton = null;
+	private EditButton yesButton = null;
+	private EditButton noButton = null;
 	
 	//TODO
 	public AnswerEditDialog getAnswer() {
@@ -44,11 +44,11 @@ public class EditDialog extends JDialog implements ActionListener {
 		this.getContentPane().add(panel);
 		panel.add(new JLabel("Toto est beau ?"));
 		
-		yesButton = new JButton("Yes");
+		yesButton = new EditButton("Yes");
 		yesButton.addActionListener(this);
 		panel.add(yesButton);	
 		
-		noButton = new JButton("No");
+		noButton = new EditButton("No");
 		noButton.addActionListener(this);
 		panel.add(noButton);
 		
