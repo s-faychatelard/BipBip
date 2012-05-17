@@ -17,7 +17,6 @@ import java.net.InetSocketAddress;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
@@ -240,7 +239,6 @@ public class BipbipServer {
 						timelineMap.getMapPanel().add(btn);
 
 						content.remove(component);
-						bottomBar.getTimeSlider().setMinAndMax(events.getMin(), new Date().getTime());
 						bottomBar.addTimeSlider(bottomBar.getTimeSlider());
 						bottomBar.repaint();
 						content.add(timelineMap.getMapPanel(), BorderLayout.CENTER);

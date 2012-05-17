@@ -11,26 +11,28 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-import java.text.SimpleDateFormat;
-
 import fr.univmlv.IG.BipBip.Map.TimelineMap;
 import fr.univmlv.IG.BipBip.Tooltip.Tooltip;
 
 public class TimeSlider extends JComponent {
 
 	private static final long serialVersionUID = 7634340909155886872L;
-
-	private final SimpleDateFormat dateFormatter = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
 	
 	private final TimelineMap timelineMap;
 	private final Tooltip tooltipText = new Tooltip();
-	private long min = 0;
-	private long max = 1;
+	
+	private static final int NB_DAY_PER_WEEK = 7;
+	private static final int NB_HOUR_PER_DAY = 24;
+	
+	private static final int OFFSET_X = 8;
+	private static final int OFFSET_Y = 8;
 	
 	private static final Image left = new ImageIcon(BottomBar.class.getResource("timeslider-left.png")).getImage();
 	private static final Image right = new ImageIcon(BottomBar.class.getResource("timeslider-right.png")).getImage();
 	private static final Image bg = new ImageIcon(BottomBar.class.getResource("timeslider-bg.png")).getImage();
 	private static final Image handle = new ImageIcon(BottomBar.class.getResource("timeslider-handle.png")).getImage();
+	
+	private static final String[] days = { "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"};
 
 	public TimeSlider(JPanel overlayPanel, TimelineMap timelineMap) {
 		this.timelineMap = timelineMap;
@@ -87,28 +89,27 @@ public class TimeSlider extends JComponent {
 	
 	private void updatePosition(int mouseX) {
 		int posX = mouseX;
-		if (posX + TimeSlider.this.getX() < TimeSlider.this.getX() + TimeSlider.this.getParent().getX() + 8) {
-			posX = TimeSlider.this.getParent().getX() + 8;
+		if (posX + TimeSlider.this.getX() < TimeSlider.this.getX() + TimeSlider.this.getParent().getX() + OFFSET_X) {
+			posX = TimeSlider.this.getParent().getX() + OFFSET_X;
 		}
-		else if (posX + TimeSlider.this.getX() > TimeSlider.this.getX() + TimeSlider.this.getParent().getX() + TimeSlider.this.getWidth() - 9) {
-			posX = TimeSlider.this.getParent().getX() + TimeSlider.this.getWidth() - 9;
+		else if (posX + TimeSlider.this.getX() > TimeSlider.this.getX() + TimeSlider.this.getParent().getX() + TimeSlider.this.getWidth() - OFFSET_Y) {
+			posX = TimeSlider.this.getParent().getX() + TimeSlider.this.getWidth() - OFFSET_Y;
 		}
 		tooltipText.setLocation(posX + TimeSlider.this.getX(), TimeSlider.this.getY() + TimeSlider.this.getParent().getY() + handle.getHeight(null)/2);
 		updateDate(posX);
 	}
 	
 	private void updateDate(int posX) {
-		long difference = max-min;
-		long date = (difference / (TimeSlider.this.getWidth() - 8 - 9)) * posX;
-		tooltipText.setLabelText(dateFormatter.format(min + date));
+		int sliderDateSize = NB_DAY_PER_WEEK * NB_HOUR_PER_DAY - 1;
+		int date = -1 + (int) (((double)(sliderDateSize / (double)(TimeSlider.this.getWidth() - OFFSET_X - OFFSET_Y))) * posX);
+		
+		int day = (int)(date/NB_HOUR_PER_DAY);
+		int hour = (int)(date%NB_HOUR_PER_DAY);
+
+		tooltipText.setLabelText(days[day] + " " + hour + "h");
 		tooltipText.setLocation(posX + TimeSlider.this.getX(), TimeSlider.this.getY() + TimeSlider.this.getParent().getY() + handle.getHeight(null)/2);
 		tooltipText.repaint();
-		this.timelineMap.setTime(min + date);
-	}
-	
-	public void setMinAndMax(long min, long max) {
-		this.min = min;
-		this.max = max;
+		this.timelineMap.setTime(day, hour);
 	}
 	
 	@Override

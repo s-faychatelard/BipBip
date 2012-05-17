@@ -14,6 +14,12 @@ import fr.univmlv.IG.BipBip.Event.EventType;
 import fr.univmlv.IG.BipBip.Tooltip.Tooltip;
 import fr.univmlv.IG.BipBip.Tooltip.TooltipListener;
 
+/**
+ * TODO : externaliser les specificités liés aux pins
+ *  
+ * @author djubeau & sfaychat
+ * Pin class is a JComponent used to represent geolocated pins 
+ */
 public class Pin extends JComponent {
 
 	private static final long serialVersionUID = -4087568813531690419L;

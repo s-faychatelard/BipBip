@@ -2,3 +2,4 @@ bin/
 fr/univmlv/IG/BipBip/.DS_Store
 .settings/
 .DS_Store
+/rawdata.txt
