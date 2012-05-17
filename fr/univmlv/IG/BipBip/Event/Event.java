@@ -11,6 +11,14 @@ public class Event {
     
     //TODO implement number of users which alert
     
+    /**
+     * Create an event
+     * 
+     * @param type of the event
+     * @param date of the event
+     * @param x longitude of the event
+     * @param y latitude of the event
+     */
     public Event(EventType type, long date, double x,double y) {
         this.type=type;
         this.date = date;
@@ -18,22 +26,50 @@ public class Event {
         this.y=y;
     }
     
+    /**
+     * Create an event
+     * 
+     * @param type of the event
+     * @param x longitude of the event
+     * @param y latitude of the event
+     */
     public Event(EventType type, double x,double y) {
     	this(type, new Date().getTime(), x, y);
     }
 
+    /**
+     * Get the type of the event
+     * 
+     * @return the type
+     */
     public EventType getType() {
         return type;
     }
 
+    /**
+     * Get the longitude of the event
+     * 
+     * @return the longitude
+     */
     public double getX() {
         return x;
     }
 
+    /**
+     * Get the latitude of the event
+     * 
+     * @return the latitude
+     */
     public double getY() {
         return y;
     }
     
+    /**
+     * Get the begin date
+     * This is a timestamp
+     * 
+     * @return the begin date 
+     */
     public long getDate() {
     	return this.date;
     }
@@ -42,25 +78,44 @@ public class Event {
     	return this.endDate;
     }
     
+    /**
+     * This is call on a confirmation from a client
+     */
     public void incrementCounter() {
     	// TODO count users
     }
     
+    /**
+     * This is call when a client unconfirm the event
+     */
     public void decrementCounter() {
     	// TODO count users
     	this.invalidate();
     }
     
+    /**
+     * Set the event has ended
+     */
     public void invalidate() {
     	this.endDate = new Date().getTime();
     }
     
+    /**
+     * Update the event
+     * 
+     * @param newEvent is the new value of the event
+     */
     public void updateEvent(Event newEvent) {
     	this.type = newEvent.type;
     	this.x = newEvent.x;
     	this.y = newEvent.y;
     }
     
+    /**
+     * Set the end date of the event
+     * 
+     * @param endDate
+     */
     private void setEndDate(long endDate) {
     	this.endDate = endDate;
     }
@@ -102,6 +157,13 @@ public class Event {
 		return true;
 	}
 	
+	/**
+	 * Create an event from a formatted string
+	 * Date;EndDate;Type;X;Y
+	 * 
+	 * @param str
+	 * @return the generate event
+	 */
 	public static Event fromString(String str) {
 		String []elements = str.split(";");
 		double x=0,y=0;
@@ -119,6 +181,10 @@ public class Event {
 		return evt;
 	}
 	
+	/**
+	 * Create a formatted string of the event
+	 * Date;EndDate;Type;X;Y
+	 */
 	@Override
 	public String toString() {
 		return this.date + ";" + this.endDate + ";" + this.getType().name() + ";" + this.getX() + ";" + this.getY();

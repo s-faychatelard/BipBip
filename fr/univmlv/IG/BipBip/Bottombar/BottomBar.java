@@ -14,6 +14,11 @@ import javax.swing.JPanel;
 
 import fr.univmlv.IG.BipBip.Map.TimelineMap;
 
+/**
+ * This class manage the bottom bar of the application
+ * 
+ * @author djubeau & sfaychat
+ */
 public class BottomBar extends JComponent {
 	private static final long serialVersionUID = -2860351564159893223L;
 	
@@ -21,6 +26,12 @@ public class BottomBar extends JComponent {
 	
 	private static final Image bg = new ImageIcon(BottomBar.class.getResource("bottombar-bg.png")).getImage();
 	
+	/**
+	 * Create the bottom bar
+	 * 
+	 * @param overlayPanel, this parameter permit to the TimeSlider to print its tooltip
+	 * @param timelineMap, the map for the TimeSlider
+	 */
 	public BottomBar(JPanel overlayPanel, TimelineMap timelineMap) {
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		this.setBorder(null);
@@ -29,6 +40,10 @@ public class BottomBar extends JComponent {
 		timeSlider = new TimeSlider(overlayPanel, timelineMap);
 	}
 	
+	/**
+	 * Add the TimeSlider to the bottom bar
+	 * @param timeSlider
+	 */
 	public void addTimeSlider(TimeSlider timeSlider) { // TODO generic
 		this.removeAll();
 		timeSlider.setPreferredSize(new Dimension(this.getWidth() - 150, this.getHeight() - 10));
@@ -38,6 +53,10 @@ public class BottomBar extends JComponent {
 		this.add(Box.createRigidArea(new Dimension(85,0)));
 	}
 	
+	/**
+	 * Add a text to the bottom bar
+	 * @param text
+	 */
 	public void addText(String text) {
 		this.removeAll();
 		JLabel label = new JLabel(text);
@@ -47,10 +66,18 @@ public class BottomBar extends JComponent {
 		this.add(Box.createHorizontalGlue());
 	}
 	
+	/**
+	 * Get the TimeSlider
+	 * 
+	 * @return the current TimeSlider
+	 */
 	public TimeSlider getTimeSlider() {
 		return this.timeSlider;
 	}
 	
+	/**
+	 * Paint component
+	 */
 	@Override
 	public void paintComponent(Graphics g) {
 		Graphics2D g2d = (Graphics2D)g;
