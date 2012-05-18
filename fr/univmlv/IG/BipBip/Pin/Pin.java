@@ -127,13 +127,14 @@ public class Pin extends JComponent {
 					Pin.this.repaint();
 				}
 			});
+			this.setSize(tooltipConfirm.getWidth(), tooltipConfirm.getHeight() + pinButton.getHeight());
 		}
 		else {
+			this.setSize(pinButton.getWidth(), pinButton.getHeight());
 			pinButton.setEnabled(false);
 		}
 
 		/* Positioned and set size of elements into the panel */
-		this.setSize(tooltipConfirm.getWidth(), tooltipConfirm.getHeight() + pinButton.getHeight());
 		pinButton.setLocation(this.getWidth()/2 - pinButton.getWidth()/2, this.getHeight() - pinButton.getHeight());
 		tooltipConfirm.setLocation(pinButton.getX() + pinButton.getWidth()/2, pinButton.getY() + tooltipOffset);
 	}
