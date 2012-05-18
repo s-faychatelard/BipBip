@@ -59,7 +59,6 @@ public class EditTypeButton extends JButton {
 			g2d.drawImage(sep, this.getWidth() - sep.getWidth(null), 0, null);
 		}
 
-
 		super.paintComponent(g);
 	}
 
