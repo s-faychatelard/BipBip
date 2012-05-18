@@ -7,20 +7,16 @@ import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -32,7 +28,6 @@ import fr.univmlv.IG.BipBip.Event.EventType;
 import fr.univmlv.IG.BipBip.Map.Map;
 import fr.univmlv.IG.BipBip.Map.MapPanel;
 import fr.univmlv.IG.BipBip.Pin.Pin;
-import fr.univmlv.IG.BipBip.Tooltip.Tooltip;
 
 /**
  * @author djubeau & sfaychat This class provides method to draw a dialog window
@@ -47,7 +42,6 @@ public class EditDialog extends JDialog implements ActionListener {
 		SAVE, BACK
 	}
 
-	private final Event event;
 	private Container panel;
 	private EditButton saveButton;
 	private EditButton backButton;
@@ -69,8 +63,6 @@ public class EditDialog extends JDialog implements ActionListener {
 		super(frame, modal);
 		this.setLocationRelativeTo(frame);
 		this.setSize(new Dimension(500, 370));
-
-		this.event = event;
 
 		panel = this.getContentPane();
 		panel.setBackground(Color.WHITE);

@@ -11,7 +11,8 @@ import javax.swing.JButton;
 import fr.univmlv.IG.BipBip.Tooltip.Tooltip;
 
 public class EditTypeButton extends JButton {
-	
+	private static final long serialVersionUID = -7685436527591441736L;
+
 	enum POSITION {
 		CENTER, LEFT, RIGHT
 	}
