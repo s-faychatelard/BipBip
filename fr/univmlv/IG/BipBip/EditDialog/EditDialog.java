@@ -83,7 +83,6 @@ public class EditDialog extends JDialog implements ActionListener {
 		panel.add(map);
 		map.setSize(500, 260); 					// c'est sale, mais avec un peu de chance ça ne se verra pas... Surtout avec un petit commentaire très discret
 
-		
         /* Tooltip to add other alert */
         JPanel topPanel = new JPanel(new BorderLayout());
         panel.add(topPanel, BorderLayout.NORTH);

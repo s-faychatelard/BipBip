@@ -73,7 +73,13 @@ public class Event {
     public long getDate() {
     	return this.date;
     }
-    
+ 
+    /**
+     * Get the end date of the event
+     * This is a timestamp
+     * 
+     * @return the end date
+     */
     public long getEndDate() {
     	return this.endDate;
     }

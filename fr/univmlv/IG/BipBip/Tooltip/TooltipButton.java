@@ -17,6 +17,11 @@ public class TooltipButton extends JButton {
 	private static final Image bg = new ImageIcon(Tooltip.class.getResource("tooltip-bg.png")).getImage();
 	private static final Image sep = new ImageIcon(Tooltip.class.getResource("tooltip-sep.png")).getImage();
 	
+	/**
+	 * Create a TooltipButton
+	 * 
+	 * @param icon of the button
+	 */
 	public TooltipButton(Icon icon) {
 		super();
 	
@@ -30,10 +35,17 @@ public class TooltipButton extends JButton {
 		this.setMinimumSize(new Dimension(20, 51));
 	}
 	
+	/**
+	 * Set has last and do not print separator on the button
+	 * @param isLast
+	 */
 	public void setLast(boolean isLast) {
 		this.isLast = isLast;
 	}
 	
+	/**
+	 * Paint component
+	 */
 	@Override
 	public void paintComponent(Graphics g) {		
 		Graphics2D g2d = (Graphics2D)g; 

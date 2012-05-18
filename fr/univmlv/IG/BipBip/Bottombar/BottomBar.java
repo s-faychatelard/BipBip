@@ -44,7 +44,7 @@ public class BottomBar extends JComponent {
 	 * Add the TimeSlider to the bottom bar
 	 * @param timeSlider
 	 */
-	public void addTimeSlider(TimeSlider timeSlider) { // TODO generic
+	public void addTimeSlider(TimeSlider timeSlider) {
 		this.removeAll();
 		timeSlider.setPreferredSize(new Dimension(this.getWidth() - 150, this.getHeight() - 10));
 		
