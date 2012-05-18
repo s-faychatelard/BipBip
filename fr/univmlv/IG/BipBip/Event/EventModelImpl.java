@@ -47,7 +47,7 @@ public class EventModelImpl implements EventModel {
 	
 	protected void fireEventModify(Event event, int index) {
 		for(EventModelListener listener : eventModelListeners)
-			listener.eventModifyed(event, index);
+			listener.eventModified(event, index);
 	}
 	
 	protected void fireEventRemoved(int position) {

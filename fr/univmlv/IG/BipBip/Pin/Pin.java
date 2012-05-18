@@ -14,13 +14,19 @@ import fr.univmlv.IG.BipBip.Event.EventType;
 import fr.univmlv.IG.BipBip.Tooltip.Tooltip;
 import fr.univmlv.IG.BipBip.Tooltip.TooltipListener;
 
+/**
+ * TODO : externaliser les specificités liés aux pins
+ *  
+ * @author djubeau & sfaychat
+ * Pin class is a JComponent used to represent geolocated pins 
+ */
 public class Pin extends JComponent {
 
 	private static final long serialVersionUID = -4087568813531690419L;
 	private final Collection<PinListener> pinListeners = new ArrayList<PinListener>();
 	private Point.Double coords = new Point.Double(0,0);
 
-	private static JButton pinButton;
+	private final JButton pinButton;
 	private final Tooltip tooltipConfirm = new Tooltip();
 	private static final ImageIcon fixe = new ImageIcon(Pin.class.getResource("pin-fixe.png"));
 	private static final ImageIcon mobile = new ImageIcon(Pin.class.getResource("pin-mobile.png"));
@@ -121,13 +127,14 @@ public class Pin extends JComponent {
 					Pin.this.repaint();
 				}
 			});
+			this.setSize(tooltipConfirm.getWidth(), tooltipConfirm.getHeight() + pinButton.getHeight());
 		}
 		else {
+			this.setSize(pinButton.getWidth(), pinButton.getHeight());
 			pinButton.setEnabled(false);
 		}
 
 		/* Positioned and set size of elements into the panel */
-		this.setSize(tooltipConfirm.getWidth(), tooltipConfirm.getHeight() + pinButton.getHeight());
 		pinButton.setLocation(this.getWidth()/2 - pinButton.getWidth()/2, this.getHeight() - pinButton.getHeight());
 		tooltipConfirm.setLocation(pinButton.getX() + pinButton.getWidth()/2, pinButton.getY() + tooltipOffset);
 	}
@@ -156,6 +163,10 @@ public class Pin extends JComponent {
 
 	public Point.Double getCoords() {
 		return this.coords;
+	}
+	
+	public JButton getButton() {
+		return pinButton;
 	}
 
 	@Override

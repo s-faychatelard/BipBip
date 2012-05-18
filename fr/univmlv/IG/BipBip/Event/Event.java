@@ -73,7 +73,7 @@ public class Event {
     public long getDate() {
     	return this.date;
     }
-    
+ 
     /**
      * Get the end date of the event
      * This is a timestamp
@@ -155,6 +155,7 @@ public class Event {
 		Event other = (Event) obj;
 		if (type != other.type)
 			return false;
+//		TODO : pas d'arrondi mais utiliser methode pour voir si deux points sont au même endroit
 		if (Double.doubleToLongBits((double)Math.round(x * 10000000) / 10000000) != Double.doubleToLongBits((double)Math.round(other.x * 10000000) / 10000000))
 			return false;
 		if (Double.doubleToLongBits((double)Math.round(y * 10000000) / 10000000) != Double.doubleToLongBits((double)Math.round(other.y * 10000000) / 10000000))

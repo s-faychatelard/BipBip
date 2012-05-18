@@ -16,7 +16,7 @@ public class StringTableCellRenderer implements TableCellRenderer {
 		JLabel lbl = new JLabel();
 		if(row%2 == 0) {
 			lbl.setText("<html><font color='black'>" + value + "</font></html>");
-			lbl.setBackground(new Color(.93f, .93f, .93f));
+			lbl.setBackground(new Color(.93f, .93f, .93f)); // TODO
 		}
 		else {
 			lbl.setText("<html><font color='black'>" + value + "</font></html>");

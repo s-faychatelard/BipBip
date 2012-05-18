@@ -89,7 +89,7 @@ public class Map {
 			}
 			
 			@Override
-			public void eventModifyed(Event event, int index) {
+			public void eventModified(Event event, int index) {
 				map.remove(pins.get(index));
 				pins.remove(index);
 				Map.this.addPin(event, index);

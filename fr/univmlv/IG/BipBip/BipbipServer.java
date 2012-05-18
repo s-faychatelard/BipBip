@@ -118,7 +118,7 @@ public class BipbipServer {
 			}
 
 			@Override
-			public void eventModifyed(Event event, int index) {
+			public void eventModified(Event event, int index) {
 				// TODO modify also the allEvents list
 			}
 
