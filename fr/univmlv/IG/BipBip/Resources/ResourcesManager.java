@@ -11,7 +11,6 @@ public class ResourcesManager {
 	private static ResourcesManager instance;
 	private final HashMap<String, ImageIcon> resources = new HashMap<String, ImageIcon>();
 	
-	
 	private static ResourcesManager getInstance() {
 		if(instance == null)
 			instance = new ResourcesManager();
@@ -30,12 +29,10 @@ public class ResourcesManager {
 	public static ImageIcon getRessourceAsImageIcon(String name) {
 		ImageIcon image = getInstance().resources.get(name);
 		if(image == null) {
-			System.out.println("Chargement de "+ name);
 			image = new ImageIcon(getInstance().getRessource(name));
 			getInstance().resources.put(name, image);
 		}
 		return image;
 		
 	}
-
 }

@@ -15,6 +15,7 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -25,8 +26,7 @@ import fr.univmlv.IG.BipBip.Event.Event;
 import fr.univmlv.IG.BipBip.Event.EventType;
 import fr.univmlv.IG.BipBip.Map.MapPanel;
 import fr.univmlv.IG.BipBip.Pin.Pin;
-import fr.univmlv.IG.BipBip.Resources.ImageNames;
-import fr.univmlv.IG.BipBip.Resources.ResourcesManager;
+
 
 /**
  * @author djubeau & sfaychat This class provides method to draw a dialog window
@@ -54,7 +54,7 @@ public class EditDialog extends JDialog implements ActionListener {
 	}
 
 	public Event getEvent() {
-		Event evt = new Event(EventType.ACCIDENT, pin.getCoords().x, pin.getCoords().y);
+		Event evt = new Event(pin.getType(), pin.getCoords().x, pin.getCoords().y);
 		return evt;
 	}
 
@@ -84,19 +84,34 @@ public class EditDialog extends JDialog implements ActionListener {
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		panel.add(typeLabel, gbc);
 
-        /* Change type buttons */		
-        JPanel buttonsTypePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 10));
+		
+		
+        /* Type manager buttons */		
+        final JPanel buttonsTypePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 10));
         buttonsTypePanel.setOpaque(false);
         buttonsTypePanel.setMaximumSize(new Dimension(100, 60));
         buttonsTypePanel.setMinimumSize(new Dimension(100, 60));
         buttonsTypePanel.setPreferredSize(new Dimension(100, 60));
         
-        buttonsTypePanel.add(new EditTypeButton(ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.FIXE), EditTypeButton.POSITION.LEFT));
-        buttonsTypePanel.add(new EditTypeButton(ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.MOBILE)));
-        buttonsTypePanel.add(new EditTypeButton(ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.ACCIDENT)));
-        buttonsTypePanel.add(new EditTypeButton(ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.TRAVAUX)));
-        buttonsTypePanel.add(new EditTypeButton(ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.DIVERS), EditTypeButton.POSITION.RIGHT));
+        EditTypeButton fixeButton = new EditTypeButton(EventType.RADAR_FIXE, EditTypeButton.POSITION.LEFT);
+        EditTypeButton mobileButton = new EditTypeButton(EventType.RADAR_MOBILE);
+        EditTypeButton accidentButton = new EditTypeButton(EventType.ACCIDENT);
+        EditTypeButton travauxButton = new EditTypeButton(EventType.TRAVAUX);
+        EditTypeButton diversButton = new EditTypeButton(EventType.DIVERS, EditTypeButton.POSITION.RIGHT);
+        
+        ButtonGroup group = new ButtonGroup();
+        group.add(fixeButton);
+        group.add(mobileButton);
+        group.add(accidentButton);
+        group.add(travauxButton);
+        group.add(diversButton);
 
+        buttonsTypePanel.add(fixeButton);
+        buttonsTypePanel.add(mobileButton);
+        buttonsTypePanel.add(accidentButton);
+        buttonsTypePanel.add(travauxButton);
+        buttonsTypePanel.add(diversButton);
+        
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.gridheight = 1;
 		gbc.weightx = .9f;
@@ -159,19 +174,42 @@ public class EditDialog extends JDialog implements ActionListener {
 		panel.add(backButton, gbc);
 
 		/* All listener */
-		map.setSize(500, 260); 					// c'est sale, mais avec un peu de chance ça ne se verra pas... Surtout avec un petit commentaire très discret
+		map.setSize(500, 260); 						// c'est sale, mais avec un peu de chance ça ne se verra pas... Surtout avec un petit commentaire très discret
 		
-		pin = new Pin(new Point.Double(event.getX(), event.getY()),
-				event.getType(), "Drag'n drop pour déplacer le point", false);
+		pin = new Pin(new Point.Double(event.getX(), event.getY()), event.getType(), "Drag'n drop pour déplacer le point", false);
+		
+        ActionListener listener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				pin.setType(((EditTypeButton) e.getSource()).getType());
+				((JLabel) pin.getComponent(0)).setIcon(pin.getButton().getIcon()); // not a good practice... TODO correct (see todo task bellow)
+			}
+		};
+        
+        fixeButton.addActionListener(listener);
+        mobileButton.addActionListener(listener);
+        accidentButton.addActionListener(listener);
+        travauxButton.addActionListener(listener);
+        diversButton.addActionListener(listener);
+        
+        switch (pin.getType()) {
+			case RADAR_MOBILE: mobileButton.setSelected(true); break;
+			case ACCIDENT: accidentButton.setSelected(true); break;
+			case TRAVAUX: travauxButton.setSelected(true); break;
+			case RADAR_FIXE: diversButton.setSelected(true); break;
+		}
+		
 		pin.setLocation(
-				MapPanel.lon2position(pin.getCoords().x, map.getZoom())
-						- map.getMapPosition().x,
-				MapPanel.lat2position(pin.getCoords().y, map.getZoom())
-						- map.getMapPosition().y);
+				MapPanel.lon2position(pin.getCoords().x, map.getZoom()) - map.getMapPosition().x ,
+				MapPanel.lat2position(pin.getCoords().y, map.getZoom()) - map.getMapPosition().y
+		);
+		
+		// TODO find a way to avoid this hack...
 		JLabel lbl = new JLabel(pin.getButton().getIcon());
 		lbl.setSize(pin.getButton().getSize());
 		pin.remove(pin.getButton());
 		pin.add(lbl);
+		
 		MouseInputListener inputListener = new MouseInputListener() {
 			@Override public void mouseMoved(MouseEvent e) {}
 			@Override public void mousePressed(MouseEvent e) {}

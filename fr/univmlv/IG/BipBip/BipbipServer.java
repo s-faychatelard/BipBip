@@ -216,6 +216,7 @@ public class BipbipServer {
 		final SplitPane splitPane = new SplitPane();
 		splitPane.add(table.getPanel(), JSplitPane.LEFT);
 		splitPane.add(map.getMapPanel(), JSplitPane.RIGHT);
+		
 		content.add(splitPane, BorderLayout.CENTER);
 
 		/* Timeline map */

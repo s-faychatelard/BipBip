@@ -30,6 +30,7 @@ public class Pin extends JComponent {
 
 	private final JButton pinButton;
 	private final Tooltip tooltipConfirm = new Tooltip();
+	private EventType type;
 
 	public Pin(Point.Double coords, EventType type, String tooltipText) {
 		this(coords, type, tooltipText, true);
@@ -50,43 +51,9 @@ public class Pin extends JComponent {
 		pinButton = new JButton();
 		pinButton.setToolTipText(tooltipText);
 		int tooltipOffset=0;
-		
-		final ImageIcon fixe = ResourcesManager.getRessourceAsImageIcon(ImageNames.Pin.FIXE);
-		final ImageIcon mobile =  ResourcesManager.getRessourceAsImageIcon(ImageNames.Pin.MOBILE);
-		final ImageIcon accident = ResourcesManager.getRessourceAsImageIcon(ImageNames.Pin.ACCIDENT);
-		final ImageIcon travaux = ResourcesManager.getRessourceAsImageIcon(ImageNames.Pin.TRAVAUX);
-		final ImageIcon divers = ResourcesManager.getRessourceAsImageIcon(ImageNames.Pin.DIVERS);
-		
-		switch (type) {
-		case RADAR_FIXE:
-			pinButton.setIcon(fixe);
-			pinButton.setDisabledIcon(fixe);
-			tooltipOffset = 5;
-			break;
-		case RADAR_MOBILE:
-			pinButton.setIcon(mobile);
-			pinButton.setDisabledIcon(mobile);
-			tooltipOffset = 10;
-			break;
-		case ACCIDENT:
-			pinButton.setIcon(accident);
-			pinButton.setDisabledIcon(accident);
-			tooltipOffset = 8;
-			break;
-		case TRAVAUX:
-			pinButton.setIcon(travaux);
-			pinButton.setDisabledIcon(travaux);
-			tooltipOffset = 10;
-			break;
-		case DIVERS:
-			pinButton.setIcon(divers);
-			pinButton.setDisabledIcon(divers);
-			tooltipOffset = 5;
-			break;
-		default:
-			assert(1==0);
-			break;
-		}
+		this.setType(type);
+
+
 		pinButton.setSize(pinButton.getIcon().getIconWidth(), pinButton.getIcon().getIconHeight());
 		pinButton.setText("");
 		pinButton.setOpaque(false);
@@ -141,6 +108,52 @@ public class Pin extends JComponent {
 		/* Positioned and set size of elements into the panel */
 		pinButton.setLocation(this.getWidth()/2 - pinButton.getWidth()/2, this.getHeight() - pinButton.getHeight());
 		tooltipConfirm.setLocation(pinButton.getX() + pinButton.getWidth()/2, pinButton.getY() + tooltipOffset);
+	}
+	
+	public EventType getType() {
+		return this.type;
+	}
+	
+	public void setType(EventType type) {
+		this.type = type;
+
+		final ImageIcon fixe = ResourcesManager.getRessourceAsImageIcon(ImageNames.Pin.FIXE);
+		final ImageIcon mobile =  ResourcesManager.getRessourceAsImageIcon(ImageNames.Pin.MOBILE);
+		final ImageIcon accident = ResourcesManager.getRessourceAsImageIcon(ImageNames.Pin.ACCIDENT);
+		final ImageIcon travaux = ResourcesManager.getRessourceAsImageIcon(ImageNames.Pin.TRAVAUX);
+		final ImageIcon divers = ResourcesManager.getRessourceAsImageIcon(ImageNames.Pin.DIVERS);
+		
+		switch (type) {
+		case RADAR_FIXE:
+			pinButton.setIcon(fixe);
+			pinButton.setDisabledIcon(fixe);
+			//tooltipOffset = 5;
+			break;
+		case RADAR_MOBILE:
+			pinButton.setIcon(mobile);
+			pinButton.setDisabledIcon(mobile);
+			//tooltipOffset = 10;
+			break;
+		case ACCIDENT:
+			pinButton.setIcon(accident);
+			pinButton.setDisabledIcon(accident);
+			//tooltipOffset = 8;
+			break;
+		case TRAVAUX:
+			pinButton.setIcon(travaux);
+			pinButton.setDisabledIcon(travaux);
+			//tooltipOffset = 10;
+			break;
+		case DIVERS:
+			pinButton.setIcon(divers);
+			pinButton.setDisabledIcon(divers);
+			//tooltipOffset = 5;
+			break;
+		default:
+			assert(1==0);
+			break;
+		}
+		
 	}
 
 	public void addPinListener(PinListener listener) {

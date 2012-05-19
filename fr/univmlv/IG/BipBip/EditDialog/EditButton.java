@@ -1,5 +1,6 @@
 package fr.univmlv.IG.BipBip.EditDialog;
 
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -24,6 +25,7 @@ public class EditButton extends JButton {
 		this.setBorderPainted(false);
 		this.setFocusable(false);
 		this.setRolloverEnabled(false);
+		this.setCursor(new Cursor(Cursor.HAND_CURSOR));
 	}
 	
 	/**
@@ -40,6 +42,7 @@ public class EditButton extends JButton {
 
 		g2d.drawImage(left, 0, 0, null);
 		g2d.drawImage(right, this.getWidth() - right.getWidth(null), 0, null);
+		
 		g2d.drawImage(bg, left.getWidth(null), 0, this.getWidth() - left.getWidth(null) - right.getWidth(null), this.getHeight(), null);
 
 		super.paintComponent(g);

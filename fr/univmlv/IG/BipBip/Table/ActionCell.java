@@ -26,6 +26,7 @@ public class ActionCell extends JPanel {
 	public ActionCell(final int index, ActionCellListener listener) {
 		this.setLayout(new FlowLayout());
 		this.addActionCellListener(listener);
+
 		
 		btnLocate = new JButton(ResourcesManager.getRessourceAsImageIcon(ImageNames.Icon.LOCATE));
 		btnEdit = new JButton(ResourcesManager.getRessourceAsImageIcon(ImageNames.Icon.EDIT));
@@ -36,19 +37,19 @@ public class ActionCell extends JPanel {
 		btnLocate.setBorderPainted(false);
 		btnLocate.setFocusable(false);
 		btnLocate.setRolloverEnabled(false);
-		
+
 		btnEdit.setOpaque(false);
 		btnEdit.setContentAreaFilled(false);
 		btnEdit.setBorderPainted(false);
 		btnEdit.setFocusable(false);
 		btnEdit.setRolloverEnabled(false);
-		
+
 		btnDelete.setOpaque(false);
 		btnDelete.setContentAreaFilled(false);
 		btnDelete.setBorderPainted(false);
 		btnDelete.setFocusable(false);
 		btnDelete.setRolloverEnabled(false);
-		
+
 		this.add(btnLocate);
 		this.add(btnEdit);
 		this.add(btnDelete);

@@ -1,17 +1,20 @@
 package fr.univmlv.IG.BipBip.EditDialog;
 
+import java.awt.AlphaComposite;
+import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Insets;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
+import javax.swing.JToggleButton;
 
+import fr.univmlv.IG.BipBip.Event.EventType;
 import fr.univmlv.IG.BipBip.Resources.ImageNames;
 import fr.univmlv.IG.BipBip.Resources.ResourcesManager;
 
-public class EditTypeButton extends JButton {
+public class EditTypeButton extends JToggleButton {
 	private static final long serialVersionUID = -7685436527591441736L;
 
 	enum POSITION {
@@ -25,20 +28,40 @@ public class EditTypeButton extends JButton {
 
 	
 	private final EditTypeButton.POSITION position;
+	private final EventType type;
+
 	
-	public EditTypeButton(ImageIcon icon, EditTypeButton.POSITION position) {
-		super(icon);
+	public EditTypeButton(EventType type, EditTypeButton.POSITION position) {
+		super(getImageIconFromType(type));
+		this.type = type;
 		this.setOpaque(false);
 		this.setContentAreaFilled(false);
 		this.setBorderPainted(false);
-		this.setFocusable(false);
+		this.setFocusPainted(false);
 		this.setRolloverEnabled(false);
 		this.setMargin(new Insets(25, 15, 15, 15));
 		this.position = position;
+		this.setCursor(new Cursor(Cursor.HAND_CURSOR));
 	}
 	
-	public EditTypeButton(ImageIcon icon) {
-		this(icon, EditTypeButton.POSITION.CENTER);
+	public EditTypeButton(EventType type) {
+		this(type, EditTypeButton.POSITION.CENTER);
+	}
+	
+	private static ImageIcon getImageIconFromType(EventType type) {
+		ImageIcon icon;
+		switch (type) {
+			case ACCIDENT: icon = ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.ACCIDENT); break;
+			case DIVERS: icon = ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.DIVERS); break;
+			case RADAR_FIXE: icon = ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.FIXE); break;
+			case RADAR_MOBILE: icon = ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.MOBILE); break;
+			default: icon = ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.TRAVAUX); break;
+		}
+		return icon;
+	}
+
+	public EventType getType() {
+		return type;
 	}
 	
 	/**
@@ -48,6 +71,10 @@ public class EditTypeButton extends JButton {
 	public void paintComponent(Graphics g) {
 		this.setSize(this.getWidth(), 40);
 		Graphics2D g2d = (Graphics2D)g; 
+		
+		if(isSelected())  {
+			g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f));
+		}
 
 		if(position == POSITION.LEFT) {
 			g2d.drawImage(left, 0, 0, null);
@@ -65,5 +92,4 @@ public class EditTypeButton extends JButton {
 
 		super.paintComponent(g);
 	}
-
 }
