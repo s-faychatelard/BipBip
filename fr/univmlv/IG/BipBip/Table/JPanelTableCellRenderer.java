@@ -38,7 +38,6 @@ public class JPanelTableCellRenderer extends AbstractCellEditor implements Table
 		}
 		if(isSelected || hasFocus) {
 			panel.setBackground(new Color(.35f, .58f, .92f));
-			System.out.println("la");
 		}
 		
 		panel.setOpaque(true);
