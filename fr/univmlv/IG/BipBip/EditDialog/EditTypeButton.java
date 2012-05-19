@@ -27,7 +27,6 @@ public class EditTypeButton extends JButton {
 	
 	public EditTypeButton(ImageIcon icon, EditTypeButton.POSITION position) {
 		super(icon);
-		this.setSize(this.getWidth(), 40);
 		this.setOpaque(false);
 		this.setContentAreaFilled(false);
 		this.setBorderPainted(false);
