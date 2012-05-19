@@ -8,7 +8,6 @@ import java.awt.Insets;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-import fr.univmlv.IG.BipBip.Tooltip.Tooltip;
 import fr.univmlv.IG.BipBip.Resources.ImageNames;
 import fr.univmlv.IG.BipBip.Resources.ResourcesManager;
 

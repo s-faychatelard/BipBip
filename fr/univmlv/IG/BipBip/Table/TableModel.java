@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.table.AbstractTableModel;
 
 import fr.univmlv.IG.BipBip.BipbipServer;
@@ -16,7 +15,6 @@ import fr.univmlv.IG.BipBip.Event.Event;
 import fr.univmlv.IG.BipBip.Event.EventModelListener;
 import fr.univmlv.IG.BipBip.Event.EventModel;
 import fr.univmlv.IG.BipBip.Event.EventModelImpl;
-import fr.univmlv.IG.BipBip.Map.Map;
 import fr.univmlv.IG.BipBip.Resources.ImageNames;
 import fr.univmlv.IG.BipBip.Resources.ResourcesManager;
 

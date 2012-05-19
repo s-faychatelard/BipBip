@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;

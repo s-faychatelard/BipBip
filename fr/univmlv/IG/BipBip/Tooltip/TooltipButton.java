@@ -6,7 +6,6 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 import fr.univmlv.IG.BipBip.Resources.ImageNames;
