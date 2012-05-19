@@ -14,6 +14,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import fr.univmlv.IG.BipBip.Resources.ImageNames;
+import fr.univmlv.IG.BipBip.Resources.ResourcesManager;
+
 public class ActionCell extends JPanel {
 	private static final long serialVersionUID = -6646136351553964151L;
 	
@@ -21,18 +24,14 @@ public class ActionCell extends JPanel {
 	private final JButton btnEdit;
 	private final JButton btnDelete;
 	private final Collection<ActionCellListener> actionCellListeners = new ArrayList<ActionCellListener>();
-	
-	private static final ImageIcon locate = new ImageIcon(ActionCell.class.getResource("icon-locate.png"));
-	private static final ImageIcon trash = new ImageIcon(ActionCell.class.getResource("icon-trash.png"));
-	private static final ImageIcon edit = new ImageIcon(ActionCell.class.getResource("icon-edit.png"));
 
 	public ActionCell(final int index, ActionCellListener listener) {
 		this.setLayout(new FlowLayout());
 		this.addActionCellListener(listener);
 		
-		btnLocate = new JButton(locate);
-		btnEdit = new JButton(edit);
-		btnDelete = new JButton(trash);
+		btnLocate = new JButton(ResourcesManager.getRessourceAsImageIcon(ImageNames.Icon.LOCATE));
+		btnEdit = new JButton(ResourcesManager.getRessourceAsImageIcon(ImageNames.Icon.EDIT));
+		btnDelete = new JButton(ResourcesManager.getRessourceAsImageIcon(ImageNames.Icon.TRASH));
 		
 		btnLocate.setOpaque(false);
 		btnLocate.setContentAreaFilled(false);

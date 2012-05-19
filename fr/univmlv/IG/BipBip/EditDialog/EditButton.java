@@ -8,12 +8,13 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
+import fr.univmlv.IG.BipBip.Resources.ImageNames;
+import fr.univmlv.IG.BipBip.Resources.ResourcesManager;
+
 public class EditButton extends JButton {
 	private static final long serialVersionUID = -8973864888152429363L;
 	
-	private static final Image left = new ImageIcon(EditButton.class.getResource("editButton-left.png")).getImage();
-	private static final Image right = new ImageIcon(EditButton.class.getResource("editButton-right.png")).getImage();
-	private static final Image bg = new ImageIcon(EditButton.class.getResource("editButton-bg.png")).getImage();
+
 	
 	public EditButton(String title) {
 		super("<html><font color='white'>" + title + "</font></html>");
@@ -33,6 +34,10 @@ public class EditButton extends JButton {
 	public void paintComponent(Graphics g) {
 		this.setSize(this.getWidth(), 40);
 		Graphics2D g2d = (Graphics2D)g; 
+		
+		final Image left = ResourcesManager.getRessourceAsImage(ImageNames.EditButton.LEFT);
+		final Image right = ResourcesManager.getRessourceAsImage(ImageNames.EditButton.RIGHT);
+		final Image bg = ResourcesManager.getRessourceAsImage(ImageNames.EditButton.BG);
 
 		g2d.drawImage(left, 0, 0, null);
 		g2d.drawImage(right, this.getWidth() - right.getWidth(null), 0, null);

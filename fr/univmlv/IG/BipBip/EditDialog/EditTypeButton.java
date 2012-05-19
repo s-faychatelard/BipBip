@@ -9,6 +9,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 import fr.univmlv.IG.BipBip.Tooltip.Tooltip;
+import fr.univmlv.IG.BipBip.Resources.ImageNames;
+import fr.univmlv.IG.BipBip.Resources.ResourcesManager;
 
 public class EditTypeButton extends JButton {
 	private static final long serialVersionUID = -7685436527591441736L;
@@ -17,10 +19,10 @@ public class EditTypeButton extends JButton {
 		CENTER, LEFT, RIGHT
 	}
 
-	private static final Image left = new ImageIcon(EditButton.class.getResource("editButton-left.png")).getImage();
-	private static final Image right = new ImageIcon(EditButton.class.getResource("editButton-right.png")).getImage();
-	private static final Image bg = new ImageIcon(EditButton.class.getResource("editButton-bg.png")).getImage();
-	private static final Image sep = new ImageIcon(Tooltip.class.getResource("tooltip-sep.png")).getImage();
+	private static final Image left = ResourcesManager.getRessourceAsImage(ImageNames.EditButton.LEFT);
+	private static final Image right = ResourcesManager.getRessourceAsImage(ImageNames.EditButton.RIGHT);
+	private static final Image bg = ResourcesManager.getRessourceAsImage(ImageNames.EditButton.BG);
+	private static final Image sep = ResourcesManager.getRessourceAsImage(ImageNames.Tooltip.SEPARATOR);
 
 	
 	private final EditTypeButton.POSITION position;
@@ -34,6 +36,10 @@ public class EditTypeButton extends JButton {
 		this.setRolloverEnabled(false);
 		this.setMargin(new Insets(25, 15, 15, 15));
 		this.position = position;
+	}
+	
+	public EditTypeButton(ImageIcon icon) {
+		this(icon, EditTypeButton.POSITION.CENTER);
 	}
 	
 	/**

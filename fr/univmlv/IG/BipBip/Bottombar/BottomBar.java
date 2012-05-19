@@ -13,6 +13,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import fr.univmlv.IG.BipBip.Map.TimelineMap;
+import fr.univmlv.IG.BipBip.Resources.ImageNames;
+import fr.univmlv.IG.BipBip.Resources.ResourcesManager;
 
 /**
  * This class manage the bottom bar of the application
@@ -23,9 +25,7 @@ public class BottomBar extends JComponent {
 	private static final long serialVersionUID = -2860351564159893223L;
 	
 	private final TimeSlider timeSlider;
-	
-	private static final Image bg = new ImageIcon(BottomBar.class.getResource("bottombar-bg.png")).getImage();
-	
+		
 	/**
 	 * Create the bottom bar
 	 * 
@@ -83,6 +83,6 @@ public class BottomBar extends JComponent {
 		Graphics2D g2d = (Graphics2D)g;
 
 		/* Draw background */
-		g2d.drawImage(bg, 0, 0, this.getWidth(), this.getHeight(), null);
+		g2d.drawImage(ResourcesManager.getRessourceAsImage(ImageNames.General.BOTTOMBAR_BG), 0, 0, this.getWidth(), this.getHeight(), null);
 	}
 }

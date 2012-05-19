@@ -18,6 +18,8 @@ import fr.univmlv.IG.BipBip.Event.EventModelImpl;
 import fr.univmlv.IG.BipBip.Event.EventType;
 import fr.univmlv.IG.BipBip.Pin.Pin;
 import fr.univmlv.IG.BipBip.Pin.PinListener;
+import fr.univmlv.IG.BipBip.Resources.ImageNames;
+import fr.univmlv.IG.BipBip.Resources.ResourcesManager;
 import fr.univmlv.IG.BipBip.Tooltip.Tooltip;
 import fr.univmlv.IG.BipBip.Tooltip.TooltipListener;
 
@@ -37,11 +39,11 @@ public class Map {
         
         /* Tooltip to add other alert */
         final Tooltip tooltipAlert = new Tooltip();
-        tooltipAlert.addButton(new ImageIcon(Map.class.getResource("alert-fixe.png")), "Radar fixe");
-        tooltipAlert.addButton(new ImageIcon(Map.class.getResource("alert-mobile.png")), "Radar mobile");
-        tooltipAlert.addButton(new ImageIcon(Map.class.getResource("alert-accident.png")), "Accident");
-        tooltipAlert.addButton(new ImageIcon(Map.class.getResource("alert-travaux.png")), "Travaux");
-        tooltipAlert.addButton(new ImageIcon(Map.class.getResource("alert-divers.png")), "Divers").setLast(true);
+        tooltipAlert.addButton(ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.FIXE), "Radar fixe");
+        tooltipAlert.addButton(ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.MOBILE), "Radar mobile");
+        tooltipAlert.addButton(ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.ACCIDENT), "Accident");
+        tooltipAlert.addButton(ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.TRAVAUX), "Travaux");
+        tooltipAlert.addButton(ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.DIVERS), "Divers").setLast(true);
         
         tooltipAlert.addTooltipListener(new TooltipListener() {
 			@Override

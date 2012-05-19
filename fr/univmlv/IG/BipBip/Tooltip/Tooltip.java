@@ -18,6 +18,9 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 
+import fr.univmlv.IG.BipBip.Resources.ImageNames;
+import fr.univmlv.IG.BipBip.Resources.ResourcesManager;
+
 /**
  * This class create an graphic element with differents button or text.
  * 
@@ -33,10 +36,10 @@ public class Tooltip extends JComponent {
 	private int width = 82;
 	
 	private static final int height = 51;
-	private static final Image left = new ImageIcon(Tooltip.class.getResource("tooltip-left.png")).getImage();
-	private static final Image right = new ImageIcon(Tooltip.class.getResource("tooltip-right.png")).getImage();
-	private static final Image arrow = new ImageIcon(Tooltip.class.getResource("tooltip-arrow.png")).getImage();
-	private static final Image lblBg = new ImageIcon(Tooltip.class.getResource("tooltip-bg.png")).getImage();
+	private static final Image left = ResourcesManager.getRessourceAsImage(ImageNames.Tooltip.LEFT);
+	private static final Image right = ResourcesManager.getRessourceAsImage(ImageNames.Tooltip.RIGHT);
+	private static final Image arrow = ResourcesManager.getRessourceAsImage(ImageNames.Tooltip.ARROW);
+	private static final Image lblBg = ResourcesManager.getRessourceAsImage(ImageNames.Tooltip.BG);
 
 	/**
 	 * Create a tooltip with no layout

@@ -9,13 +9,13 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
+import fr.univmlv.IG.BipBip.Resources.ImageNames;
+import fr.univmlv.IG.BipBip.Resources.ResourcesManager;
+
 public class TooltipButton extends JButton {
 	private static final long serialVersionUID = -202732288388163416L;
 	
 	private boolean isLast = false;
-	
-	private static final Image bg = new ImageIcon(Tooltip.class.getResource("tooltip-bg.png")).getImage();
-	private static final Image sep = new ImageIcon(Tooltip.class.getResource("tooltip-sep.png")).getImage();
 	
 	/**
 	 * Create a TooltipButton
@@ -49,10 +49,10 @@ public class TooltipButton extends JButton {
 	@Override
 	public void paintComponent(Graphics g) {		
 		Graphics2D g2d = (Graphics2D)g; 
-
-		g2d.drawImage(bg, 0, 0, this.getWidth(), this.getHeight(), null);
+		Image separator = ResourcesManager.getRessourceAsImage(ImageNames.Tooltip.SEPARATOR);
+		g2d.drawImage(ResourcesManager.getRessourceAsImage(ImageNames.Tooltip.BG), 0, 0, this.getWidth(), this.getHeight(), null);
 		if(!isLast)
-			g2d.drawImage(sep, this.getWidth() - sep.getWidth(null), 0, null);
+			g2d.drawImage(separator, this.getWidth() - separator.getWidth(null), 0, null);
 
 		super.paintComponent(g);
 	}

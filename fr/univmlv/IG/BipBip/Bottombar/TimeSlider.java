@@ -12,6 +12,8 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import fr.univmlv.IG.BipBip.Map.TimelineMap;
+import fr.univmlv.IG.BipBip.Resources.ImageNames;
+import fr.univmlv.IG.BipBip.Resources.ResourcesManager;
 import fr.univmlv.IG.BipBip.Tooltip.Tooltip;
 
 public class TimeSlider extends JComponent {
@@ -26,11 +28,6 @@ public class TimeSlider extends JComponent {
 	
 	private static final int OFFSET_X = 8;
 	private static final int OFFSET_Y = 8;
-	
-	private static final Image left = new ImageIcon(BottomBar.class.getResource("timeslider-left.png")).getImage();
-	private static final Image right = new ImageIcon(BottomBar.class.getResource("timeslider-right.png")).getImage();
-	private static final Image bg = new ImageIcon(BottomBar.class.getResource("timeslider-bg.png")).getImage();
-	private static final Image handle = new ImageIcon(BottomBar.class.getResource("timeslider-handle.png")).getImage();
 	
 	private static final String[] days = { "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"};
 
@@ -100,6 +97,8 @@ public class TimeSlider extends JComponent {
 	 * @param mouseX is the x position of the mouse
 	 */
 	private void updatePosition(int mouseX) {
+		final Image handle = ResourcesManager.getRessourceAsImage(ImageNames.TimeSlider.HANDLE);
+
 		int posX = mouseX;
 		if (posX + TimeSlider.this.getX() < TimeSlider.this.getX() + TimeSlider.this.getParent().getX() + OFFSET_X) {
 			posX = TimeSlider.this.getParent().getX() + OFFSET_X;
@@ -118,6 +117,8 @@ public class TimeSlider extends JComponent {
 	 * @param posX is the x position of the mouse
 	 */
 	private void updateDate(int posX) {
+		final Image handle = ResourcesManager.getRessourceAsImage(ImageNames.TimeSlider.HANDLE);
+		
 		int sliderDateSize = NB_DAY_PER_WEEK * NB_HOUR_PER_DAY - 1;
 		int date = -1 + (int) (((double)(sliderDateSize / (double)(TimeSlider.this.getWidth() - OFFSET_X - OFFSET_Y))) * posX);
 		
@@ -136,6 +137,11 @@ public class TimeSlider extends JComponent {
 	@Override
 	public void paintComponent(Graphics g) {
 		Graphics2D g2d = (Graphics2D)g;
+		
+		final Image left = ResourcesManager.getRessourceAsImage(ImageNames.TimeSlider.LEFT);
+		final Image right = ResourcesManager.getRessourceAsImage(ImageNames.TimeSlider.RIGHT);
+		final Image bg = ResourcesManager.getRessourceAsImage(ImageNames.TimeSlider.BG);
+		final Image handle = ResourcesManager.getRessourceAsImage(ImageNames.TimeSlider.HANDLE);
 		
 		/* Draw tooltip */
 		g2d.drawImage(left, 0, this.getHeight()/2 - left.getHeight(null)/2, null);

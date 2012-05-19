@@ -17,6 +17,8 @@ import fr.univmlv.IG.BipBip.Event.EventModelListener;
 import fr.univmlv.IG.BipBip.Event.EventModel;
 import fr.univmlv.IG.BipBip.Event.EventModelImpl;
 import fr.univmlv.IG.BipBip.Map.Map;
+import fr.univmlv.IG.BipBip.Resources.ImageNames;
+import fr.univmlv.IG.BipBip.Resources.ResourcesManager;
 
 public class TableModel extends AbstractTableModel {
 	private static final long serialVersionUID = -3121191093975659662L;
@@ -24,11 +26,6 @@ public class TableModel extends AbstractTableModel {
 	private final Collection<TableListener> tableListeners = new ArrayList<TableListener>();
 	
 	private final String[] columns = { "Longitude", "Latitude", "Date", "Type", "Actions" };
-	private final ImageIcon fixe = new ImageIcon(Map.class.getResource("alert-fixe.png"));
-	private final ImageIcon mobile = new ImageIcon(Map.class.getResource("alert-mobile.png"));
-	private final ImageIcon accident = new ImageIcon(Map.class.getResource("alert-accident.png"));
-	private final ImageIcon travaux = new ImageIcon(Map.class.getResource("alert-travaux.png"));
-	private final ImageIcon divers = new ImageIcon(Map.class.getResource("alert-divers.png"));
 	
 	private final EventModel events;
 	private final SimpleDateFormat dateFormatter = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
@@ -95,15 +92,15 @@ public class TableModel extends AbstractTableModel {
 		case 3:
 			switch (events.getEvents().get(rowIndex).getType()) {
 			case RADAR_FIXE:
-				return fixe;
+				return ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.FIXE);
 			case RADAR_MOBILE:
-				return mobile;
+				return ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.MOBILE);
 			case ACCIDENT:
-				return accident;
+				return ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.ACCIDENT);
 			case TRAVAUX:
-				return travaux;
+				return ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.TRAVAUX);
 			case DIVERS:
-				return divers;
+				return ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.DIVERS);
 			}
 		case 4:
 			return new ActionCell(rowIndex, new ActionCellListener() {

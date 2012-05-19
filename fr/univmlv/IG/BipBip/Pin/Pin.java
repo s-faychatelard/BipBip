@@ -11,6 +11,8 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 
 import fr.univmlv.IG.BipBip.Event.EventType;
+import fr.univmlv.IG.BipBip.Resources.ImageNames;
+import fr.univmlv.IG.BipBip.Resources.ResourcesManager;
 import fr.univmlv.IG.BipBip.Tooltip.Tooltip;
 import fr.univmlv.IG.BipBip.Tooltip.TooltipListener;
 
@@ -28,11 +30,6 @@ public class Pin extends JComponent {
 
 	private final JButton pinButton;
 	private final Tooltip tooltipConfirm = new Tooltip();
-	private static final ImageIcon fixe = new ImageIcon(Pin.class.getResource("pin-fixe.png"));
-	private static final ImageIcon mobile = new ImageIcon(Pin.class.getResource("pin-mobile.png"));
-	private static final ImageIcon accident = new ImageIcon(Pin.class.getResource("pin-accident.png"));
-	private static final ImageIcon travaux = new ImageIcon(Pin.class.getResource("pin-travaux.png"));
-	private static final ImageIcon divers = new ImageIcon(Pin.class.getResource("pin-divers.png"));
 
 	public Pin(Point.Double coords, EventType type, String tooltipText) {
 		this(coords, type, tooltipText, true);
@@ -53,6 +50,13 @@ public class Pin extends JComponent {
 		pinButton = new JButton();
 		pinButton.setToolTipText(tooltipText);
 		int tooltipOffset=0;
+		
+		final ImageIcon fixe = ResourcesManager.getRessourceAsImageIcon(ImageNames.Pin.FIXE);
+		final ImageIcon mobile =  ResourcesManager.getRessourceAsImageIcon(ImageNames.Pin.MOBILE);
+		final ImageIcon accident = ResourcesManager.getRessourceAsImageIcon(ImageNames.Pin.ACCIDENT);
+		final ImageIcon travaux = ResourcesManager.getRessourceAsImageIcon(ImageNames.Pin.TRAVAUX);
+		final ImageIcon divers = ResourcesManager.getRessourceAsImageIcon(ImageNames.Pin.DIVERS);
+		
 		switch (type) {
 		case RADAR_FIXE:
 			pinButton.setIcon(fixe);
@@ -94,8 +98,8 @@ public class Pin extends JComponent {
 
 		if (openable) {
 			/* Configure tooltip */
-			tooltipConfirm.addButton(new ImageIcon(Pin.class.getResource("confirm-yes.png")), null);
-			tooltipConfirm.addButton(new ImageIcon(Pin.class.getResource("confirm-no.png")), null).setLast(true);
+			tooltipConfirm.addButton(ResourcesManager.getRessourceAsImageIcon(ImageNames.Confirm.YES), null);
+			tooltipConfirm.addButton(ResourcesManager.getRessourceAsImageIcon(ImageNames.Confirm.NO), null).setLast(true);
 
 			/* Get click event to open the tooltip */
 			pinButton.addActionListener(new ActionListener() {

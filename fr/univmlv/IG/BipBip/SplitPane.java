@@ -9,10 +9,13 @@ import javax.swing.JSplitPane;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
 
+import fr.univmlv.IG.BipBip.Resources.ImageNames;
+import fr.univmlv.IG.BipBip.Resources.ResourcesManager;
+
 public class SplitPane extends JSplitPane {
 	private static final long serialVersionUID = -3741186309641104813L;
 	
-	private static final Image bg = new ImageIcon(SplitPane.class.getResource("splitdivider-bg.png")).getImage();
+	private static final Image bg = ResourcesManager.getRessourceAsImage(ImageNames.General.SPLIT_DIVIDER);
 
 	/**
 	 * Create a JSplitPane with a cusomize divider

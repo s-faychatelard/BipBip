@@ -38,6 +38,8 @@ import fr.univmlv.IG.BipBip.Event.EventModelListener;
 import fr.univmlv.IG.BipBip.Map.Map;
 import fr.univmlv.IG.BipBip.Map.MapPanel;
 import fr.univmlv.IG.BipBip.Map.TimelineMap;
+import fr.univmlv.IG.BipBip.Resources.ImageNames;
+import fr.univmlv.IG.BipBip.Resources.ResourcesManager;
 import fr.univmlv.IG.BipBip.Table.Table;
 import fr.univmlv.IG.BipBip.Table.TableListener;
 
@@ -50,10 +52,6 @@ public class BipbipServer {
 	/* Static object */
 	public static EventModelImpl events = new EventModelImpl();
 	public static JFrame frame;
-
-	private static final ImageIcon time = new ImageIcon(BipbipServer.class.getResource("icon-time.png"));
-	private static final ImageIcon realtime = new ImageIcon(BipbipServer.class.getResource("icon-realtime.png"));
-
 	private static final String btnSwitcherSecondaryText = "Revenir à la vue en temps réel";
 	private static final String btnSwitcherDefaultText = "Ouvrir la timeline";
 	private static final String bottomBarText = "Pour ajouter une nouvelle alerte, faites un clic prolongé sur le lieu de l'alerte, puis choisissez son type.";
@@ -233,7 +231,7 @@ public class BipbipServer {
 		content.add(bottomBar, BorderLayout.SOUTH);
 
 		/* Switcher between Time view and Current view */
-		final JButton btn = new JButton(time);
+		final JButton btn = new JButton(ResourcesManager.getRessourceAsImageIcon(ImageNames.Icon.TIME));
 		btn.setToolTipText(btnSwitcherDefaultText);
 		btn.setSize(34, 30);
 		btn.setLocation(20, 20);
@@ -249,7 +247,7 @@ public class BipbipServer {
 			public void actionPerformed(ActionEvent e) {
 				for (Component component : content.getComponents()) {
 					if (component instanceof JSplitPane) {
-						btn.setIcon(realtime);
+						btn.setIcon(ResourcesManager.getRessourceAsImageIcon(ImageNames.Icon.REALTIME));
 						btn.setToolTipText(btnSwitcherSecondaryText);
 						timelineMap.getMapPanel().add(btn);
 
@@ -261,7 +259,7 @@ public class BipbipServer {
 						content.repaint();
 					}
 					else if (component instanceof MapPanel) {
-						btn.setIcon(time);
+						btn.setIcon(ResourcesManager.getRessourceAsImageIcon(ImageNames.Icon.TIME));
 						btn.setToolTipText(btnSwitcherDefaultText);
 						map.getMapPanel().add(btn);
 

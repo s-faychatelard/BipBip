@@ -27,6 +27,8 @@ import fr.univmlv.IG.BipBip.Event.EventType;
 import fr.univmlv.IG.BipBip.Map.Map;
 import fr.univmlv.IG.BipBip.Map.MapPanel;
 import fr.univmlv.IG.BipBip.Pin.Pin;
+import fr.univmlv.IG.BipBip.Resources.ImageNames;
+import fr.univmlv.IG.BipBip.Resources.ResourcesManager;
 
 /**
  * @author djubeau & sfaychat This class provides method to draw a dialog window
@@ -91,11 +93,11 @@ public class EditDialog extends JDialog implements ActionListener {
         buttonsTypePanel.setMinimumSize(new Dimension(100, 60));
         buttonsTypePanel.setPreferredSize(new Dimension(100, 60));
         
-        buttonsTypePanel.add(new EditTypeButton(new ImageIcon(Map.class.getResource("alert-fixe.png")), EditTypeButton.POSITION.LEFT));
-        buttonsTypePanel.add(new EditTypeButton(new ImageIcon(Map.class.getResource("alert-mobile.png")), EditTypeButton.POSITION.CENTER));
-        buttonsTypePanel.add(new EditTypeButton(new ImageIcon(Map.class.getResource("alert-accident.png")), EditTypeButton.POSITION.CENTER));
-        buttonsTypePanel.add(new EditTypeButton(new ImageIcon(Map.class.getResource("alert-travaux.png")), EditTypeButton.POSITION.CENTER));
-        buttonsTypePanel.add(new EditTypeButton(new ImageIcon(Map.class.getResource("alert-divers.png")), EditTypeButton.POSITION.RIGHT));
+        buttonsTypePanel.add(new EditTypeButton(ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.FIXE), EditTypeButton.POSITION.LEFT));
+        buttonsTypePanel.add(new EditTypeButton(ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.MOBILE)));
+        buttonsTypePanel.add(new EditTypeButton(ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.ACCIDENT)));
+        buttonsTypePanel.add(new EditTypeButton(ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.TRAVAUX)));
+        buttonsTypePanel.add(new EditTypeButton(ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.DIVERS), EditTypeButton.POSITION.RIGHT));
 
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.gridheight = 1;
