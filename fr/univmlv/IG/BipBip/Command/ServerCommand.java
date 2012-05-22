@@ -131,6 +131,68 @@ public enum ServerCommand {
             
             BipbipClient.events.remove(new Event(event, x, y));
         }
+    },
+    
+    MODIFY {
+
+        /**
+         * A MODIFY command is supposed to have the following form:
+         * 
+         * MODIFY PREVIOUS_EVENT_TYPE PREVIOUS_X PREVIOUS_Y EVENT_TYPE X Y
+         * 
+         * where X and Y are double
+         */
+        @Override
+        public void handle(SocketChannel sc, Scanner scanner) throws IOException {
+            if (!scanner.hasNext()) throw new IOException("MODIFY : Invalid command");
+            
+            EventType previousEventType;
+            double previousX,previousY;
+            
+            EventType eventType;
+            double x,y;
+            
+            /* Get previous event information */
+            try {
+            	previousEventType=EventType.valueOf(scanner.next());
+            } catch (IllegalArgumentException e) {
+                throw new IOException("Invalid previous event type");
+            }
+            String tmp=scanner.next();
+            try {
+            	previousX=Double.parseDouble(tmp);
+            } catch (NumberFormatException e) {
+                throw new IOException("Missing previous X coordinate");
+            }
+            tmp=scanner.next();
+            try {
+            	previousY=Double.parseDouble(tmp);
+            } catch (NumberFormatException e) {
+                throw new IOException("Missing previous Y coordinate");
+            }
+            
+            /* Get new event information */
+            tmp=scanner.next();
+            try {
+                eventType=EventType.valueOf(tmp);
+            } catch (IllegalArgumentException e) {
+                throw new IOException("Invalid event type");
+            }
+            tmp=scanner.next();
+            try {
+                x=Double.parseDouble(tmp);
+            } catch (NumberFormatException e) {
+                throw new IOException("Missing X coordinate");
+            }
+            tmp=scanner.next();
+            try {
+                y=Double.parseDouble(tmp);
+            } catch (NumberFormatException e) {
+                throw new IOException("Missing Y coordinate");
+            }
+            
+            BipbipClient.events.modifyEvent(new Event(previousEventType, previousX, previousY), new Event(eventType, x, y));
+        }
     };
     
     public abstract void handle(SocketChannel sc,Scanner scanner) throws IOException;
@@ -144,6 +206,10 @@ public enum ServerCommand {
 
     public static void sendInfo(SocketChannel sc, Event e) throws IOException {
         NetUtil.writeLine(sc,"INFO "+e.getType().name()+" "+e.getX()+" "+e.getY());
+    }
+    
+    public static void modify(SocketChannel sc, Event previous, Event e) throws IOException {
+        NetUtil.writeLine(sc,"MODIFY "+previous.getType().name()+" "+previous.getX()+" "+previous.getY()+" "+e.getType().name()+" "+e.getX()+" "+e.getY());
     }
     
     public static void remove(SocketChannel sc, Event e) throws IOException {

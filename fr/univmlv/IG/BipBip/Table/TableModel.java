@@ -44,7 +44,7 @@ public class TableModel extends AbstractTableModel {
 			}
 			
 			@Override
-			public void eventModified(Event event, int index) {
+			public void eventModified(Event previousEvent, Event event, int index) {
 				TableModel.this.fireTableRowsUpdated(index, index);
 			}
 			
@@ -106,7 +106,7 @@ public class TableModel extends AbstractTableModel {
 				public void eventEdit(int index) {
 					EditDialog editDialog = new EditDialog(BipbipServer.frame, ((EventModelImpl)events).getEvents().get(index), true);
 					if (editDialog.getAnswer() == AnswerEditDialog.SAVE) {
-						((EventModelImpl)events).modifyEvent(index, editDialog.getEvent());
+						((EventModelImpl)events).modifyEvent(((EventModelImpl)events).getEvents().get(index), editDialog.getEvent());
 					}
 				}
 				

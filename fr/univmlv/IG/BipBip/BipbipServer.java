@@ -114,8 +114,12 @@ public class BipbipServer {
 			}
 
 			@Override
-			public void eventModified(Event event, int index) {
-				// TODO modify also the allEvents list
+			public void eventModified(Event previousEvent, Event event, int index) {
+				try {
+					ServerCommand.modify(sc, previousEvent, event);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 
 			@Override

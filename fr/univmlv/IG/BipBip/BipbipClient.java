@@ -30,7 +30,7 @@ public class BipbipClient {
 	/* Events */
 	public static EventModelImpl events = new EventModelImpl();
 
-	private static final String bottomBarText = "Pour ajouter une nouvelle alerte, faites un clic prolong� sur le lieu de l'alerte, puis choisissez son type.";
+	private static final String bottomBarText = "Pour ajouter une nouvelle alerte, faites un clic prolongé sur le lieu de l'alerte, puis choisissez son type.";
 
 	public BipbipClient(String host, int port) {
 		this.server = new InetSocketAddress(host, port);
@@ -90,7 +90,7 @@ public class BipbipClient {
 			}
 
 			@Override
-			public void eventModified(Event event, int index) {
+			public void eventModified(Event previousEvent, Event event, int index) {
 				// Do nothing, you are a client and you cannot modify an event
 			}
 

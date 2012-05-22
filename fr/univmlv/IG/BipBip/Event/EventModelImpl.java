@@ -45,9 +45,9 @@ public class EventModelImpl implements EventModel {
 			listener.eventAdded(event, index);
 	}
 	
-	protected void fireEventModify(Event event, int index) {
+	protected void fireEventModify(Event previousEvent, Event event, int index) {
 		for(EventModelListener listener : eventModelListeners)
-			listener.eventModified(event, index);
+			listener.eventModified(previousEvent, event, index);
 	}
 	
 	protected void fireEventRemoved(int position) {
@@ -84,9 +84,16 @@ public class EventModelImpl implements EventModel {
 	}
 	
 	@Override
-	public void modifyEvent(int index, Event event) {
-		this.events.get(index).updateEvent(event);
-		this.fireEventModify(this.events.get(index), index);
+	public void modifyEvent(Event previousEvent, Event event) {
+		/* Because previousEvent reference will be modified */
+		Event oldEvent = new Event(previousEvent.getType(), previousEvent.getX(), previousEvent.getY());
+		for (Event e : events) {
+			if (e.equals(previousEvent)) {
+				e.updateEvent(event);
+				this.fireEventModify(oldEvent, e, events.indexOf(e));
+				break;
+			}
+		}
 	}
 
 	@Override
