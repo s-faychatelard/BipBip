@@ -2,7 +2,6 @@ package fr.univmlv.IG.BipBip.Table;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Cursor;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.JTable;
