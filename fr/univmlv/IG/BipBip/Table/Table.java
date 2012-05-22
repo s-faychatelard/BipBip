@@ -1,7 +1,6 @@
 package fr.univmlv.IG.BipBip.Table;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Dimension;
 
 import javax.swing.JComponent;
