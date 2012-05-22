@@ -191,12 +191,14 @@ public class EditDialog extends JDialog implements ActionListener {
         accidentButton.addActionListener(listener);
         travauxButton.addActionListener(listener);
         diversButton.addActionListener(listener);
-        
+                
         switch (pin.getType()) {
+			case RADAR_FIXE: fixeButton.setSelected(true); break;
 			case RADAR_MOBILE: mobileButton.setSelected(true); break;
 			case ACCIDENT: accidentButton.setSelected(true); break;
 			case TRAVAUX: travauxButton.setSelected(true); break;
-			case RADAR_FIXE: diversButton.setSelected(true); break;
+			case DIVERS: diversButton.setSelected(true); break;
+			default : throw new IllegalStateException();
 		}
 		
 		pin.setLocation(
