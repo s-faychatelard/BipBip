@@ -20,6 +20,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.event.MouseInputAdapter;
 import javax.swing.event.MouseInputListener;
 
 import fr.univmlv.IG.BipBip.Event.Event;
@@ -48,7 +49,7 @@ public class EditDialog extends JDialog implements ActionListener {
 	private final Pin pin;
 	private AnswerEditDialog answer = AnswerEditDialog.BACK;
 
-	// TODO
+
 	public AnswerEditDialog getAnswer() {
 		return answer;
 	}
@@ -182,7 +183,6 @@ public class EditDialog extends JDialog implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				pin.setType(((EditTypeButton) e.getSource()).getType());
-				((JLabel) pin.getComponent(0)).setIcon(pin.getButton().getIcon()); // not a good practice... TODO correct (see todo task bellow)
 			}
 		};
         
@@ -204,17 +204,8 @@ public class EditDialog extends JDialog implements ActionListener {
 				MapPanel.lat2position(pin.getCoords().y, map.getZoom()) - map.getMapPosition().y
 		);
 		
-		// TODO find a way to avoid this hack...
-		JLabel lbl = new JLabel(pin.getButton().getIcon());
-		lbl.setSize(pin.getButton().getSize());
-		pin.remove(pin.getButton());
-		pin.add(lbl);
-		
-		MouseInputListener inputListener = new MouseInputListener() {
-			@Override public void mouseMoved(MouseEvent e) {}
-			@Override public void mousePressed(MouseEvent e) {}
-			@Override public void mouseClicked(MouseEvent e) {}
-			
+		MouseInputListener inputListener = new MouseInputAdapter() {
+
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				Component source = (Component) pin;
@@ -244,8 +235,8 @@ public class EditDialog extends JDialog implements ActionListener {
 			}
 		};
 
-		pin.addMouseListener(inputListener);
-		pin.addMouseMotionListener(inputListener);
+		pin.getButton().addMouseListener(inputListener);
+		pin.getButton().addMouseMotionListener(inputListener);
 
 		map.add(pin);
 		map.addPropertyChangeListener("mapPosition",

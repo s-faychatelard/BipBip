@@ -25,7 +25,7 @@ public class EditButton extends JButton {
 		this.setBorderPainted(false);
 		this.setFocusable(false);
 		this.setRolloverEnabled(false);
-		this.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 	}
 	
 	/**

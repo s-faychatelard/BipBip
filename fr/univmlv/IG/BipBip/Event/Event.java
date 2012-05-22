@@ -8,6 +8,7 @@ public class Event {
     private double x,y;
     private long date;
     private long endDate=0;
+    private int counter = 1;
     
     //TODO implement number of users which alert
     
@@ -88,7 +89,7 @@ public class Event {
      * This is call on a confirmation from a client
      */
     public void incrementCounter() {
-    	// TODO count users
+    	this.counter++;
     }
     
     /**

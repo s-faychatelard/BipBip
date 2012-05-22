@@ -1,5 +1,6 @@
 package fr.univmlv.IG.BipBip.Pin;
 
+import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -78,6 +79,8 @@ public class Pin extends JComponent {
 					Pin.this.repaint();
 				}
 			});
+			
+			this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
 			/* Confirm event */
 			tooltipConfirm.addTooltipListener(new TooltipListener() {

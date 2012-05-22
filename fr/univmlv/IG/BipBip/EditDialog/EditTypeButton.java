@@ -41,7 +41,7 @@ public class EditTypeButton extends JToggleButton {
 		this.setRolloverEnabled(false);
 		this.setMargin(new Insets(25, 15, 15, 15));
 		this.position = position;
-		this.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 	}
 	
 	public EditTypeButton(EventType type) {
