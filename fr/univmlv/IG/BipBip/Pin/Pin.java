@@ -11,6 +11,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 
+import fr.univmlv.IG.BipBip.Event.Event;
 import fr.univmlv.IG.BipBip.Event.EventType;
 import fr.univmlv.IG.BipBip.Resources.ImageNames;
 import fr.univmlv.IG.BipBip.Resources.ResourcesManager;
@@ -27,21 +28,20 @@ public class Pin extends JComponent {
 
 	private static final long serialVersionUID = -4087568813531690419L;
 	private final Collection<PinListener> pinListeners = new ArrayList<PinListener>();
-	private Point.Double coords = new Point.Double(0,0);
+	private Event event;
 
 	private final JButton pinButton;
 	private final Tooltip tooltipConfirm = new Tooltip();
-	private EventType type;
 
-	public Pin(Point.Double coords, EventType type, String tooltipText) {
-		this(coords, type, tooltipText, true);
+	public Pin(Event event, String tooltipText) {
+		this(event, tooltipText, true);
 	}
 
-	public Pin(Point.Double coords, EventType type, String tooltipText, boolean openable) {
+	public Pin(Event event, String tooltipText, boolean openable) {
 		super();
 
 		/* Save coords */
-		this.coords = coords;
+		this.event = event;
 
 		/* Configure panel */
 		this.setOpaque(false);
@@ -52,7 +52,7 @@ public class Pin extends JComponent {
 		pinButton = new JButton();
 		pinButton.setToolTipText(tooltipText);
 		int tooltipOffset=0;
-		this.setType(type);
+		this.refreshType();
 
 
 		pinButton.setSize(pinButton.getIcon().getIconWidth(), pinButton.getIcon().getIconHeight());
@@ -113,20 +113,27 @@ public class Pin extends JComponent {
 		tooltipConfirm.setLocation(pinButton.getX() + pinButton.getWidth()/2, pinButton.getY() + tooltipOffset);
 	}
 	
-	public EventType getType() {
-		return this.type;
+	public void setEvent(Event event) {
+		this.event = event;
 	}
 	
-	public void setType(EventType type) {
-		this.type = type;
-
+	public Event getEvent() {
+		return this.event;
+	}
+	
+	public EventType getType() {
+		return this.event.getType();
+	}
+	
+	public void refreshType() {
+		
 		final ImageIcon fixe = ResourcesManager.getRessourceAsImageIcon(ImageNames.Pin.FIXE);
 		final ImageIcon mobile =  ResourcesManager.getRessourceAsImageIcon(ImageNames.Pin.MOBILE);
 		final ImageIcon accident = ResourcesManager.getRessourceAsImageIcon(ImageNames.Pin.ACCIDENT);
 		final ImageIcon travaux = ResourcesManager.getRessourceAsImageIcon(ImageNames.Pin.TRAVAUX);
 		final ImageIcon divers = ResourcesManager.getRessourceAsImageIcon(ImageNames.Pin.DIVERS);
 		
-		switch (type) {
+		switch (event.getType()) {
 		case RADAR_FIXE:
 			pinButton.setIcon(fixe);
 			pinButton.setDisabledIcon(fixe);
@@ -175,14 +182,6 @@ public class Pin extends JComponent {
 
 	public void clear() {
 		this.remove(tooltipConfirm);
-	}
-
-	public void setCoords(Point.Double coords) {
-		this.coords = coords;
-	}
-
-	public Point.Double getCoords() {
-		return this.coords;
 	}
 	
 	public JButton getButton() {

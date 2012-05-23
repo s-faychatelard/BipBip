@@ -115,7 +115,7 @@ public class Map {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 				for(Pin pin : pins) {
-					pin.setLocation(MapPanel.lon2position(pin.getCoords().x, map.getZoom()) - map.getMapPosition().x, MapPanel.lat2position(pin.getCoords().y, map.getZoom()) - map.getMapPosition().y);
+					pin.setLocation(MapPanel.lon2position(pin.getEvent().getX(), map.getZoom()) - map.getMapPosition().x, MapPanel.lat2position(pin.getEvent().getY(), map.getZoom()) - map.getMapPosition().y);
 					pin.repaint();
 				}
 				tooltipAlert.setLocation(MapPanel.lon2position(tooltipAlert.getCoords().x, map.getZoom()) - map.getMapPosition().x, MapPanel.lat2position(tooltipAlert.getCoords().y, map.getZoom()) - map.getMapPosition().y);
@@ -164,8 +164,8 @@ public class Map {
 	
 	public void addPin(Event event, int index) {
 		/* Create pin */
-		final Pin pin = new Pin(new Point.Double(event.getX(), event.getY()), event.getType(), "Cliquez pour valider ou supprimer");
-		pin.setLocation(MapPanel.lon2position(pin.getCoords().x, map.getZoom()) - map.getMapPosition().x, MapPanel.lat2position(pin.getCoords().y, map.getZoom()) - map.getMapPosition().y);
+		final Pin pin = new Pin(event, "Cliquez pour valider ou supprimer");
+		pin.setLocation(MapPanel.lon2position(pin.getEvent().getX(), map.getZoom()) - map.getMapPosition().x, MapPanel.lat2position(pin.getEvent().getY(), map.getZoom()) - map.getMapPosition().y);
         map.add(pin);
         pin.addPinListener(new PinListener() {
         	@Override

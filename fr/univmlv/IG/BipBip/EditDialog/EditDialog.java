@@ -55,12 +55,14 @@ public class EditDialog extends JDialog implements ActionListener {
 	}
 
 	public Event getEvent() {
-		Event evt = new Event(pin.getType(), pin.getCoords().x, pin.getCoords().y);
+		Event evt = new Event(pin.getType(), pin.getEvent().getX(), pin.getEvent().getY());
 		return evt;
 	}
 
 	public EditDialog(JFrame frame, Event event, boolean modal) {
 		super(frame, modal);
+		
+		Event evt = new Event(event.getType(), event.getX(), event.getY());
 		this.setLocationRelativeTo(frame);
 		this.setMinimumSize(new Dimension(550, 440));
 		this.setSize(new Dimension(600, 440));
@@ -177,12 +179,14 @@ public class EditDialog extends JDialog implements ActionListener {
 		/* All listener */
 		map.setSize(500, 260); 						// c'est sale, mais avec un peu de chance ça ne se verra pas... Surtout avec un petit commentaire très discret
 
-		pin = new Pin(new Point.Double(event.getX(), event.getY()), event.getType(), "Drag'n drop pour déplacer le point", false);
+		pin = new Pin(evt, "Drag'n drop pour déplacer le point", false);
 
 		ActionListener listener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				pin.setType(((EditTypeButton) e.getSource()).getType());
+				Event evt = pin.getEvent();
+				Event newTypeEvent = new Event(((EditTypeButton) e.getSource()).getType(), evt.getX(), evt.getY());
+				pin.setEvent(newTypeEvent);
 			}
 		};
 
@@ -201,7 +205,7 @@ public class EditDialog extends JDialog implements ActionListener {
 		default : throw new IllegalStateException();
 		}
 
-		pin.setLocation(MapPanel.lon2position(pin.getCoords().x, map.getZoom()) - map.getMapPosition().x, MapPanel.lat2position(pin.getCoords().y, map.getZoom()) - map.getMapPosition().y);
+		pin.setLocation(MapPanel.lon2position(pin.getEvent().getX(), map.getZoom()) - map.getMapPosition().x, MapPanel.lat2position(pin.getEvent().getY(), map.getZoom()) - map.getMapPosition().y);
 
 		MouseInputListener inputListener = new MouseInputAdapter() {
 
@@ -210,7 +214,11 @@ public class EditDialog extends JDialog implements ActionListener {
 				Component source = (Component) pin;
 				Point location = source.getLocation();
 				location.translate(e.getX(), e.getY());
-				pin.setCoords(map.getLongitudeLatitude(new Point(location.x + map.getMapPosition().x, location.y + map.getMapPosition().y)));
+				
+				Point.Double coord = map.getLongitudeLatitude(new Point(location.x + map.getMapPosition().x, location.y + map.getMapPosition().y));
+				Event evt = pin.getEvent();
+				Event newTypeEvent = new Event(evt.getType(), coord.getX(), coord.getY());
+				pin.setEvent(newTypeEvent);
 			}
 
 			@Override
@@ -242,7 +250,7 @@ public class EditDialog extends JDialog implements ActionListener {
 			
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
-				pin.setLocation(MapPanel.lon2position(pin.getCoords().x, map.getZoom()) - map.getMapPosition().x, MapPanel.lat2position(pin.getCoords().y, map.getZoom()) - map.getMapPosition().y);
+				pin.setLocation(MapPanel.lon2position(pin.getEvent().getX(), map.getZoom()) - map.getMapPosition().x, MapPanel.lat2position(pin.getEvent().getY(), map.getZoom()) - map.getMapPosition().y);
 				pin.repaint();
 			}
 		});
