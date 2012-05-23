@@ -115,6 +115,7 @@ public class Pin extends JComponent {
 	
 	public void setEvent(Event event) {
 		this.event = event;
+		this.refreshType();
 	}
 	
 	public Event getEvent() {

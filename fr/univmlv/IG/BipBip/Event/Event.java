@@ -97,7 +97,9 @@ public class Event {
      */
     public void decrementCounter() {
     	// TODO count users
-    	this.invalidate();
+    	this.counter--;
+    	if (this.counter == 0)
+    		this.invalidate();
     }
     
     /**
