@@ -40,14 +40,14 @@ public class EventModelImpl implements EventModel {
 			listener.eventsAdded(events);
 	}
 	
-	protected void fireEventAdded(Event event, int index) {
+	protected void fireEventAdded(Event event) {
 		for(EventModelListener listener : eventModelListeners)
-			listener.eventAdded(event, index);
+			listener.eventAdded(event);
 	}
 	
-	protected void fireEventModify(Event previousEvent, Event event, int index) {
+	protected void fireEventModify(Event previousEvent, Event event) {
 		for(EventModelListener listener : eventModelListeners)
-			listener.eventModified(previousEvent, event, index);
+			listener.eventModified(previousEvent, event);
 	}
 	
 	protected void fireEventRemoved(int position) {
@@ -80,7 +80,7 @@ public class EventModelImpl implements EventModel {
 		if (event.getEndDate() != 0)
 			return;
 		this.events.add(event);
-		this.fireEventAdded(events.get(events.size()-1), events.size()-1);
+		this.fireEventAdded(events.get(events.size()-1));
 	}
 	
 	@Override
@@ -90,7 +90,7 @@ public class EventModelImpl implements EventModel {
 		for (Event e : events) {
 			if (e.equals(previousEvent)) {
 				e.updateEvent(event);
-				this.fireEventModify(oldEvent, e, events.indexOf(e));
+				this.fireEventModify(oldEvent, e);
 				break;
 			}
 		}

@@ -105,7 +105,7 @@ public class BipbipServer {
 			}
 
 			@Override
-			public void eventAdded(Event event, int index) {
+			public void eventAdded(Event event) {
 				try {
 					ServerCommand.sendInfo(sc, event);
 				} catch (IOException e) {
@@ -114,7 +114,7 @@ public class BipbipServer {
 			}
 
 			@Override
-			public void eventModified(Event previousEvent, Event event, int index) {
+			public void eventModified(Event previousEvent, Event event) {
 				try {
 					ServerCommand.modify(sc, previousEvent, event);
 				} catch (IOException e) {
