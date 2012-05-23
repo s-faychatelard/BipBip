@@ -76,7 +76,7 @@ public class BipbipClient {
 			}
 
 			@Override
-			public void eventAdded(Event event, int index) {
+			public void eventAdded(Event event) {
 				try {
 					BipbipClient.this.submit(event.getType(), event.getX(), event.getY());
 				} catch (IOException e) {
@@ -90,7 +90,7 @@ public class BipbipClient {
 			}
 
 			@Override
-			public void eventModified(Event previousEvent, Event event, int index) {
+			public void eventModified(Event previousEvent, Event event) {
 				// Do nothing, you are a client and you cannot modify an event
 			}
 

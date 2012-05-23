@@ -39,13 +39,13 @@ public class TableModel extends AbstractTableModel {
 			}
 			
 			@Override
-			public void eventAdded(Event event, int index) {
-				TableModel.this.fireTableRowsInserted(index, index);
+			public void eventAdded(Event event) {
+				TableModel.this.fireTableRowsInserted(TableModel.this.events.getEvents().indexOf(event), TableModel.this.events.getEvents().indexOf(event));
 			}
 			
 			@Override
-			public void eventModified(Event previousEvent, Event event, int index) {
-				TableModel.this.fireTableRowsUpdated(index, index);
+			public void eventModified(Event previousEvent, Event event) {
+				TableModel.this.fireTableRowsUpdated(TableModel.this.events.getEvents().indexOf(event), TableModel.this.events.getEvents().indexOf(event));
 			}
 			
 			@Override

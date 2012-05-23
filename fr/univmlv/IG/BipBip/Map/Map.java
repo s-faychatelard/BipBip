@@ -83,16 +83,21 @@ public class Map {
 			}
 			
 			@Override
-			public void eventAdded(Event event, int index) {
+			public void eventAdded(Event event) {
 				Map.this.addPin(event);
 				map.repaint();
 			}
 			
 			@Override
-			public void eventModified(Event previousEvent, Event event, int index) {
-				map.remove(pins.get(index));
-				pins.remove(index);
-				Map.this.addPin(event, index);
+			public void eventModified(Event previousEvent, Event event) {
+				for (Pin pin : pins) {
+					if (pin.getEvent().getSpatialHash().equals(previousEvent.getSpatialHash())) {
+						map.remove(pin);
+						pins.remove(pin);
+						Map.this.addPin(event);
+						break;
+					}
+				}
 				map.repaint();
 			}
 			
