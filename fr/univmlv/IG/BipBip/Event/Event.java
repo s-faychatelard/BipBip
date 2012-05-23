@@ -88,22 +88,24 @@ public class Event {
     /**
      * This is call on a confirmation from a client
      */
-    public void incrementCounter() {
+    void incrementCounter() {
     	this.counter++;
     }
     
     /**
      * This is call when a client unconfirm the event
      */
-    public void decrementCounter() {
+    void decrementCounter() {
     	// TODO count users
-    	this.invalidate();
+    	this.counter--;
+    	if (this.counter == 0)
+    		this.invalidate();
     }
     
     /**
      * Set the event has ended
      */
-    public void invalidate() {
+    void invalidate() {
     	this.endDate = new Date().getTime();
     }
     
