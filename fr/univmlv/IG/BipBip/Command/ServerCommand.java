@@ -3,9 +3,12 @@ package fr.univmlv.IG.BipBip.Command;
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
+import java.util.SortedSet;
 
 import fr.univmlv.IG.BipBip.BipbipClient;
+import fr.univmlv.IG.BipBip.BipbipServer;
 import fr.univmlv.IG.BipBip.Event.Event;
 import fr.univmlv.IG.BipBip.Event.EventType;
 
@@ -44,7 +47,8 @@ public enum ServerCommand {
                 }
                 ServerCommand.INFO.handle(sc,scanner);
             }
-        }              
+        }     
+
     },
     
     INFO {
@@ -202,6 +206,13 @@ public enum ServerCommand {
         for (Event e:list) {
             sendInfo(sc,e);
         }
+    }
+    
+    public static void sendInfos(SocketChannel sc, Iterable<Event> it, int size) throws IOException {
+        NetUtil.writeLine(sc,"INFOS "+size);
+        for (Event e : it) {
+            sendInfo(sc,e);
+		}
     }
 
     public static void sendInfo(SocketChannel sc, Event e) throws IOException {

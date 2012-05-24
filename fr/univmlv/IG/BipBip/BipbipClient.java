@@ -2,6 +2,8 @@ package fr.univmlv.IG.BipBip;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
@@ -20,6 +22,8 @@ import fr.univmlv.IG.BipBip.Event.EventModelImpl;
 import fr.univmlv.IG.BipBip.Event.EventModelListener;
 import fr.univmlv.IG.BipBip.Event.EventType;
 import fr.univmlv.IG.BipBip.Map.Map;
+import fr.univmlv.IG.BipBip.Map.MapPanel;
+import fr.univmlv.IG.BipBip.Pin.Pin;
 
 public class BipbipClient {
 
@@ -53,11 +57,11 @@ public class BipbipClient {
 		ClientCommand.notSeen(sc, event, x, y);
 	}
 
-	public void getInfos() throws IOException {
+	public void getInfos(double x, double y, int zoom) throws IOException {
 		Scanner scanner = new Scanner(sc,NetUtil.getCharset().name());
 
 		/* Get all events */
-		ClientCommand.getInfo(sc);
+		ClientCommand.getInfo(sc, x, y, zoom);
 		if (!scanner.hasNext() || !scanner.next().equals(ServerCommand.INFOS.name())) {
 			throw new IOException("Server did not respond to the GET_INFO query");
 		}
@@ -159,8 +163,22 @@ public class BipbipClient {
 
 		frame.setVisible(true);
 
-		BipbipClient client = new BipbipClient("localhost", 6996);
+		final BipbipClient client = new BipbipClient("localhost", 6996);
 		client.connect();
-		client.getInfos();
+		
+		map.getMapPanel().addPropertyChangeListener("mapPosition", new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				int zoom = map.getMapPanel().getZoom();
+				try {
+					client.getInfos(MapPanel.position2lat(map.getMapPanel().getMapPosition().y, zoom), MapPanel.position2lon(map.getMapPanel().getMapPosition().y, zoom), zoom);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				map.getMapPanel().repaint();
+			}
+		});
+
 	}
 }

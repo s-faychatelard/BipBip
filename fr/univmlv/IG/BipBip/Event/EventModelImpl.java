@@ -36,6 +36,7 @@ public class EventModelImpl implements EventModel {
 	}
 	
 	protected void fireEventsAdded(List<? extends Event> events) {
+		System.out.println("events added");
 		for(EventModelListener listener : eventModelListeners)
 			listener.eventsAdded(events);
 	}

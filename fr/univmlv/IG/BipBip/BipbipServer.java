@@ -32,6 +32,7 @@ import fr.univmlv.IG.BipBip.Command.NetUtil;
 import fr.univmlv.IG.BipBip.Command.ServerCommand;
 import fr.univmlv.IG.BipBip.Event.Event;
 import fr.univmlv.IG.BipBip.Event.EventModelImpl;
+import fr.univmlv.IG.BipBip.Event.EventModelImplTreeAdapter;
 import fr.univmlv.IG.BipBip.Event.EventModelListener;
 import fr.univmlv.IG.BipBip.Map.Map;
 import fr.univmlv.IG.BipBip.Map.MapPanel;
@@ -49,6 +50,8 @@ public class BipbipServer {
 
 	/* Static object */
 	public static EventModelImpl events = new EventModelImpl();
+	public static EventModelImplTreeAdapter treeAdapter = new EventModelImplTreeAdapter(events);
+
 	public static JFrame frame;
 	private static final String btnSwitcherSecondaryText = "Revenir à la vue en temps réel";
 	private static final String btnSwitcherDefaultText = "Ouvrir la timeline";
@@ -63,6 +66,7 @@ public class BipbipServer {
 	 * Wait connection and serve a client as soon as possible
 	 */
 	public void serve() {
+		
 		for (int i=0; i<MAX_CONNECTIONS; i++) {
 			new Thread() {
 				@Override

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.SortedSet;
 
 import fr.univmlv.IG.BipBip.BipbipServer;
 import fr.univmlv.IG.BipBip.Event.Event;
@@ -131,9 +132,33 @@ public enum ClientCommand {
          */
         @Override
         public void handle(SocketChannel sc, Scanner scanner) throws IOException {
-            ServerCommand.sendInfos(sc, new ArrayList<Event>(BipbipServer.events.getEvents()));
+        	   
+       		double x,y;
+    		int zoom;
+            if (!scanner.hasNextDouble()) {
+                throw new IOException("Missing X coordinate");
+            }
+            x=scanner.nextDouble();
+            if (!scanner.hasNextDouble()) {
+                throw new IOException("Missing Y coordinate");
+            }
+            y=scanner.nextDouble();
+            
+            if (!scanner.hasNextInt()) {
+                throw new IOException("Missing zoom info");
+            }
+            zoom=scanner.nextInt();
+            
+        	SortedSet<Event> events = BipbipServer.treeAdapter.tree.tailSet(new Event(EventType.ACCIDENT, x, y));
+        	ServerCommand.sendInfos(sc, events, events.size());
+        	
+        	
+//        	ServerCommand.sendInfos(sc, new ArrayList<Event>(BipbipServer.events.getEvents()));
         }
-    };
+
+
+    }
+    ;
     
     public abstract void handle(SocketChannel sc,Scanner scanner) throws IOException;
     
@@ -149,8 +174,9 @@ public enum ClientCommand {
         NetUtil.writeLine(sc,"NOT_SEEN "+event.name()+" "+x+" "+y);
     }
 
-    public static void getInfo(SocketChannel sc) throws IOException {
-        NetUtil.writeLine(sc,"GET_INFO");
+    public static void getInfo(SocketChannel sc, double x,double y, int zoom) throws IOException {
+    	System.out.println("GET_INFO"+" "+x+" "+y+" "+zoom);
+        NetUtil.writeLine(sc,"GET_INFO"+" "+x+" "+y+" "+zoom);
     }
     
 
