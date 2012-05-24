@@ -2,7 +2,6 @@ package fr.univmlv.IG.BipBip.Command;
 
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.SortedSet;
 
@@ -143,15 +142,13 @@ public enum ClientCommand {
                 throw new IOException("Missing Y coordinate");
             }
             y=scanner.nextDouble();
-            
             if (!scanner.hasNextInt()) {
                 throw new IOException("Missing zoom info");
             }
             zoom=scanner.nextInt();
-            
+
         	SortedSet<Event> events = BipbipServer.treeAdapter.tree.tailSet(new Event(EventType.ACCIDENT, x, y));
         	ServerCommand.sendInfos(sc, events, events.size());
-        	
         	
 //        	ServerCommand.sendInfos(sc, new ArrayList<Event>(BipbipServer.events.getEvents()));
         }
@@ -175,8 +172,8 @@ public enum ClientCommand {
     }
 
     public static void getInfo(SocketChannel sc, double x,double y, int zoom) throws IOException {
-    	System.out.println("GET_INFO"+" "+x+" "+y+" "+zoom);
-        NetUtil.writeLine(sc,"GET_INFO"+" "+x+" "+y+" "+zoom);
+    	System.out.println("GET_INFO "+x+" "+y+" "+zoom);
+        NetUtil.writeLine(sc,"GET_INFO "+x+" "+y+" "+zoom);
     }
     
 

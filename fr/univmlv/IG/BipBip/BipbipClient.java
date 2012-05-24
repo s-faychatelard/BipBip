@@ -23,7 +23,6 @@ import fr.univmlv.IG.BipBip.Event.EventModelListener;
 import fr.univmlv.IG.BipBip.Event.EventType;
 import fr.univmlv.IG.BipBip.Map.Map;
 import fr.univmlv.IG.BipBip.Map.MapPanel;
-import fr.univmlv.IG.BipBip.Pin.Pin;
 
 public class BipbipClient {
 
@@ -66,7 +65,11 @@ public class BipbipClient {
 			throw new IOException("Server did not respond to the GET_INFO query");
 		}
 		ServerCommand.INFOS.handle(sc, scanner);
-
+	}
+	
+	public void serveCommand() {
+		Scanner scanner = new Scanner(sc,NetUtil.getCharset().name());
+		
 		events.addEventListener(new EventModelListener() {
 
 			@Override
@@ -116,6 +119,7 @@ public class BipbipClient {
 				}
 			}
 		});
+		
 		try {
 			while (scanner.hasNextLine()) {
 				String line = scanner.nextLine();
@@ -165,6 +169,7 @@ public class BipbipClient {
 
 		final BipbipClient client = new BipbipClient("localhost", 6996);
 		client.connect();
+		client.serveCommand();
 		
 		map.getMapPanel().addPropertyChangeListener("mapPosition", new PropertyChangeListener() {
 			@Override
@@ -173,7 +178,6 @@ public class BipbipClient {
 				try {
 					client.getInfos(MapPanel.position2lat(map.getMapPanel().getMapPosition().y, zoom), MapPanel.position2lon(map.getMapPanel().getMapPosition().y, zoom), zoom);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				map.getMapPanel().repaint();

@@ -3,12 +3,9 @@ package fr.univmlv.IG.BipBip.Command;
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Scanner;
-import java.util.SortedSet;
 
 import fr.univmlv.IG.BipBip.BipbipClient;
-import fr.univmlv.IG.BipBip.BipbipServer;
 import fr.univmlv.IG.BipBip.Event.Event;
 import fr.univmlv.IG.BipBip.Event.EventType;
 
