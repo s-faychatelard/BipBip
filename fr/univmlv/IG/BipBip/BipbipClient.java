@@ -66,10 +66,10 @@ public class BipbipClient {
 		}
 		ServerCommand.INFOS.handle(sc, scanner);
 	}
-	
+
 	public void serveCommand() {
 		Scanner scanner = new Scanner(sc,NetUtil.getCharset().name());
-		
+
 		events.addEventListener(new EventModelListener() {
 
 			@Override
@@ -119,7 +119,7 @@ public class BipbipClient {
 				}
 			}
 		});
-		
+
 		try {
 			while (scanner.hasNextLine()) {
 				String line = scanner.nextLine();
@@ -169,9 +169,9 @@ public class BipbipClient {
 
 		final BipbipClient client = new BipbipClient("localhost", 6996);
 		client.connect();
-		client.serveCommand();
-		
+
 		map.getMapPanel().addPropertyChangeListener("mapPosition", new PropertyChangeListener() {
+
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 				int zoom = map.getMapPanel().getZoom();
@@ -184,5 +184,6 @@ public class BipbipClient {
 			}
 		});
 
+		client.serveCommand();
 	}
 }
