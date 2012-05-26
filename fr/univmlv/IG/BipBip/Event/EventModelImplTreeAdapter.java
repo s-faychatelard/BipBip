@@ -74,7 +74,7 @@ public class EventModelImplTreeAdapter implements EventModel {
 	
 	@Override
 	public void confirm(Event event) {
-		//throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException();
 	}
 	
 	@Override
