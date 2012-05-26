@@ -149,7 +149,7 @@ public enum ClientCommand {
             zoom=scanner.nextInt();
         	SortedSet<Event> events = BipbipServer.treeAdapter.tree.tailSet(Event.createMockEvent(SpatialHashing.compute(x, y).substring(0, 4)));
         	ServerCommand.sendInfos(sc, events, events.size());
-       }
+        }
     };
     
     public abstract void handle(SocketChannel sc,Scanner scanner) throws IOException;

@@ -51,7 +51,6 @@ public class EventModelImplTreeAdapter implements EventModel {
 	}
 
 	/* Implements */
-
 	@Override
 	public void addEvent(Event event) {
 		tree.add(event);

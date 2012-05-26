@@ -152,7 +152,7 @@ public class BipbipClient {
 
 		final BipbipClient client = new BipbipClient("localhost", 6996);
 		client.connect();
-
+		
 		map.getMapPanel().addPropertyChangeListener("mapPosition", new PropertyChangeListener() {
 
 			@Override
@@ -166,7 +166,7 @@ public class BipbipClient {
 				map.getMapPanel().repaint();
 			}
 		});
-		
+
 		client.getInfos(MapPanel.position2lat(map.getMapPanel().getMapPosition().y, map.getMapPanel().getZoom()), MapPanel.position2lon(map.getMapPanel().getMapPosition().y, map.getMapPanel().getZoom()), map.getMapPanel().getZoom());
 		client.serveCommand();
 	}

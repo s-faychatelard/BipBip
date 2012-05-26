@@ -73,7 +73,7 @@ public class Map {
 		});
 		
 		((EventModelImpl)events).addEventListener(new EventModelListener() {
-			
+		
 			@Override
 			public void eventAdded(Event event) {
 				Map.this.addPin(event);
