@@ -26,6 +26,11 @@ public class Map {
 	private final EventModel events;
 	final ArrayList<Pin> pins = new ArrayList<Pin>();
 	
+	/**
+	 * Create a Map
+	 * 
+	 * @param events represent the Model of the application
+	 */
 	public Map(EventModel events) {
 		this.events = events;
 		
@@ -72,6 +77,7 @@ public class Map {
 			}
 		});
 		
+        /* Model listener */
 		((EventModelImpl)events).addEventListener(new EventModelListener() {
 		
 			@Override
@@ -159,6 +165,12 @@ public class Map {
 		});
 	}
 	
+	/**
+	 * Add a pin on the map
+	 * 
+	 * @param event of the Pin
+	 * @param index to put in list of pins
+	 */
 	public void addPin(Event event, int index) {
 		/* Create pin */
 		final Pin pin = new Pin(event, "Cliquez pour valider ou supprimer");
@@ -186,10 +198,20 @@ public class Map {
         pins.add(index, pin);
 	}
 
+	/**
+	 * Add a pin on the map
+	 * 
+	 * @param event of the Pin
+	 */
 	public void addPin(Event event) {
 		this.addPin(event, pins.size());
 	}
 	
+	/**
+	 * Return the MapPanel component
+	 * 
+	 * @return the MapPanel
+	 */
 	public MapPanel getMapPanel() {
 		return map;
 	}

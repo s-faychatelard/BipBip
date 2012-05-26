@@ -154,18 +154,58 @@ public enum ClientCommand {
     
     public abstract void handle(SocketChannel sc,Scanner scanner) throws IOException;
     
+    /**
+     * Submit a new alert
+     * 
+     * @param sc channel of the client
+     * @param event represent the type of alert
+     * @param x longitude of the alert
+     * @param y latitude of the alert
+     * 
+     * @throws IOException
+     */
     public static void submit(SocketChannel sc,EventType event,double x,double y) throws IOException {
         NetUtil.writeLine(sc,"SUBMIT "+event.name()+" "+x+" "+y);
     }
     
+    /**
+     * Confirm an alert
+     * 
+     * @param sc channel of the client
+     * @param event represent the type of alert
+     * @param x longitude of the alert
+     * @param y latitude of the alert
+     * 
+     * @throws IOException
+     */
     public static void confirm(SocketChannel sc,EventType event,double x,double y) throws IOException {
         NetUtil.writeLine(sc,"CONFIRM "+event.name()+" "+x+" "+y);
     }
     
+    /**
+     * Unconfirm an alert
+     * 
+     * @param sc channel of the client
+     * @param event represent the type of alert
+     * @param x longitude of the alert
+     * @param y latitude of the alert
+     * 
+     * @throws IOException
+     */
     public static void notSeen(SocketChannel sc,EventType event,double x,double y) throws IOException {
         NetUtil.writeLine(sc,"NOT_SEEN "+event.name()+" "+x+" "+y);
     }
 
+    /**
+     * Get all alerts in a specific zone for a specific zoom
+     * 
+     * @param sc channel of the client
+     * @param x longitude of the client map
+     * @param y latitude of the client map
+     * @param zoom of the client map
+     * 
+     * @throws IOException
+     */
     public static void getInfo(SocketChannel sc, double x,double y, int zoom) throws IOException {
         NetUtil.writeLine(sc,"GET_INFO "+x+" "+y+" "+zoom);
     }

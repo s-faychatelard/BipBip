@@ -23,6 +23,12 @@ public class ActionCell extends JPanel {
 	private final JButton btnDelete;
 	private final Collection<ActionCellListener> actionCellListeners = new ArrayList<ActionCellListener>();
 
+	/**
+	 * Create a cell with three buttons (Locate, Edit an Delete)
+	 * 
+	 * @param index of the ActionCell in the JTable
+	 * @param listener of the ActionCell
+	 */
 	public ActionCell(final int index, ActionCellListener listener) {
 		this.setLayout(new FlowLayout());
 		this.addActionCellListener(listener);
@@ -84,17 +90,14 @@ public class ActionCell extends JPanel {
 		MouseListener defaultMouseListener = new MouseListener() {
 			@Override
 			public void mousePressed(MouseEvent e) {
+				/* Change the color of the cell on press event */
 				ActionCell.this.setBackground(new Color(.35f, .58f, .92f));
 			}
 			
-			@Override
-			public void mouseReleased(MouseEvent e) {}
-			@Override
-			public void mouseExited(MouseEvent e) {}
-			@Override
-			public void mouseEntered(MouseEvent e) {}
-			@Override
-			public void mouseClicked(MouseEvent e) {}
+			@Override public void mouseReleased(MouseEvent e) {}
+			@Override public void mouseExited(MouseEvent e) {}
+			@Override public void mouseEntered(MouseEvent e) {}
+			@Override public void mouseClicked(MouseEvent e) {}
 		};
 		
 		btnLocate.addMouseListener(defaultMouseListener);
@@ -103,20 +106,41 @@ public class ActionCell extends JPanel {
 		this.addMouseListener(defaultMouseListener);
 	}
 	
+	/**
+	 * Add a listener to the ActionCell
+	 * Call for an locate, edit or delete clicked
+	 * 
+	 * @param listener of the ActionCell
+	 */
 	private void addActionCellListener(ActionCellListener listener) {
 		actionCellListeners.add(listener);
 	}
 	
+	/**
+	 * Fire a locate event
+	 * 
+	 * @param index of the ActionCell in the JTable
+	 */
 	protected void fireEventLocate(int index) {
 		for(ActionCellListener listener : actionCellListeners)
 			listener.eventLocate(index);
 	}
 	
+	/**
+	 * Fire an edit event
+	 * 
+	 * @param index of the ActionCell in the JTable
+	 */
 	protected void fireEventEdit(int index) {
 		for(ActionCellListener listener : actionCellListeners)
 			listener.eventEdit(index);
 	}
 	
+	/**
+	 * Fire a delete event
+	 * 
+	 * @param index of the ActionCell in the JTable
+	 */
 	protected void fireEventDelete(int index) {
 		for(ActionCellListener listener : actionCellListeners)
 			listener.eventDelete(index);

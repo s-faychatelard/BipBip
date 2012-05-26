@@ -13,9 +13,12 @@ import fr.univmlv.IG.BipBip.Resources.ResourcesManager;
 
 public class EditButton extends JButton {
 	private static final long serialVersionUID = -8973864888152429363L;
-	
 
-	
+	/**
+	 * Create an Edit Button
+	 * 
+	 * @param title of the button
+	 */
 	public EditButton(String title) {
 		super("<html><font color='white'>" + title + "</font></html>");
 		this.setFont(new Font("Arial", Font.BOLD, 13));

@@ -10,12 +10,20 @@ import javax.swing.ListSelectionModel;
 
 import fr.univmlv.IG.BipBip.Event.EventModel;
 
+/**
+ * This class manage the JTable
+ */
 public class Table {
 	
 	private final JScrollPane scrollPane;
 	private final JTable table;
 	private final TableModel tableModel;
 	
+	/**
+	 * Create the Table which also create the JTable
+	 * 
+	 * @param events represent the Model of the application
+	 */
 	public Table(EventModel events) {
 		this.tableModel = new TableModel(events);
 		
@@ -47,10 +55,20 @@ public class Table {
 		scrollPane.setBorder(null);
 	}
 	
+	/**
+	 * Return the Model of the JTable
+	 * 
+	 * @return the TableModel
+	 */
 	public TableModel getModel() {
 		return this.tableModel;
 	}
 	
+	/**
+	 * Return the JComponent which contain the JTable
+	 * 
+	 * @return the JComponent containing the JTable
+	 */
 	public JComponent getPanel() {
 		return (JComponent)this.scrollPane;
 	}

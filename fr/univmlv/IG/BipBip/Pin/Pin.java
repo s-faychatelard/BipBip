@@ -19,9 +19,6 @@ import fr.univmlv.IG.BipBip.Tooltip.Tooltip;
 import fr.univmlv.IG.BipBip.Tooltip.TooltipListener;
 
 /**
- * TODO : externaliser les specificités liés aux pins
- *  
- * @author djubeau & sfaychat
  * Pin class is a JComponent used to represent geolocated pins 
  */
 public class Pin extends JComponent {
@@ -33,10 +30,23 @@ public class Pin extends JComponent {
 	private final JButton pinButton;
 	private final Tooltip tooltipConfirm = new Tooltip();
 
+	/**
+	 * Create a Pin with openable tooltip to confirm or unconfirm
+	 * 
+	 * @param event of the Pin
+	 * @param tooltipText represent the text of the Pin
+	 */
 	public Pin(Event event, String tooltipText) {
 		this(event, tooltipText, true);
 	}
 
+	/**
+	 * Create a Pin
+	 * 
+	 * @param event of the Pin
+	 * @param tooltipText represent the text of the Pin
+	 * @param openable specify if you can open the tooltip to confirm or unconfirm
+	 */
 	public Pin(Event event, String tooltipText, boolean openable) {
 		super();
 
@@ -113,19 +123,37 @@ public class Pin extends JComponent {
 		tooltipConfirm.setLocation(pinButton.getX() + pinButton.getWidth()/2, pinButton.getY() + tooltipOffset);
 	}
 	
+	/**
+	 * Change the event of the Pin
+	 * 
+	 * @param event is the new event
+	 */
 	public void setEvent(Event event) {
 		this.event = event;
 		this.refreshType();
 	}
 	
+	/**
+	 * Get the event of the Pin
+	 * 
+	 * @return the event
+	 */
 	public Event getEvent() {
 		return this.event;
 	}
 	
+	/**
+	 * Get the type of the Pin
+	 * 
+	 * @return the type
+	 */
 	public EventType getType() {
 		return this.event.getType();
 	}
 	
+	/**
+	 * Change the Icon if needed
+	 */
 	public void refreshType() {
 		
 		final ImageIcon fixe = ResourcesManager.getRessourceAsImageIcon(ImageNames.Pin.FIXE);
@@ -138,27 +166,22 @@ public class Pin extends JComponent {
 		case RADAR_FIXE:
 			pinButton.setIcon(fixe);
 			pinButton.setDisabledIcon(fixe);
-			//tooltipOffset = 5;
 			break;
 		case RADAR_MOBILE:
 			pinButton.setIcon(mobile);
 			pinButton.setDisabledIcon(mobile);
-			//tooltipOffset = 10;
 			break;
 		case ACCIDENT:
 			pinButton.setIcon(accident);
 			pinButton.setDisabledIcon(accident);
-			//tooltipOffset = 8;
 			break;
 		case TRAVAUX:
 			pinButton.setIcon(travaux);
 			pinButton.setDisabledIcon(travaux);
-			//tooltipOffset = 10;
 			break;
 		case DIVERS:
 			pinButton.setIcon(divers);
 			pinButton.setDisabledIcon(divers);
-			//tooltipOffset = 5;
 			break;
 		default:
 			assert(1==0);
@@ -167,33 +190,59 @@ public class Pin extends JComponent {
 		
 	}
 
+	/**
+	 * Add a PinListener
+	 * 
+	 * @param listener
+	 */
 	public void addPinListener(PinListener listener) {
 		pinListeners.add(listener);
 	}
 
+	/**
+	 * Fire a selected event (represent a click on the Pin)
+	 */
 	protected void fireSelected() {
 		for(PinListener listener : pinListeners)
 			listener.eventSelected();
 	}
 
+	/**
+	 * Fire a confirm event (represent a click to confirm or unconfirm in tooltip)
+	 * @param confirm
+	 */
 	protected void fireConfirm(boolean confirm) {
 		for(PinListener listener : pinListeners)
 			listener.eventConfirm(confirm);
 	}
 
+	/**
+	 * Remove the tooltip of the Pin
+	 */
 	public void clear() {
 		this.remove(tooltipConfirm);
 	}
 	
+	/**
+	 * Return the JButton of the Pin
+	 * 
+	 * @return the button of the Pin
+	 */
 	public JButton getButton() {
 		return pinButton;
 	}
 
+	/**
+	 * Set the new location of the Pin
+	 */
 	@Override
 	public void setLocation(int x, int y) {
 		this.setLocation(new Point(x, y));
 	}
 
+	/**
+	 * Set the new location of the Pin
+	 */
 	@Override
 	public void setLocation(Point p) {
 		super.setLocation(p.x - this.getWidth()/2, p.y - this.getHeight() + 5);

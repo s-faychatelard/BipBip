@@ -17,6 +17,11 @@ public class TimelineMap {
 	private final EventModel events;
 	final ArrayList<Pin> pins = new ArrayList<Pin>();
 	
+	/**
+	 * Create a TimelineMap
+	 * 
+	 * @param events represent the Model of the application
+	 */
 	public TimelineMap(EventModel events) {
 		this.events = events;
 		
@@ -38,6 +43,12 @@ public class TimelineMap {
 		});
 	}
 	
+	/**
+	 * Load all pins in the TimelineMap for a specific time
+	 * 
+	 * @param day
+	 * @param hour
+	 */
 	public void setTime(int day, int hour) {
 		ArrayList<Pin> tmpPins = new ArrayList<Pin>();
 		for (Event e : events.getEventsFromBeginning()) {
@@ -57,6 +68,12 @@ public class TimelineMap {
 		this.putPinsOnMap();
 	}
 
+	/**
+	 * Create a pin
+	 * 
+	 * @param event of the pin
+	 * @return the created pin
+	 */
 	private Pin createPin(Event event) {
 		/* Create pin */
 		final Pin pin = new Pin(event, "", false);
@@ -64,12 +81,20 @@ public class TimelineMap {
         return pin;
 	}
 	
+	/**
+	 * Add pins on the map
+	 */
 	private void putPinsOnMap() {
 		for (Pin p : pins)
 			map.add(p);
 		map.repaint();
 	}
 	
+	/**
+	 * Return the MapPanel component
+	 * 
+	 * @return the MapPanel
+	 */
 	public MapPanel getMapPanel() {
 		return map;
 	}
