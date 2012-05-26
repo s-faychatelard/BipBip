@@ -8,6 +8,7 @@ import java.util.SortedSet;
 import fr.univmlv.IG.BipBip.BipbipServer;
 import fr.univmlv.IG.BipBip.Event.Event;
 import fr.univmlv.IG.BipBip.Event.EventType;
+import fr.univmlv.IG.Utils.SpatialHashing;
 
 public enum ClientCommand {
     
@@ -146,16 +147,10 @@ public enum ClientCommand {
                 throw new IOException("Missing zoom info");
             }
             zoom=scanner.nextInt();
-
-        	SortedSet<Event> events = BipbipServer.treeAdapter.tree.tailSet(new Event(EventType.ACCIDENT, x, y));
+        	SortedSet<Event> events = BipbipServer.treeAdapter.tree.tailSet(Event.createMockEvent(SpatialHashing.compute(x, y).substring(0, 4)));
         	ServerCommand.sendInfos(sc, events, events.size());
-        	
-//        	ServerCommand.sendInfos(sc, new ArrayList<Event>(BipbipServer.events.getEvents()));
-        }
-
-
-    }
-    ;
+       }
+    };
     
     public abstract void handle(SocketChannel sc,Scanner scanner) throws IOException;
     
@@ -172,7 +167,6 @@ public enum ClientCommand {
     }
 
     public static void getInfo(SocketChannel sc, double x,double y, int zoom) throws IOException {
-    	System.out.println("GET_INFO "+x+" "+y+" "+zoom);
         NetUtil.writeLine(sc,"GET_INFO "+x+" "+y+" "+zoom);
     }
     

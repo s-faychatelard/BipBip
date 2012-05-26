@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
-import java.util.List;
 import java.util.Scanner;
 
 import javax.swing.JFrame;
@@ -57,30 +56,14 @@ public class BipbipClient {
 	}
 
 	public void getInfos(double x, double y, int zoom) throws IOException {
-		Scanner scanner = new Scanner(sc,NetUtil.getCharset().name());
-
-		/* Get all events */
+		/* Get events for this position */
 		ClientCommand.getInfo(sc, x, y, zoom);
-		if (!scanner.hasNext() || !scanner.next().equals(ServerCommand.INFOS.name())) {
-			throw new IOException("Server did not respond to the GET_INFO query");
-		}
-		ServerCommand.INFOS.handle(sc, scanner);
 	}
 
 	public void serveCommand() {
 		Scanner scanner = new Scanner(sc,NetUtil.getCharset().name());
 
 		events.addEventListener(new EventModelListener() {
-
-			@Override
-			public void eventsAdded(List<? extends Event> events) {
-				try {
-					for(Event e : events)
-						BipbipClient.this.submit(e.getType(), e.getX(), e.getY());
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-			}
 
 			@Override
 			public void eventAdded(Event event) {
@@ -183,7 +166,8 @@ public class BipbipClient {
 				map.getMapPanel().repaint();
 			}
 		});
-
+		
+		client.getInfos(MapPanel.position2lat(map.getMapPanel().getMapPosition().y, map.getMapPanel().getZoom()), MapPanel.position2lon(map.getMapPanel().getMapPosition().y, map.getMapPanel().getZoom()), map.getMapPanel().getZoom());
 		client.serveCommand();
 	}
 }

@@ -24,11 +24,6 @@ public class EventModelImplTreeAdapter implements EventModel {
 			public void eventConfirmed(int index) {}
 			
 			@Override
-			public void eventsAdded(List<? extends Event> events) {
-				EventModelImplTreeAdapter.this.addEvents(events);
-			}
-			
-			@Override
 			public void eventRemoved(int index) {
 				EventModelImplTreeAdapter.this.remove(model.getEvents().get(index));
 			}
@@ -56,11 +51,7 @@ public class EventModelImplTreeAdapter implements EventModel {
 	}
 
 	/* Implements */
-	@Override
-	public void addEvents(List<? extends Event> events) {		
-		tree.addAll(events);
-	}
-	
+
 	@Override
 	public void addEvent(Event event) {
 		tree.add(event);

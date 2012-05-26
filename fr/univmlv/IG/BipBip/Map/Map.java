@@ -7,7 +7,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import fr.univmlv.IG.BipBip.Event.Event;
 import fr.univmlv.IG.BipBip.Event.EventModelListener;
@@ -74,13 +73,6 @@ public class Map {
 		});
 		
 		((EventModelImpl)events).addEventListener(new EventModelListener() {
-			
-			@Override
-			public void eventsAdded(List<? extends Event> events) {
-				for(Event event : events)
-					Map.this.addPin(event);
-				map.repaint();
-			}
 			
 			@Override
 			public void eventAdded(Event event) {

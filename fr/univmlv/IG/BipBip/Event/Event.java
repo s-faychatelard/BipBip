@@ -31,14 +31,6 @@ public class Event {
        this.spatialHash = SpatialHashing.compute(x, y);
    }
 
-   public Event(EventType type, long date, double x,double y, String spatialHash) {
-       this.type=type;
-       this.date = date;
-       this.x=x;
-       this.y=y;
-       this.spatialHash = spatialHash;
-   }
-
    /**
     * Create an event
     *
@@ -48,6 +40,28 @@ public class Event {
     */
    public Event(EventType type, double x,double y) {
        this(type, new Date().getTime(), x, y);
+   }
+   
+   /**
+    * Private constructor allowing to genereate mock events with a given spatialHash
+    * (useful sosearch Events in a given area) 
+    * @param spatialHash
+    */
+   private Event(String spatialHash) {
+       this.spatialHash = spatialHash;
+   }
+
+   /**
+    * Private constructor allowing to specify the spatialHash (avid to compute a new one 
+    * if it has previously done)
+    * used by fromString()
+    */
+   private Event(EventType type, long date, double x, double y, String spatialHash) {
+	   this.type=type;
+       this.date = date;
+       this.x=x;
+       this.y=y;
+       this.spatialHash = spatialHash;
    }
 
    /**
@@ -109,7 +123,8 @@ public class Event {
     */
    public void decrementCounter() {
        // TODO count users
-       this.invalidate();
+	   if (--counter == 0)
+		   this.invalidate();
    }
 
    /**
@@ -214,4 +229,13 @@ public class Event {
    public String toString() {
        return this.spatialHash + ";" + this.date + ";" + this.endDate + ";" + this.getType().name() + ";" + this.getX() + ";" + this.getY();
    }
+   
+   /**
+    * @param spatialHash
+    * @return mock Event for the given spatial hash
+    */
+   public static Event createMockEvent(String spatialHash) {
+	   return new Event(spatialHash);
+   }
+   
 }

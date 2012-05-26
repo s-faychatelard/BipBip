@@ -35,12 +35,6 @@ public class EventModelImpl implements EventModel {
 		eventModelListeners.add(listener);
 	}
 	
-	protected void fireEventsAdded(List<? extends Event> events) {
-		System.out.println("events added");
-		for(EventModelListener listener : eventModelListeners)
-			listener.eventsAdded(events);
-	}
-	
 	protected void fireEventAdded(Event event) {
 		for(EventModelListener listener : eventModelListeners)
 			listener.eventAdded(event);
@@ -67,12 +61,6 @@ public class EventModelImpl implements EventModel {
 	}
 	
 	/* Implements */
-	@Override
-	public void addEvents(List<? extends Event> events) {
-		this.events.addAll(events);
-		this.allEvents.addAll(events);
-		this.fireEventsAdded(events);
-	}
 	
 	@Override
 	public void addEvent(Event event) {

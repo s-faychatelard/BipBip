@@ -2,7 +2,6 @@ package fr.univmlv.IG.BipBip.Command;
 
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 import fr.univmlv.IG.BipBip.BipbipClient;
@@ -198,21 +197,14 @@ public enum ServerCommand {
     
     public abstract void handle(SocketChannel sc,Scanner scanner) throws IOException;
     
-    public static void sendInfos(SocketChannel sc, ArrayList<Event> list) throws IOException {
-        NetUtil.writeLine(sc,"INFOS "+list.size());
-        for (Event e:list) {
-            sendInfo(sc,e);
-        }
-    }
-    
     public static void sendInfos(SocketChannel sc, Iterable<Event> it, int size) throws IOException {
-        NetUtil.writeLine(sc,"INFOS "+size);
         for (Event e : it) {
             sendInfo(sc,e);
 		}
     }
 
     public static void sendInfo(SocketChannel sc, Event e) throws IOException {
+    	System.out.println("INFO "+e.getType().name()+" "+e.getX()+" "+e.getY());
         NetUtil.writeLine(sc,"INFO "+e.getType().name()+" "+e.getX()+" "+e.getY());
     }
     
