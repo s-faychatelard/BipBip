@@ -3,7 +3,6 @@ package fr.univmlv.IG.BipBip.Table;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import javax.swing.Icon;
 import javax.swing.table.AbstractTableModel;
@@ -32,11 +31,6 @@ public class TableModel extends AbstractTableModel {
 		this.events = events;
 		
 		((EventModelImpl)events).addEventListener(new EventModelListener() {
-			
-			@Override
-			public void eventsAdded(List<? extends Event> events) {
-				TableModel.this.fireTableDataChanged();
-			}
 			
 			@Override
 			public void eventAdded(Event event) {

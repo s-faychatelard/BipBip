@@ -1,11 +1,9 @@
 package fr.univmlv.IG.Utils;
 
-import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.TreeSet;
 
 import fr.univmlv.IG.BipBip.Event.Event;
-import fr.univmlv.IG.BipBip.Event.EventType;
 
 public class SpatialHashing {
 

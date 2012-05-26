@@ -16,8 +16,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 import javax.swing.JButton;
@@ -98,15 +96,6 @@ public class BipbipServer {
 
 		/* Push new information on event */
 		events.addEventListener(new EventModelListener() {
-
-			@Override
-			public void eventsAdded(List<? extends Event> events) {
-				try {
-					ServerCommand.sendInfos(sc, new ArrayList<Event>(events));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
 
 			@Override
 			public void eventAdded(Event event) {

@@ -147,15 +147,11 @@ public enum ClientCommand {
             }
             zoom=scanner.nextInt();
 
+            System.out.println(zoom);
         	SortedSet<Event> events = BipbipServer.treeAdapter.tree.tailSet(new Event(EventType.ACCIDENT, x, y));
         	ServerCommand.sendInfos(sc, events, events.size());
-        	
-//        	ServerCommand.sendInfos(sc, new ArrayList<Event>(BipbipServer.events.getEvents()));
         }
-
-
-    }
-    ;
+    };
     
     public abstract void handle(SocketChannel sc,Scanner scanner) throws IOException;
     
@@ -172,7 +168,6 @@ public enum ClientCommand {
     }
 
     public static void getInfo(SocketChannel sc, double x,double y, int zoom) throws IOException {
-    	System.out.println("GET_INFO "+x+" "+y+" "+zoom);
         NetUtil.writeLine(sc,"GET_INFO "+x+" "+y+" "+zoom);
     }
     
