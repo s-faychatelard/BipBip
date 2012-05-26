@@ -55,6 +55,13 @@ public class BipbipServer {
 	private static final String btnSwitcherDefaultText = "Ouvrir la timeline";
 	private static final String bottomBarText = "Pour ajouter une nouvelle alerte, faites un clic prolongé sur le lieu de l'alerte, puis choisissez son type.";
 
+	/**
+	 * Create the BipBipServer
+	 * 
+	 * @param port is the local port of the server
+	 * 
+	 * @throws IOException
+	 */
 	public BipbipServer(int port) throws IOException {
 		ssc = ServerSocketChannel.open();
 		ssc.socket().bind(new InetSocketAddress(port), MAX_CONNECTIONS);
@@ -162,12 +169,6 @@ public class BipbipServer {
 		}
 	}
 
-	/**
-	 * Create the window
-	 * 
-	 * @param args
-	 * @throws IOException
-	 */
 	public static void main(String[] args) throws IOException {
 		/* Global frame */
 		frame = new JFrame("BipBip Server");
@@ -272,6 +273,7 @@ public class BipbipServer {
 
 		frame.setVisible(true);
 		
+		/* Shutdown event to save events */
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 		    public void run() {
 				try {
@@ -288,6 +290,7 @@ public class BipbipServer {
 			}
 		});
 
+		/* Open event to load saved events */
 		JFrame.getWindows()[0].addWindowListener(new WindowListener() {
 			@Override public void windowIconified(WindowEvent e) {}
 			@Override public void windowDeiconified(WindowEvent e) {}
