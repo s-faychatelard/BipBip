@@ -27,9 +27,6 @@ public class BipbipClient {
 	private final InetSocketAddress server;
 	private SocketChannel sc;
 
-	/* Events */
-	public static EventModelImpl events = new EventModelImpl();
-
 	private static final String bottomBarText = "Pour ajouter une nouvelle alerte, faites un clic prolongé sur le lieu de l'alerte, puis choisissez son type.";
 
 	/**
@@ -112,7 +109,7 @@ public class BipbipClient {
 	public void serveCommand() {
 		Scanner scanner = new Scanner(sc,NetUtil.getCharset().name());
 
-		events.addEventListener(new EventModelListener() {
+		EventModelImpl.getInstance().addEventListener(new EventModelListener() {
 
 			@Override
 			public void eventAdded(Event event) {
@@ -134,7 +131,7 @@ public class BipbipClient {
 			@Override
 			public void eventConfirmed(int index) {
 				try {
-					BipbipClient.this.confirm(events.getEvents().get(index).getType(), events.getEvents().get(index).getX(), events.getEvents().get(index).getY());
+					BipbipClient.this.confirm(EventModelImpl.getInstance().getEvents().get(index).getType(), EventModelImpl.getInstance().getEvents().get(index).getX(), EventModelImpl.getInstance().getEvents().get(index).getY());
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -143,7 +140,7 @@ public class BipbipClient {
 			@Override
 			public void eventUnconfirmed(int index) {
 				try {
-					BipbipClient.this.unconfirm(events.getEvents().get(index).getType(), events.getEvents().get(index).getX(), events.getEvents().get(index).getY());
+					BipbipClient.this.unconfirm(EventModelImpl.getInstance().getEvents().get(index).getType(), EventModelImpl.getInstance().getEvents().get(index).getX(), EventModelImpl.getInstance().getEvents().get(index).getY());
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -185,7 +182,7 @@ public class BipbipClient {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		/* Center panel */
-		final Map map = new Map(events);
+		final Map map = new Map();
 		map.getMapPanel().setMinimumSize(new Dimension(300, 300));
 		frame.getContentPane().add(map.getMapPanel(), BorderLayout.CENTER);
 

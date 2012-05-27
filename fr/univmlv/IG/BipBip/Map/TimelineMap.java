@@ -8,13 +8,12 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import fr.univmlv.IG.BipBip.Event.Event;
-import fr.univmlv.IG.BipBip.Event.EventModel;
+import fr.univmlv.IG.BipBip.Event.EventModelImpl;
 import fr.univmlv.IG.BipBip.Pin.Pin;
 
 public class TimelineMap {
 	
 	private final MapPanel map;
-	private final EventModel events;
 	final ArrayList<Pin> pins = new ArrayList<Pin>();
 	
 	/**
@@ -22,9 +21,7 @@ public class TimelineMap {
 	 * 
 	 * @param events represent the Model of the application
 	 */
-	public TimelineMap(EventModel events) {
-		this.events = events;
-		
+	public TimelineMap() {		
 		map = new MapPanel(new Point(1063208, 721344), 13);
         map.getOverlayPanel().setVisible(false);
         map.getControlPanel().setVisible(false);
@@ -51,7 +48,7 @@ public class TimelineMap {
 	 */
 	public void setTime(int day, int hour) {
 		ArrayList<Pin> tmpPins = new ArrayList<Pin>();
-		for (Event e : events.getEventsFromBeginning()) {
+		for (Event e : EventModelImpl.getInstance().getEventsFromBeginning()) {
 			GregorianCalendar cEvent = new GregorianCalendar();
 			cEvent.setTimeInMillis(e.getDate());
 			

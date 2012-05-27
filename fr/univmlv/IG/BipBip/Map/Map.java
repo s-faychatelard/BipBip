@@ -8,7 +8,6 @@ import java.util.Date;
 
 import fr.univmlv.IG.BipBip.Event.Event;
 import fr.univmlv.IG.BipBip.Event.EventModelListener;
-import fr.univmlv.IG.BipBip.Event.EventModel;
 import fr.univmlv.IG.BipBip.Event.EventModelImpl;
 import fr.univmlv.IG.BipBip.Event.EventType;
 import fr.univmlv.IG.BipBip.Pin.Pin;
@@ -21,7 +20,6 @@ import fr.univmlv.IG.BipBip.Tooltip.TooltipListener;
 public class Map {
 	
 	private final MapPanel map;
-	private final EventModel events;
 	private final Tooltip tooltipAlert;
 	final ArrayList<Pin> pins = new ArrayList<Pin>();
 	private static final Object obj = new Object();
@@ -31,9 +29,7 @@ public class Map {
 	 * 
 	 * @param events represent the Model of the application
 	 */
-	public Map(EventModel events) {
-		this.events = events;
-		
+	public Map() {		
 		map = new MapPanel(new Point(1063208, 721344), 13);
         map.getOverlayPanel().setVisible(false);
         map.getControlPanel().setVisible(false);
@@ -54,19 +50,19 @@ public class Map {
 				
 				switch (index) {
 				case 0:
-					Map.this.events.addEvent(new Event(EventType.RADAR_FIXE, new Date().getTime(), coords.x, coords.y));
+					EventModelImpl.getInstance().addEvent(new Event(EventType.RADAR_FIXE, new Date().getTime(), coords.x, coords.y));
 					break;
 				case 1:
-					Map.this.events.addEvent(new Event(EventType.RADAR_MOBILE, new Date().getTime(), coords.x, coords.y));
+					EventModelImpl.getInstance().addEvent(new Event(EventType.RADAR_MOBILE, new Date().getTime(), coords.x, coords.y));
 					break;
 				case 2:
-					Map.this.events.addEvent(new Event(EventType.ACCIDENT, new Date().getTime(), coords.x, coords.y));
+					EventModelImpl.getInstance().addEvent(new Event(EventType.ACCIDENT, new Date().getTime(), coords.x, coords.y));
 					break;
 				case 3:
-					Map.this.events.addEvent(new Event(EventType.TRAVAUX, new Date().getTime(), coords.x, coords.y));
+					EventModelImpl.getInstance().addEvent(new Event(EventType.TRAVAUX, new Date().getTime(), coords.x, coords.y));
 					break;
 				case 4:
-					Map.this.events.addEvent(new Event(EventType.DIVERS, new Date().getTime(), coords.x, coords.y));
+					EventModelImpl.getInstance().addEvent(new Event(EventType.DIVERS, new Date().getTime(), coords.x, coords.y));
 					break;
 				default:
 					assert(0==1);
@@ -78,7 +74,7 @@ public class Map {
 		});
 		
         /* Model listener */
-		((EventModelImpl)events).addEventListener(new EventModelListener() {
+        EventModelImpl.getInstance().addEventListener(new EventModelListener() {
 		
 			@Override
 			public void eventAdded(Event event) {
@@ -182,10 +178,10 @@ public class Map {
 			@Override
 			public void eventConfirm(boolean confirm) {
 				if(confirm) {
-					((EventModelImpl)events).confirm(Map.this.events.getEvents().get(pins.indexOf(pin)));
+					EventModelImpl.getInstance().confirm(EventModelImpl.getInstance().getEvents().get(pins.indexOf(pin)));
 				}
 				else {
-					((EventModelImpl)events).unconfirm(Map.this.events.getEvents().get(pins.indexOf(pin)));
+					EventModelImpl.getInstance().unconfirm(EventModelImpl.getInstance().getEvents().get(pins.indexOf(pin)));
 				}
 			}
 		});

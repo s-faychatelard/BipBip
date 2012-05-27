@@ -24,8 +24,8 @@ public class Table {
 	 * 
 	 * @param events represent the Model of the application
 	 */
-	public Table(EventModel events) {
-		this.tableModel = new TableModel(events);
+	public Table() {
+		this.tableModel = new TableModel();
 		
 		table = new JTable();
 		table.setBorder(null);
