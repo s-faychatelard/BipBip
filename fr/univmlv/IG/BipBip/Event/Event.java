@@ -10,7 +10,7 @@ public class Event {
    private double x,y;
    private long date;
    private long endDate=0;
-   private int counter = 1;
+   private int reliability = 1;
    private String spatialHash = null;
 
    //TODO implement number of users which alert
@@ -110,12 +110,21 @@ public class Event {
    public long getEndDate() {
        return this.endDate;
    }
+   
+   /**
+    * Get the reliability of the event
+    *
+    * @return the latitude
+    */
+   public int getReliability() {
+       return this.reliability;
+   }
 
    /**
     * This is call on a confirmation from a client
     */
    public void incrementCounter() {
-       this.counter++;
+       this.reliability++;
    }
 
    /**
@@ -123,8 +132,7 @@ public class Event {
     */
    public void decrementCounter() {
        // TODO count users
-	   if (--counter == 0)
-		   this.invalidate();
+	   this.invalidate();   
    }
 
    /**
@@ -143,15 +151,6 @@ public class Event {
        this.type = newEvent.type;
        this.x = newEvent.x;
        this.y = newEvent.y;
-   }
-
-   /**
-    * Set the end date of the event
-    *
-    * @param endDate
-    */
-   private void setEndDate(long endDate) {
-       this.endDate = endDate;
    }
 
    public String getSpatialHash() {
@@ -197,7 +196,7 @@ public class Event {
 
    /**
     * Create an event from a formatted string
-    * Date;EndDate;Type;X;Y
+    * Hash;Date;EndDate;Type;X;Y;Reliability
     *
     * @param str
     * @return the generate event
@@ -208,6 +207,7 @@ public class Event {
        long date=0,endDate=0;
        EventType type=null;
        double x=0,y=0;
+       int reliability=0;
        for (int i=0; i<elements.length; i++) {
            hash = elements[0];
            date = Long.valueOf(elements[1]);
@@ -215,19 +215,21 @@ public class Event {
            type = EventType.valueOf(elements[3]);
            x = Double.valueOf(elements[4]);
            y = Double.valueOf(elements[5]);
+           reliability = Integer.valueOf(elements[6]);
        }
        Event evt = new Event(type, date, x, y, hash);
-       evt.setEndDate(endDate);
+       evt.endDate = endDate;
+       evt.reliability = reliability;
        return evt;
    }
 
    /**
     * Create a formatted string of the event
-    * Date;EndDate;Type;X;Y
+    * Hash;Date;EndDate;Type;X;Y;Reliability
     */
    @Override
    public String toString() {
-       return this.spatialHash + ";" + this.date + ";" + this.endDate + ";" + this.getType().name() + ";" + this.getX() + ";" + this.getY();
+       return this.spatialHash + ";" + this.date + ";" + this.endDate + ";" + this.getType().name() + ";" + this.getX() + ";" + this.getY() + ";" + this.getReliability();
    }
    
    /**

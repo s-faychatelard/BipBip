@@ -25,7 +25,7 @@ public class TableModel extends AbstractTableModel {
 	
 	private final Collection<TableListener> tableListeners = new ArrayList<TableListener>();
 	
-	private final String[] columns = { "Longitude", "Latitude", "Date", "Type", "Actions" };
+	private final String[] columns = { "Longitude", "Latitude", "Date", "Fiabilité", "Type", "Actions" };
 	
 	private final EventModel events;
 	private final SimpleDateFormat dateFormatter = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
@@ -56,10 +56,14 @@ public class TableModel extends AbstractTableModel {
 			}
 			
 			@Override
-			public void eventConfirmed(int index) {}
+			public void eventConfirmed(int index) {
+				TableModel.this.fireTableRowsUpdated(index, index);
+			}
 			
 			@Override
-			public void eventUnconfirmed(int index) {}
+			public void eventUnconfirmed(int index) {
+				TableModel.this.fireTableRowsUpdated(index, index);
+			}
 		});
 	}
 	
@@ -106,6 +110,8 @@ public class TableModel extends AbstractTableModel {
 		case 2:
 			return dateFormatter.format(events.getEvents().get(rowIndex).getDate());
 		case 3:
+			return String.valueOf(events.getEvents().get(rowIndex).getReliability());
+		case 4:
 			switch (events.getEvents().get(rowIndex).getType()) {
 			case RADAR_FIXE:
 				return ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.FIXE);
@@ -118,7 +124,7 @@ public class TableModel extends AbstractTableModel {
 			case DIVERS:
 				return ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.DIVERS);
 			}
-		case 4:
+		case 5:
 			return new ActionCell(rowIndex, new ActionCellListener() {
 				@Override
 				public void eventEdit(int index) {
