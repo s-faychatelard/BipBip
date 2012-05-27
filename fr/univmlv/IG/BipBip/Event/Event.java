@@ -15,7 +15,8 @@
  */
 package fr.univmlv.IG.BipBip.Event;
 
-import java.util.Date;
+import java.util.Calendar;
+import java.util.Locale;
 
 import fr.univmlv.IG.Utils.SpatialHashing;
 
@@ -52,7 +53,7 @@ public class Event {
     * @param y latitude of the event
     */
    public Event(EventType type, double x,double y) {
-       this(type, new Date().getTime(), x, y);
+       this(type, Calendar.getInstance(Locale.FRANCE).getTimeInMillis(), x, y);
    }
    
    /**
@@ -151,7 +152,7 @@ public class Event {
     * Set the event has ended
     */
    public void invalidate() {
-       this.endDate = new Date().getTime();
+       this.endDate = Calendar.getInstance(Locale.US).getTimeInMillis();
    }
 
    /**
