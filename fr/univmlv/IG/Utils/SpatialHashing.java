@@ -7,14 +7,15 @@ import fr.univmlv.IG.BipBip.Event.Event;
 
 public class SpatialHashing {
 
+   private static final double EARTH_DIAMETER = 12756.32;
    public static final int HASH_DEFAULT_LENGHT = 17; // (superficie de la terre : 510 067 420 / (4^17) = 0,0296898314 km2 theoriquement pour chaque zone)
+   
    private static final int MAX_LAT = 90;
    private static final int MAX_LNG = 180;
    
-   public static final String minMask = "000000000000000000000";
-   public static final String maxMask = "333333333333333333333";
-
-
+   /**
+    * @return a lexicographic treeSet of Events
+    */
    public static TreeSet<Event> createTree() {
        return new TreeSet<Event> (new Comparator<Event>() {
            @Override
@@ -24,6 +25,11 @@ public class SpatialHashing {
        });
    }
 
+   /**
+    * @param lat
+    * @param lng
+    * @return the spatial hash of the given coordinates
+    */
    public static String compute(double lat, double lng) {
 	   if((lat > MAX_LAT && lat < -MAX_LAT) || (lng > MAX_LNG  && lng < -MAX_LNG))
 		   throw new IllegalArgumentException();
@@ -32,8 +38,6 @@ public class SpatialHashing {
    }
 
    private static String computeRec(double lat, double lng, double compLat, double compLng, StringBuffer sb, double level, int counter) {
-
-	   
        if (counter == HASH_DEFAULT_LENGHT)
            return sb.toString();
        
@@ -63,4 +67,17 @@ public class SpatialHashing {
            }
        }
    }
+   
+   /**
+    * @param lat1
+    * @param lng1
+    * @param lat2
+    * @param lng2
+    * @return distance between the two points in km
+    */
+	public static double computeDistance(double lat1, double lng1, double lat2, double lng2) {   	    	
+		double dLatBy2 = Math.toRadians(lat2-lat1) / 2;
+		double dLngBy2 = Math.toRadians(lng2-lng1) / 2;
+		return EARTH_DIAMETER * Math.asin(Math.sqrt(Math.sin(dLatBy2) * Math.sin(dLatBy2) + Math.cos(lat1) * Math.cos(lat2) *  Math.sin(dLngBy2) * Math.sin(dLngBy2)));
+	}
 }

@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.nio.channels.SocketChannel;
 import java.util.Scanner;
 
-import fr.univmlv.IG.BipBip.BipbipClient;
 import fr.univmlv.IG.BipBip.Event.Event;
+import fr.univmlv.IG.BipBip.Event.EventModelImpl;
 import fr.univmlv.IG.BipBip.Event.EventType;
 
 public enum ServerCommand {
@@ -81,16 +81,14 @@ public enum ServerCommand {
             } catch (NumberFormatException e) {
                 throw new IOException("Missing Y coordinate");
             }
-            
-            // Verify if it is not a doubl
-            // TODO can be ameliorate with clustering
+
             Event evt = new Event(event, x, y);
-            for (Event e : BipbipClient.events.getEvents()) {
-    			if (e.equals(evt)) {
+            for (Event e : EventModelImpl.getInstance().getEvents()) {
+    			if (e.isSame(evt)) {
     				return;
     			}
     		}
-            BipbipClient.events.addEvent(new Event(event, x, y));
+            EventModelImpl.getInstance().addEvent(new Event(event, x, y));
         }
     },
     
@@ -129,7 +127,7 @@ public enum ServerCommand {
                 throw new IOException("Missing Y coordinate");
             }
             
-            BipbipClient.events.remove(new Event(event, x, y));
+            EventModelImpl.getInstance().remove(new Event(event, x, y));
         }
     },
     
@@ -191,7 +189,7 @@ public enum ServerCommand {
                 throw new IOException("Missing Y coordinate");
             }
             
-            BipbipClient.events.modifyEvent(new Event(previousEventType, previousX, previousY), new Event(eventType, x, y));
+            EventModelImpl.getInstance().modifyEvent(new Event(previousEventType, previousX, previousY), new Event(eventType, x, y));
         }
     };
     

@@ -7,10 +7,21 @@ import java.util.List;
 
 public class EventModelImpl implements EventModel {
 	
+	private static final EventModelImpl eventModel = new EventModelImpl();
+	
 	private final Collection<EventModelListener> eventModelListeners = new ArrayList<EventModelListener>();
 	private ArrayList<Event> events = new ArrayList<Event>();
 	private ArrayList<Event> allEvents = new ArrayList<Event>();
 	private final Object obj = new Object();
+	
+	/**
+	 * Get the instance of the model
+	 * 
+	 * @return the instance of events model
+	 */
+	public static EventModelImpl getInstance() {
+		return eventModel;
+	}
 
 	/**
 	 * Get all valid events

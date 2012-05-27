@@ -6,16 +6,13 @@ import java.util.TreeSet;
 import fr.univmlv.IG.Utils.SpatialHashing;
 
 public class EventModelImplTreeAdapter implements EventModel {
-	
-	public final EventModelImpl model;
 	public final TreeSet<Event> tree;
 
-	public EventModelImplTreeAdapter(final EventModelImpl model) {
-		this.model = model;
+	public EventModelImplTreeAdapter() {
 		tree = SpatialHashing.createTree();
-		tree.addAll(model.getEvents());
+		tree.addAll(EventModelImpl.getInstance().getEvents());
 		
-		model.addEventListener(new EventModelListener() {
+		EventModelImpl.getInstance().addEventListener(new EventModelListener() {
 			
 			@Override
 			public void eventUnconfirmed(int index) {}
@@ -25,7 +22,7 @@ public class EventModelImplTreeAdapter implements EventModel {
 			
 			@Override
 			public void eventRemoved(int index) {
-				EventModelImplTreeAdapter.this.remove(model.getEvents().get(index));
+				EventModelImplTreeAdapter.this.remove(EventModelImpl.getInstance().getEvents().get(index));
 			}
 			
 			@Override

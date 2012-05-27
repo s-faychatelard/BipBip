@@ -49,8 +49,7 @@ public class BipbipServer {
 	private final ServerSocketChannel ssc;
 
 	/* Static object */
-	public static EventModelImpl events = new EventModelImpl();
-	public static EventModelImplTreeAdapter treeAdapter = new EventModelImplTreeAdapter(events);
+	public static EventModelImplTreeAdapter treeAdapter = new EventModelImplTreeAdapter();
 
 	public static JFrame frame;
 	private static final String btnSwitcherSecondaryText = "Revenir à la vue en temps réel";
@@ -102,7 +101,7 @@ public class BipbipServer {
 	 */
 	private void serveClient(final SocketChannel sc) {
 		/* Push new information on event */
-		events.addEventListener(new EventModelListener() {
+		EventModelImpl.getInstance().addEventListener(new EventModelListener() {
 
 			@Override
 			public void eventAdded(Event event) {
@@ -121,7 +120,7 @@ public class BipbipServer {
 			@Override
 			public void eventRemoved(int index) {
 				try {
-					ServerCommand.remove(sc, events.getEvents().get(index));
+					ServerCommand.remove(sc, EventModelImpl.getInstance().getEvents().get(index));
 				} catch (IOException e) {}
 			}
 
@@ -187,7 +186,7 @@ public class BipbipServer {
 		frame.getContentPane().add(layeredPanel, BorderLayout.CENTER);
 
 		/* Center panel */
-		final Map map = new Map(events);
+		final Map map = new Map();
 		map.getMapPanel().setMinimumSize(new Dimension(300, 300));
 		
 		/* Refresh pins position on map */
@@ -200,13 +199,13 @@ public class BipbipServer {
 		});
 		
 		/* Left panel */
-		final Table table = new Table(events);
+		final Table table = new Table();
 		table.getModel().addTableListener(new TableListener() {
 			
 			@Override
 			public void eventLocateEventAtIndex(int index) {
-				int x = MapPanel.lon2position(events.getEvents().get(index).getX(), map.getMapPanel().getZoom()) - map.getMapPanel().getWidth()/2;
-				int y = MapPanel.lat2position(events.getEvents().get(index).getY(), map.getMapPanel().getZoom()) - map.getMapPanel().getHeight()/2;
+				int x = MapPanel.lon2position(EventModelImpl.getInstance().getEvents().get(index).getX(), map.getMapPanel().getZoom()) - map.getMapPanel().getWidth()/2;
+				int y = MapPanel.lat2position(EventModelImpl.getInstance().getEvents().get(index).getY(), map.getMapPanel().getZoom()) - map.getMapPanel().getHeight()/2;
 				map.getMapPanel().setMapPosition(x, y);
 				map.getMapPanel().setZoom(14);
 			}
@@ -220,7 +219,7 @@ public class BipbipServer {
 		content.add(splitPane, BorderLayout.CENTER);
 
 		/* Timeline map */
-		final TimelineMap timelineMap = new TimelineMap(events);
+		final TimelineMap timelineMap = new TimelineMap();
 		timelineMap.getMapPanel().setMinimumSize(new Dimension(300, 300));
 
 		/* Bottom bar */
@@ -281,7 +280,7 @@ public class BipbipServer {
 				try {
 					FileWriter writer = new FileWriter("rawdata.txt");
 					BufferedWriter out = new BufferedWriter(writer);
-					for (Event evt : events.getEventsFromBeginning()) {
+					for (Event evt : EventModelImpl.getInstance().getEventsFromBeginning()) {
 						out.write(evt.toString() + "\n");
 					}
 					out.flush();
@@ -308,7 +307,7 @@ public class BipbipServer {
 					String line;
 					while ((line = in.readLine()) != null) {
 						Event evt = Event.fromString(line);
-						events.addEvent(evt);
+						EventModelImpl.getInstance().addEvent(evt);
 					}
 				} catch (FileNotFoundException e1) {
 					// Nothing to do, it is probably normal

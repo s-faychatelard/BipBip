@@ -10,7 +10,7 @@ public class Event {
    private double x,y;
    private long date;
    private long endDate=0;
-   private int counter = 1;
+   private int reliability = 1;
    private String spatialHash = null;
 
    //TODO implement number of users which alert
@@ -110,12 +110,21 @@ public class Event {
    public long getEndDate() {
        return this.endDate;
    }
+   
+   /**
+    * Get the reliability of the event
+    *
+    * @return the latitude
+    */
+   public int getReliability() {
+       return this.reliability;
+   }
 
    /**
     * This is call on a confirmation from a client
     */
    public void incrementCounter() {
-       this.counter++;
+       this.reliability++;
    }
 
    /**
@@ -123,8 +132,7 @@ public class Event {
     */
    public void decrementCounter() {
        // TODO count users
-	   if (--counter == 0)
-		   this.invalidate();
+	   this.invalidate();   
    }
 
    /**
@@ -145,34 +153,27 @@ public class Event {
        this.y = newEvent.y;
    }
 
-   /**
-    * Set the end date of the event
-    *
-    * @param endDate
-    */
-   private void setEndDate(long endDate) {
-       this.endDate = endDate;
-   }
-
    public String getSpatialHash() {
        return this.spatialHash;
    }
-
-   @Override
-   public int hashCode() {
-       final int prime = 31;
-       int result = 1;
-       result = prime * result + (int) (date ^ (date >>> 32));
-       result = prime * result + (int) (endDate ^ (endDate >>> 32));
-       result = prime * result + ((type == null) ? 0 : type.hashCode());
-       long temp;
-       temp = Double.doubleToLongBits(x);
-       result = prime * result + (int) (temp ^ (temp >>> 32));
-       temp = Double.doubleToLongBits(y);
-       result = prime * result + (int) (temp ^ (temp >>> 32));
-       return result;
+   
+   /**
+    * Check type and distance between to Event
+    * 
+    * @param other
+    * 
+    * @return true if is similar or false
+    */
+   public boolean isSame(Event other) {
+       if (type != other.type)
+           return false;
+       if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x))
+           return false;
+       if (Double.doubleToLongBits(y) != Double.doubleToLongBits(other.y))
+           return false;
+       return true;
    }
-
+   
    /**
     * DO NOT COMPARE DATE
     */
@@ -187,17 +188,17 @@ public class Event {
        Event other = (Event) obj;
        if (type != other.type)
            return false;
-//        TODO : pas d'arrondi mais utiliser methode pour voir si deux points sont au même endroit
-       if (Double.doubleToLongBits((double)Math.round(x * 10000000) / 10000000) != Double.doubleToLongBits((double)Math.round(other.x * 10000000) / 10000000))
+       if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x))
            return false;
-       if (Double.doubleToLongBits((double)Math.round(y * 10000000) / 10000000) != Double.doubleToLongBits((double)Math.round(other.y * 10000000) / 10000000))
+       if (Double.doubleToLongBits(y) != Double.doubleToLongBits(other.y))
            return false;
        return true;
    }
 
+
    /**
     * Create an event from a formatted string
-    * Date;EndDate;Type;X;Y
+    * Hash;Date;EndDate;Type;X;Y;Reliability
     *
     * @param str
     * @return the generate event
@@ -208,6 +209,7 @@ public class Event {
        long date=0,endDate=0;
        EventType type=null;
        double x=0,y=0;
+       int reliability=0;
        for (int i=0; i<elements.length; i++) {
            hash = elements[0];
            date = Long.valueOf(elements[1]);
@@ -215,19 +217,21 @@ public class Event {
            type = EventType.valueOf(elements[3]);
            x = Double.valueOf(elements[4]);
            y = Double.valueOf(elements[5]);
+           reliability = Integer.valueOf(elements[6]);
        }
        Event evt = new Event(type, date, x, y, hash);
-       evt.setEndDate(endDate);
+       evt.endDate = endDate;
+       evt.reliability = reliability;
        return evt;
    }
 
    /**
     * Create a formatted string of the event
-    * Date;EndDate;Type;X;Y
+    * Hash;Date;EndDate;Type;X;Y;Reliability
     */
    @Override
    public String toString() {
-       return this.spatialHash + ";" + this.date + ";" + this.endDate + ";" + this.getType().name() + ";" + this.getX() + ";" + this.getY();
+       return this.spatialHash + ";" + this.date + ";" + this.endDate + ";" + this.getType().name() + ";" + this.getX() + ";" + this.getY() + ";" + this.getReliability();
    }
    
    /**

@@ -12,7 +12,6 @@ import fr.univmlv.IG.BipBip.EditDialog.EditDialog;
 import fr.univmlv.IG.BipBip.EditDialog.EditDialog.AnswerEditDialog;
 import fr.univmlv.IG.BipBip.Event.Event;
 import fr.univmlv.IG.BipBip.Event.EventModelListener;
-import fr.univmlv.IG.BipBip.Event.EventModel;
 import fr.univmlv.IG.BipBip.Event.EventModelImpl;
 import fr.univmlv.IG.BipBip.Resources.ImageNames;
 import fr.univmlv.IG.BipBip.Resources.ResourcesManager;
@@ -25,9 +24,8 @@ public class TableModel extends AbstractTableModel {
 	
 	private final Collection<TableListener> tableListeners = new ArrayList<TableListener>();
 	
-	private final String[] columns = { "Longitude", "Latitude", "Date", "Type", "Actions" };
+	private final String[] columns = { "Longitude", "Latitude", "Date", "Fiabilité", "Type", "Actions" };
 	
-	private final EventModel events;
 	private final SimpleDateFormat dateFormatter = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
 	
 	/**
@@ -35,19 +33,17 @@ public class TableModel extends AbstractTableModel {
 	 * 
 	 * @param events represent the model of the application
 	 */
-	public TableModel(EventModel events) {
-		this.events = events;
-		
-		((EventModelImpl)events).addEventListener(new EventModelListener() {
+	public TableModel() {		
+		EventModelImpl.getInstance().addEventListener(new EventModelListener() {
 			
 			@Override
 			public void eventAdded(Event event) {
-				TableModel.this.fireTableRowsInserted(TableModel.this.events.getEvents().indexOf(event), TableModel.this.events.getEvents().indexOf(event));
+				TableModel.this.fireTableRowsInserted(EventModelImpl.getInstance().getEvents().indexOf(event), EventModelImpl.getInstance().getEvents().indexOf(event));
 			}
 			
 			@Override
 			public void eventModified(Event previousEvent, Event event) {
-				TableModel.this.fireTableRowsUpdated(TableModel.this.events.getEvents().indexOf(event), TableModel.this.events.getEvents().indexOf(event));
+				TableModel.this.fireTableRowsUpdated(EventModelImpl.getInstance().getEvents().indexOf(event), EventModelImpl.getInstance().getEvents().indexOf(event));
 			}
 			
 			@Override
@@ -56,10 +52,14 @@ public class TableModel extends AbstractTableModel {
 			}
 			
 			@Override
-			public void eventConfirmed(int index) {}
+			public void eventConfirmed(int index) {
+				TableModel.this.fireTableRowsUpdated(index, index);
+			}
 			
 			@Override
-			public void eventUnconfirmed(int index) {}
+			public void eventUnconfirmed(int index) {
+				TableModel.this.fireTableRowsUpdated(index, index);
+			}
 		});
 	}
 	
@@ -100,13 +100,15 @@ public class TableModel extends AbstractTableModel {
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		switch (columnIndex) {
 		case 0:
-			return String.valueOf(events.getEvents().get(rowIndex).getX());
+			return String.valueOf(EventModelImpl.getInstance().getEvents().get(rowIndex).getX());
 		case 1:
-			return String.valueOf(events.getEvents().get(rowIndex).getY());
+			return String.valueOf(EventModelImpl.getInstance().getEvents().get(rowIndex).getY());
 		case 2:
-			return dateFormatter.format(events.getEvents().get(rowIndex).getDate());
+			return dateFormatter.format(EventModelImpl.getInstance().getEvents().get(rowIndex).getDate());
 		case 3:
-			switch (events.getEvents().get(rowIndex).getType()) {
+			return String.valueOf(EventModelImpl.getInstance().getEvents().get(rowIndex).getReliability());
+		case 4:
+			switch (EventModelImpl.getInstance().getEvents().get(rowIndex).getType()) {
 			case RADAR_FIXE:
 				return ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.FIXE);
 			case RADAR_MOBILE:
@@ -118,19 +120,19 @@ public class TableModel extends AbstractTableModel {
 			case DIVERS:
 				return ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.DIVERS);
 			}
-		case 4:
+		case 5:
 			return new ActionCell(rowIndex, new ActionCellListener() {
 				@Override
 				public void eventEdit(int index) {
-					EditDialog editDialog = new EditDialog(BipbipServer.frame, ((EventModelImpl)events).getEvents().get(index), true);
+					EditDialog editDialog = new EditDialog(BipbipServer.frame, EventModelImpl.getInstance().getEvents().get(index), true);
 					if (editDialog.getAnswer() == AnswerEditDialog.SAVE) {
-						((EventModelImpl)events).modifyEvent(((EventModelImpl)events).getEvents().get(index), editDialog.getEvent());
+						EventModelImpl.getInstance().modifyEvent(EventModelImpl.getInstance().getEvents().get(index), editDialog.getEvent());
 					}
 				}
 				
 				@Override
 				public void eventDelete(int index) {
-					((EventModelImpl)events).remove(index);
+					EventModelImpl.getInstance().remove(index);
 				}
 				
 				@Override
@@ -149,7 +151,7 @@ public class TableModel extends AbstractTableModel {
 	 */
 	@Override
 	public int getRowCount() {
-		return events.getEvents().size();
+		return EventModelImpl.getInstance().getEvents().size();
 	}
 	
 	/**

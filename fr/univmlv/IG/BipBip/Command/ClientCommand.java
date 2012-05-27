@@ -7,6 +7,7 @@ import java.util.SortedSet;
 
 import fr.univmlv.IG.BipBip.BipbipServer;
 import fr.univmlv.IG.BipBip.Event.Event;
+import fr.univmlv.IG.BipBip.Event.EventModelImpl;
 import fr.univmlv.IG.BipBip.Event.EventType;
 import fr.univmlv.IG.Utils.SpatialHashing;
 
@@ -44,12 +45,13 @@ public enum ClientCommand {
             // A client send a new Event we need to check if is not already on our list
             // TODO can be ameliorate with clustering
             Event evt = new Event(eventType, x, y);
-            for (Event e : BipbipServer.events.getEvents()) {
-    			if (e.equals(evt)) {
+            for (Event e : EventModelImpl.getInstance().getEvents()) {
+    			if (e.isSame(evt)) {
+    				EventModelImpl.getInstance().confirm(e);
     				return;
     			}
     		}
-            BipbipServer.events.addEvent(evt);
+            EventModelImpl.getInstance().addEvent(evt);
         }
     },
     
@@ -83,7 +85,7 @@ public enum ClientCommand {
             y=scanner.nextDouble();
             
             // A client confirm an alert
-            BipbipServer.events.confirm(new Event(event, x, y));
+            EventModelImpl.getInstance().confirm(new Event(event, x, y));
         }
     },
     
@@ -118,7 +120,7 @@ public enum ClientCommand {
             y=scanner.nextDouble();
             
             // A client declare an event not seen
-            BipbipServer.events.unconfirm(new Event(event, x, y));
+            EventModelImpl.getInstance().unconfirm(new Event(event, x, y));
         }
     },
 
@@ -158,7 +160,7 @@ public enum ClientCommand {
             Event eMin = Event.createMockEvent(SpatialHashing.compute(yStart, xStart));
         	Event eMax = Event.createMockEvent(SpatialHashing.compute(yEnd, xEnd));
 
-        	//TODO si eMin et eMax existent : ne pas les virer
+        	// TODO if eMin / eMax already exist, do not add/remove them
 
         	BipbipServer.treeAdapter.tree.add(eMin);
         	BipbipServer.treeAdapter.tree.add(eMax);

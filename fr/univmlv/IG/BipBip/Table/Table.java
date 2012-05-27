@@ -24,8 +24,8 @@ public class Table {
 	 * 
 	 * @param events represent the Model of the application
 	 */
-	public Table(EventModel events) {
-		this.tableModel = new TableModel(events);
+	public Table() {
+		this.tableModel = new TableModel();
 		
 		table = new JTable();
 		table.setBorder(null);
@@ -38,16 +38,16 @@ public class Table {
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		table.setDefaultRenderer(table.getColumnClass(0), new StringTableCellRenderer());
-		table.setDefaultRenderer(table.getColumnClass(3), new IconTableCellRenderer());
-		table.setDefaultRenderer(table.getColumnClass(4), new JPanelTableCellRenderer());
-		table.setDefaultEditor(table.getColumnClass(4), new JPanelTableCellRenderer());
+		table.setDefaultRenderer(table.getColumnClass(4), new IconTableCellRenderer());
+		table.setDefaultRenderer(table.getColumnClass(5), new JPanelTableCellRenderer());
+		table.setDefaultEditor(table.getColumnClass(5), new JPanelTableCellRenderer());
 		table.getColumnModel().getColumn(0).setPreferredWidth(30);
 		table.getColumnModel().getColumn(1).setPreferredWidth(30);
 		
-		table.getColumnModel().getColumn(3).setMinWidth(35);
-		table.getColumnModel().getColumn(3).setMaxWidth(35);
-		table.getColumnModel().getColumn(4).setMinWidth(110);
-		table.getColumnModel().getColumn(4).setMaxWidth(110);
+		table.getColumnModel().getColumn(4).setMinWidth(35);
+		table.getColumnModel().getColumn(4).setMaxWidth(35);
+		table.getColumnModel().getColumn(5).setMinWidth(110);
+		table.getColumnModel().getColumn(5).setMaxWidth(110);
 		
 		scrollPane = new JScrollPane(table);
 		scrollPane.setMinimumSize(new Dimension(250, 1));
