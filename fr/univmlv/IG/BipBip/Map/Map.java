@@ -200,6 +200,9 @@ public class Map {
 		this.addPin(event, pins.size());
 	}
 	
+	/**
+	 * Refresh pins on the map
+	 */
 	public void refreshPins() {
 		synchronized (obj) {
 			for(Pin pin : pins) {
