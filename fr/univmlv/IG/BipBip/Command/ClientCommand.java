@@ -43,7 +43,6 @@ public enum ClientCommand {
             y=scanner.nextDouble();
             
             // A client send a new Event we need to check if is not already on our list
-            // TODO can be ameliorate with clustering
             Event evt = new Event(eventType, x, y);
             for (Event e : EventModelImpl.getInstance().getEvents()) {
     			if (e.isSame(evt)) {

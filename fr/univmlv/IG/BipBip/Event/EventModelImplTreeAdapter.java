@@ -37,7 +37,7 @@ public class EventModelImplTreeAdapter implements EventModel {
 		});
 	}
 	
-	@Override // TODO
+	@Override
 	public List<? extends Event> getEvents() {
 		throw new UnsupportedOperationException();
 	}
@@ -53,7 +53,7 @@ public class EventModelImplTreeAdapter implements EventModel {
 		tree.add(event);
 	}
 	
-	@Override // TODO
+	@Override
 	public void modifyEvent(Event previousEvent, Event event) {
 		tree.remove(previousEvent);
 		tree.add(event);

@@ -13,8 +13,6 @@ public class Event {
    private int reliability = 1;
    private String spatialHash = null;
 
-   //TODO implement number of users which alert
-
    /**
     * Create an event
     *
@@ -131,7 +129,6 @@ public class Event {
     * This is call when a client unconfirm the event
     */
    public void decrementCounter() {
-       // TODO count users
 	   this.invalidate();   
    }
 
@@ -167,10 +164,8 @@ public class Event {
    public boolean isSame(Event other) {
        if (type != other.type)
            return false;
-       if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x))
-           return false;
-       if (Double.doubleToLongBits(y) != Double.doubleToLongBits(other.y))
-           return false;
+       if (SpatialHashing.computeDistance(this.getX(), this.getY(), other.getX(), other.getY()) > .5f)
+    	   return false;
        return true;
    }
    

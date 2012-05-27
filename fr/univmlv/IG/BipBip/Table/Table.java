@@ -8,8 +8,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
-import fr.univmlv.IG.BipBip.Event.EventModel;
-
 /**
  * This class manage the JTable
  */

@@ -19,7 +19,7 @@ public class StringTableCellRenderer implements TableCellRenderer {
 		/* Alternate background color for more clarity */
 		if(row%2 == 0) {
 			lbl.setText("<html><font color='black'>" + value + "</font></html>");
-			lbl.setBackground(new Color(.93f, .93f, .93f)); // TODO
+			lbl.setBackground(new Color(.93f, .93f, .93f));
 		}
 		else {
 			lbl.setText("<html><font color='black'>" + value + "</font></html>");

@@ -35,7 +35,7 @@ public class JPanelTableCellRenderer extends AbstractCellEditor implements Table
 		
 		/* Alternate background color for more clarity */
 		if(row%2 == 0) {
-			panel.setBackground(new Color(.93f, .93f, .93f)); //TODO : factoriser le l&f
+			panel.setBackground(new Color(.93f, .93f, .93f));
 		}
 		else {
 			panel.setBackground(new Color(.99f, .99f, .99f));
