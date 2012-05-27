@@ -83,7 +83,6 @@ public class BipbipServer {
 								sc = ssc.accept();
 								serveClient(sc);
 							} catch (IOException e) {
-								e.printStackTrace();
 								continue;
 							}
 						}
@@ -108,27 +107,21 @@ public class BipbipServer {
 			public void eventAdded(Event event) {
 				try {
 					ServerCommand.sendInfo(sc, event);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				} catch (IOException e) {}
 			}
 
 			@Override
 			public void eventModified(Event previousEvent, Event event) {
 				try {
 					ServerCommand.modify(sc, previousEvent, event);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				} catch (IOException e) {}
 			}
 
 			@Override
 			public void eventRemoved(int index) {
 				try {
 					ServerCommand.remove(sc, events.getEvents().get(index));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				} catch (IOException e) {}
 			}
 
 			@Override
@@ -158,7 +151,7 @@ public class BipbipServer {
 				}
 			}
 		} catch (IOException ie) {
-			ie.printStackTrace();
+			
 		} finally {
 			try {
 				scanner.close();
@@ -207,6 +200,7 @@ public class BipbipServer {
 				int x = MapPanel.lon2position(events.getEvents().get(index).getX(), map.getMapPanel().getZoom()) - map.getMapPanel().getWidth()/2;
 				int y = MapPanel.lat2position(events.getEvents().get(index).getY(), map.getMapPanel().getZoom()) - map.getMapPanel().getHeight()/2;
 				map.getMapPanel().setMapPosition(x, y);
+				map.getMapPanel().setZoom(14);
 			}
 		});
 
