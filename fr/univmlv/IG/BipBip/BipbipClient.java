@@ -93,7 +93,6 @@ public class BipbipClient {
 		ClientCommand.notSeen(sc, event, x, y);
 	}
 
-
 	/**
 	 * Get all events from the server
 	 * 

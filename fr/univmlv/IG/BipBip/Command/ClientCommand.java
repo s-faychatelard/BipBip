@@ -229,9 +229,9 @@ public enum ClientCommand {
      * 
      * @throws IOException
      */
-
     public static void getInfo(SocketChannel sc, double xStart,double yStart, double xEnd,double yEnd) throws IOException {
         NetUtil.writeLine(sc,"GET_INFO "+xStart+" "+yStart+" "+xEnd+" "+yEnd);
+
     }
     
 
