@@ -118,7 +118,7 @@ public class TimeSlider extends JComponent {
 	private void updateDate(int posX) {
 		final Image handle = ResourcesManager.getRessourceAsImage(ImageNames.TimeSlider.HANDLE);
 		
-		int sliderDateSize = NB_DAY_PER_WEEK * NB_HOUR_PER_DAY - 1;
+		int sliderDateSize = NB_DAY_PER_WEEK * NB_HOUR_PER_DAY - 2;
 		int date = (int) (((double)(sliderDateSize / (double)(TimeSlider.this.getWidth() - OFFSET_X - OFFSET_Y))) * posX);
 		
 		int day = (int)(date/NB_HOUR_PER_DAY);
