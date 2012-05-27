@@ -29,6 +29,7 @@ public class SpatialHashing {
     * @param lat
     * @param lng
     * @return the spatial hash of the given coordinates
+    * The hash is computed using the quadrants recursive decomposition
     */
    public static String compute(double lat, double lng) {
 	   if((lat > MAX_LAT && lat < -MAX_LAT) || (lng > MAX_LNG  && lng < -MAX_LNG))
@@ -37,6 +38,17 @@ public class SpatialHashing {
        return computeRec(lat+MAX_LAT, lng+MAX_LNG, MAX_LAT, MAX_LNG, new StringBuffer(), 2, 0);
    }
 
+   /**
+    * 
+    * @param lat
+    * @param lng
+    * @param compLat
+    * @param compLng
+    * @param sb : StringBuilder used to build the hash
+    * @param level
+    * @param counter : number of recursive call
+    * @return
+    */
    private static String computeRec(double lat, double lng, double compLat, double compLng, StringBuffer sb, double level, int counter) {
        if (counter == HASH_DEFAULT_LENGHT)
            return sb.toString();
