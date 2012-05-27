@@ -123,13 +123,11 @@ public class BipbipClient {
 				}
 			}
 
-			@Override
-			public void eventRemoved(int index) {
+			@Override public void eventRemoved(int index) {
 				// Do nothing, you are a client and you cannot remove an event
 			}
 
-			@Override
-			public void eventModified(Event previousEvent, Event event) {
+			@Override public void eventModified(Event previousEvent, Event event) {
 				// Do nothing, you are a client and you cannot modify an event
 			}
 
@@ -202,6 +200,7 @@ public class BipbipClient {
 		final BipbipClient client = new BipbipClient("localhost", 6996);
 		client.connect();
 
+		/* Refresh pins position on map */
 		map.getMapPanel().addPropertyChangeListener("mapPosition", new PropertyChangeListener() {
 
 			@Override

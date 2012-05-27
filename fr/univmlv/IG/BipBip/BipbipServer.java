@@ -125,13 +125,11 @@ public class BipbipServer {
 				} catch (IOException e) {}
 			}
 
-			@Override
-			public void eventConfirmed(int index) {
+			@Override public void eventConfirmed(int index) {
 				// Do nothing, you are the server
 			}
 
-			@Override
-			public void eventUnconfirmed(int index) {
+			@Override public void eventUnconfirmed(int index) {
 				// Do nothing, you are the server
 			}
 		});
@@ -191,6 +189,8 @@ public class BipbipServer {
 		/* Center panel */
 		final Map map = new Map(events);
 		map.getMapPanel().setMinimumSize(new Dimension(300, 300));
+		
+		/* Refresh pins position on map */
 		map.getMapPanel().addPropertyChangeListener("mapPosition", new PropertyChangeListener() {
 
 			@Override
