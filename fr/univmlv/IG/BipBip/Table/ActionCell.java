@@ -22,6 +22,10 @@ public class ActionCell extends JPanel {
 	private final JButton btnEdit;
 	private final JButton btnDelete;
 	private final Collection<ActionCellListener> actionCellListeners = new ArrayList<ActionCellListener>();
+	
+	private static final String LOCATE_TEXT = "Centrer la carte sur le point";
+	private static final String EDIT_TEXT = "Editer ce point";
+	private static final String DELETE_TEXT = "Supprimer ce point";
 
 	/**
 	 * Create a cell with three buttons (Locate, Edit an Delete)
@@ -38,18 +42,21 @@ public class ActionCell extends JPanel {
 		btnEdit = new JButton(ResourcesManager.getRessourceAsImageIcon(ImageNames.Icon.EDIT));
 		btnDelete = new JButton(ResourcesManager.getRessourceAsImageIcon(ImageNames.Icon.TRASH));
 		
+		btnLocate.setToolTipText(LOCATE_TEXT);
 		btnLocate.setOpaque(false);
 		btnLocate.setContentAreaFilled(false);
 		btnLocate.setBorderPainted(false);
 		btnLocate.setFocusable(false);
 		btnLocate.setRolloverEnabled(false);
 
+		btnLocate.setToolTipText(EDIT_TEXT);
 		btnEdit.setOpaque(false);
 		btnEdit.setContentAreaFilled(false);
 		btnEdit.setBorderPainted(false);
 		btnEdit.setFocusable(false);
 		btnEdit.setRolloverEnabled(false);
 
+		btnLocate.setToolTipText(DELETE_TEXT);
 		btnDelete.setOpaque(false);
 		btnDelete.setContentAreaFilled(false);
 		btnDelete.setBorderPainted(false);
