@@ -6,6 +6,7 @@ import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
@@ -27,7 +28,7 @@ public class TimeSlider extends JComponent {
 	private static final int OFFSET_X = 8;
 	private static final int OFFSET_Y = 8;
 	
-	private static final String[] days = { "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"};
+	private static final String[] days = { "Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"};
 
 	/**
 	 * Create a TimeSlider
@@ -118,7 +119,7 @@ public class TimeSlider extends JComponent {
 		final Image handle = ResourcesManager.getRessourceAsImage(ImageNames.TimeSlider.HANDLE);
 		
 		int sliderDateSize = NB_DAY_PER_WEEK * NB_HOUR_PER_DAY - 1;
-		int date = -1 + (int) (((double)(sliderDateSize / (double)(TimeSlider.this.getWidth() - OFFSET_X - OFFSET_Y))) * posX);
+		int date = (int) (((double)(sliderDateSize / (double)(TimeSlider.this.getWidth() - OFFSET_X - OFFSET_Y))) * posX);
 		
 		int day = (int)(date/NB_HOUR_PER_DAY);
 		int hour = (int)(date%NB_HOUR_PER_DAY);
@@ -126,7 +127,7 @@ public class TimeSlider extends JComponent {
 		tooltipText.setLabelText(days[day] + " " + hour + "h");
 		tooltipText.setLocation(posX + TimeSlider.this.getX(), TimeSlider.this.getY() + TimeSlider.this.getParent().getY() + handle.getHeight(null)/2);
 		tooltipText.repaint();
-		this.timelineMap.setTime(day, hour);
+		this.timelineMap.setTime(day+1, hour);
 	}
 	
 	/**

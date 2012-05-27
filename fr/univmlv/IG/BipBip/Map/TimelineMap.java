@@ -5,7 +5,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import fr.univmlv.IG.BipBip.Event.Event;
 import fr.univmlv.IG.BipBip.Event.EventModelImpl;
@@ -49,11 +49,9 @@ public class TimelineMap {
 	public void setTime(int day, int hour) {
 		ArrayList<Pin> tmpPins = new ArrayList<Pin>();
 		for (Event e : EventModelImpl.getInstance().getEventsFromBeginning()) {
-			GregorianCalendar cEvent = new GregorianCalendar();
+			Calendar cEvent = Calendar.getInstance(Locale.US);
 			cEvent.setTimeInMillis(e.getDate());
 			
-			GregorianCalendar cEventEnd = new GregorianCalendar();
-			cEventEnd.setTimeInMillis(e.getEndDate());
 			if (day == cEvent.get(Calendar.DAY_OF_WEEK) && hour == cEvent.get(Calendar.HOUR_OF_DAY)) {
 				tmpPins.add(this.createPin(e));
 			}
