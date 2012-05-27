@@ -46,7 +46,8 @@ public enum ClientCommand {
             // TODO can be ameliorate with clustering
             Event evt = new Event(eventType, x, y);
             for (Event e : EventModelImpl.getInstance().getEvents()) {
-    			if (e.equals(evt)) {
+    			if (e.isSame(evt)) {
+    				EventModelImpl.getInstance().confirm(e);
     				return;
     			}
     		}

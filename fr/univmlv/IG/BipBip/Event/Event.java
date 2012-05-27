@@ -156,22 +156,24 @@ public class Event {
    public String getSpatialHash() {
        return this.spatialHash;
    }
-
-   @Override
-   public int hashCode() {
-       final int prime = 31;
-       int result = 1;
-       result = prime * result + (int) (date ^ (date >>> 32));
-       result = prime * result + (int) (endDate ^ (endDate >>> 32));
-       result = prime * result + ((type == null) ? 0 : type.hashCode());
-       long temp;
-       temp = Double.doubleToLongBits(x);
-       result = prime * result + (int) (temp ^ (temp >>> 32));
-       temp = Double.doubleToLongBits(y);
-       result = prime * result + (int) (temp ^ (temp >>> 32));
-       return result;
+   
+   /**
+    * Check type and distance between to Event
+    * 
+    * @param other
+    * 
+    * @return true if is similar or false
+    */
+   public boolean isSame(Event other) {
+       if (type != other.type)
+           return false;
+       if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x))
+           return false;
+       if (Double.doubleToLongBits(y) != Double.doubleToLongBits(other.y))
+           return false;
+       return true;
    }
-
+   
    /**
     * DO NOT COMPARE DATE
     */
@@ -186,13 +188,13 @@ public class Event {
        Event other = (Event) obj;
        if (type != other.type)
            return false;
-//        TODO : pas d'arrondi mais utiliser methode pour voir si deux points sont au même endroit
-       if (Double.doubleToLongBits((double)Math.round(x * 10000000) / 10000000) != Double.doubleToLongBits((double)Math.round(other.x * 10000000) / 10000000))
+       if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x))
            return false;
-       if (Double.doubleToLongBits((double)Math.round(y * 10000000) / 10000000) != Double.doubleToLongBits((double)Math.round(other.y * 10000000) / 10000000))
+       if (Double.doubleToLongBits(y) != Double.doubleToLongBits(other.y))
            return false;
        return true;
    }
+
 
    /**
     * Create an event from a formatted string

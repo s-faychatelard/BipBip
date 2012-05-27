@@ -81,12 +81,10 @@ public enum ServerCommand {
             } catch (NumberFormatException e) {
                 throw new IOException("Missing Y coordinate");
             }
-            
-            // Verify if it is not a doubl
-            // TODO can be ameliorate with clustering
+
             Event evt = new Event(event, x, y);
             for (Event e : EventModelImpl.getInstance().getEvents()) {
-    			if (e.equals(evt)) {
+    			if (e.isSame(evt)) {
     				return;
     			}
     		}
