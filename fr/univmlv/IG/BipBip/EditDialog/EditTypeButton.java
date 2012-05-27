@@ -30,7 +30,12 @@ public class EditTypeButton extends JToggleButton {
 	private final EditTypeButton.POSITION position;
 	private final EventType type;
 
-	
+	/**
+	 * Create an edit type button to change the type of a Pin
+	 * 
+	 * @param type of the edit type button
+	 * @param position to print a left, right or center button
+	 */
 	public EditTypeButton(EventType type, EditTypeButton.POSITION position) {
 		super(getImageIconFromType(type));
 		this.type = type;
@@ -44,10 +49,21 @@ public class EditTypeButton extends JToggleButton {
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 	}
 	
+	/**
+	 * Create a center edit type button
+	 * 
+	 * @param type of the edit type button
+	 */
 	public EditTypeButton(EventType type) {
 		this(type, EditTypeButton.POSITION.CENTER);
 	}
 	
+	/**
+	 * Get an ImageIcon for a specific EventType
+	 * 
+	 * @param type
+	 * @return the ImageIcon which represent the EventType
+	 */
 	private static ImageIcon getImageIconFromType(EventType type) {
 		ImageIcon icon;
 		switch (type) {
@@ -60,6 +76,11 @@ public class EditTypeButton extends JToggleButton {
 		return icon;
 	}
 
+	/**
+	 * Get the EventType of the edit type button
+	 * 
+	 * @return the EventType of the edit type button
+	 */
 	public EventType getType() {
 		return type;
 	}

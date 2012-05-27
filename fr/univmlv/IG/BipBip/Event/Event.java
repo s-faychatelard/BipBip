@@ -6,7 +6,7 @@ import fr.univmlv.IG.Utils.SpatialHashing;
 
 public class Event {
 
-   private EventType type;
+   private EventType type = EventType.ACCIDENT;
    private double x,y;
    private long date;
    private long endDate=0;
@@ -28,7 +28,7 @@ public class Event {
        this.date = date;
        this.x=x;
        this.y=y;
-       this.spatialHash = SpatialHashing.compute(x, y);
+       this.spatialHash = SpatialHashing.compute(y, x);
    }
 
    /**

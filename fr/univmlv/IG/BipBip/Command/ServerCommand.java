@@ -197,21 +197,54 @@ public enum ServerCommand {
     
     public abstract void handle(SocketChannel sc,Scanner scanner) throws IOException;
     
+    /**
+     * Send all alerts to a client
+     * 
+     * @param sc of the server
+     * @param it is the iterator of the Events
+     * @param size represent the number of Events
+     * 
+     * @throws IOException
+     */
     public static void sendInfos(SocketChannel sc, Iterable<Event> it, int size) throws IOException {
         for (Event e : it) {
             sendInfo(sc,e);
 		}
     }
 
+    /**
+     * Send an alert to a client
+     * 
+     * @param sc of the server
+     * @param e is the event to send
+     * 
+     * @throws IOException
+     */
     public static void sendInfo(SocketChannel sc, Event e) throws IOException {
-    	System.out.println("INFO "+e.getType().name()+" "+e.getX()+" "+e.getY());
         NetUtil.writeLine(sc,"INFO "+e.getType().name()+" "+e.getX()+" "+e.getY());
     }
     
+    /**
+     * Send a modification of an event to a client
+     * 
+     * @param sc of the server
+     * @param previous is the previous event
+     * @param e is the new event
+     * 
+     * @throws IOException
+     */
     public static void modify(SocketChannel sc, Event previous, Event e) throws IOException {
         NetUtil.writeLine(sc,"MODIFY "+previous.getType().name()+" "+previous.getX()+" "+previous.getY()+" "+e.getType().name()+" "+e.getX()+" "+e.getY());
     }
     
+    /**
+     * Send a remove event to a client
+     * 
+     * @param sc of the server
+     * @param e is the event to remove
+     * 
+     * @throws IOException
+     */
     public static void remove(SocketChannel sc, Event e) throws IOException {
         NetUtil.writeLine(sc,"REMOVE "+e.getType().name()+" "+e.getX()+" "+e.getY());
     }

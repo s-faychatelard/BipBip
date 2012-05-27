@@ -133,41 +133,105 @@ public enum ClientCommand {
         @Override
         public void handle(SocketChannel sc, Scanner scanner) throws IOException {
         	   
-       		double x,y;
-    		int zoom;
+       		double xStart,yStart, xEnd, yEnd;
             if (!scanner.hasNextDouble()) {
-                throw new IOException("Missing X coordinate");
+                throw new IOException("Missing X start coordinate");
             }
-            x=scanner.nextDouble();
+            xStart=scanner.nextDouble();
+            
             if (!scanner.hasNextDouble()) {
-                throw new IOException("Missing Y coordinate");
+                throw new IOException("Missing Y start coordinate");
             }
-            y=scanner.nextDouble();
-            if (!scanner.hasNextInt()) {
-                throw new IOException("Missing zoom info");
+            yStart=scanner.nextDouble();
+            
+            if (!scanner.hasNextDouble()) {
+                throw new IOException("Missing X end coordinate");
             }
-            zoom=scanner.nextInt();
-        	SortedSet<Event> events = BipbipServer.treeAdapter.tree.tailSet(Event.createMockEvent(SpatialHashing.compute(x, y).substring(0, 4)));
-        	ServerCommand.sendInfos(sc, events, events.size());
+            xEnd=scanner.nextDouble();
+            
+            if (!scanner.hasNextDouble()) {
+                throw new IOException("Missing Y end coordinate");
+            }
+            yEnd=scanner.nextDouble();
+
+            
+            Event eMin = Event.createMockEvent(SpatialHashing.compute(yStart, xStart));
+        	Event eMax = Event.createMockEvent(SpatialHashing.compute(yEnd, xEnd));
+
+        	//TODO si eMin et eMax existent : ne pas les virer
+
+        	BipbipServer.treeAdapter.tree.add(eMin);
+        	BipbipServer.treeAdapter.tree.add(eMax);
+
+        	SortedSet<Event> events = BipbipServer.treeAdapter.tree.subSet(eMin, eMax);
+        	
+        	BipbipServer.treeAdapter.tree.remove(eMin);
+        	BipbipServer.treeAdapter.tree.remove(eMax);
+        	events.remove(eMax);
+        	events.remove(eMin);
+
+        	//System.out.println(events);        	
+           	ServerCommand.sendInfos(sc, events, events.size());
         }
     };
     
     public abstract void handle(SocketChannel sc,Scanner scanner) throws IOException;
     
+    /**
+     * Submit a new alert
+     * 
+     * @param sc channel of the client
+     * @param event represent the type of alert
+     * @param x longitude of the alert
+     * @param y latitude of the alert
+     * 
+     * @throws IOException
+     */
     public static void submit(SocketChannel sc,EventType event,double x,double y) throws IOException {
         NetUtil.writeLine(sc,"SUBMIT "+event.name()+" "+x+" "+y);
     }
     
+    /**
+     * Confirm an alert
+     * 
+     * @param sc channel of the client
+     * @param event represent the type of alert
+     * @param x longitude of the alert
+     * @param y latitude of the alert
+     * 
+     * @throws IOException
+     */
     public static void confirm(SocketChannel sc,EventType event,double x,double y) throws IOException {
         NetUtil.writeLine(sc,"CONFIRM "+event.name()+" "+x+" "+y);
     }
     
+    /**
+     * Unconfirm an alert
+     * 
+     * @param sc channel of the client
+     * @param event represent the type of alert
+     * @param x longitude of the alert
+     * @param y latitude of the alert
+     * 
+     * @throws IOException
+     */
     public static void notSeen(SocketChannel sc,EventType event,double x,double y) throws IOException {
         NetUtil.writeLine(sc,"NOT_SEEN "+event.name()+" "+x+" "+y);
     }
 
-    public static void getInfo(SocketChannel sc, double x,double y, int zoom) throws IOException {
-        NetUtil.writeLine(sc,"GET_INFO "+x+" "+y+" "+zoom);
+    /**
+     * Get all alerts in a specific zone for a specific zoom
+     * 
+     * @param sc channel of the client
+     * @param x longitude of the client map
+     * @param y latitude of the client map
+     * @param zoom of the client map
+     * 
+     * @throws IOException
+     */
+
+    public static void getInfo(SocketChannel sc, double xStart,double yStart, double xEnd,double yEnd) throws IOException {
+        NetUtil.writeLine(sc,"GET_INFO "+xStart+" "+yStart+" "+xEnd+" "+yEnd);
     }
     
 

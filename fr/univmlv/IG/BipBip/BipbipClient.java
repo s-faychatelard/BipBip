@@ -2,6 +2,7 @@ package fr.univmlv.IG.BipBip;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
@@ -21,7 +22,6 @@ import fr.univmlv.IG.BipBip.Event.EventModelImpl;
 import fr.univmlv.IG.BipBip.Event.EventModelListener;
 import fr.univmlv.IG.BipBip.Event.EventType;
 import fr.univmlv.IG.BipBip.Map.Map;
-import fr.univmlv.IG.BipBip.Map.MapPanel;
 
 public class BipbipClient {
 
@@ -34,32 +34,84 @@ public class BipbipClient {
 
 	private static final String bottomBarText = "Pour ajouter une nouvelle alerte, faites un clic prolongé sur le lieu de l'alerte, puis choisissez son type.";
 
+	/**
+	 * Create the BipBipClient
+	 * 
+	 * @param host is the address of the server
+	 * @param port is the distant port of the server
+	 */
 	public BipbipClient(String host, int port) {
 		this.server = new InetSocketAddress(host, port);
 	}
 
+	/**
+	 * Connect to the server
+	 * 
+	 * @throws IOException
+	 */
 	public void connect() throws IOException {
 		sc = SocketChannel.open();
 		sc.connect(server);
 	}
 
+	/**
+	 * Submit a new event to the server
+	 * 
+	 * @param event to add
+	 * @param x is the longitude of the event
+	 * @param y is the latitude of the event
+	 * 
+	 * @throws IOException
+	 */
 	public void submit(EventType event,double x,double y) throws IOException {
 		ClientCommand.submit(sc, event, x, y);
 	}
 
+	/**
+	 * Confirm an event to the server
+	 * 
+	 * @param event to add
+	 * @param x is the longitude of the event
+	 * @param y is the latitude of the event
+	 * 
+	 * @throws IOException
+	 */
 	public void confirm(EventType event,double x,double y) throws IOException {
 		ClientCommand.confirm(sc, event, x, y);
 	}
 
+	/**
+	 * Unconfirm an event to the server
+	 * 
+	 * @param event to add
+	 * @param x is the longitude of the event
+	 * @param y is the latitude of the event
+	 * 
+	 * @throws IOException
+	 */
 	public void unconfirm(EventType event,double x,double y) throws IOException {
 		ClientCommand.notSeen(sc, event, x, y);
 	}
 
-	public void getInfos(double x, double y, int zoom) throws IOException {
+
+	/**
+	 * Get all events from the server
+	 * 
+	 * @param x is the longitude of the client map
+	 * @param y is the latitude of the client map
+	 * @param zoom is the current zoom of the client map
+	 * 
+	 * @throws IOException
+	 */
+	public void getInfos(double xStart, double yStart, double xEnd, double yEnd) throws IOException {
 		/* Get events for this position */
-		ClientCommand.getInfo(sc, x, y, zoom);
+		ClientCommand.getInfo(sc, xStart, yStart, xEnd, yEnd);
 	}
 
+	/**
+	 * Communicate with the server
+	 * Contains the EventModelListener to send needed event to the server
+	 */
 	public void serveCommand() {
 		Scanner scanner = new Scanner(sc,NetUtil.getCharset().name());
 
@@ -157,9 +209,10 @@ public class BipbipClient {
 
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
-				int zoom = map.getMapPanel().getZoom();
 				try {
-					client.getInfos(MapPanel.position2lat(map.getMapPanel().getMapPosition().y, zoom), MapPanel.position2lon(map.getMapPanel().getMapPosition().y, zoom), zoom);
+					Point.Double coordsStart = map.getMapPanel().getLongitudeLatitude(new Point(map.getMapPanel().getMapPosition().x, map.getMapPanel().getMapPosition().y));
+					Point.Double coordsEnd = map.getMapPanel().getLongitudeLatitude(new Point(map.getMapPanel().getMapPosition().x + map.getMapPanel().getWidth(), map.getMapPanel().getMapPosition().y + map.getMapPanel().getHeight()));
+					client.getInfos(coordsStart.x, coordsStart.y, coordsEnd.x, coordsEnd.y);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -167,7 +220,9 @@ public class BipbipClient {
 			}
 		});
 
-		client.getInfos(MapPanel.position2lat(map.getMapPanel().getMapPosition().y, map.getMapPanel().getZoom()), MapPanel.position2lon(map.getMapPanel().getMapPosition().y, map.getMapPanel().getZoom()), map.getMapPanel().getZoom());
+		Point.Double coordsStart = map.getMapPanel().getLongitudeLatitude(new Point(map.getMapPanel().getMapPosition().x, map.getMapPanel().getMapPosition().y));
+		Point.Double coordsEnd = map.getMapPanel().getLongitudeLatitude(new Point(map.getMapPanel().getMapPosition().x + map.getMapPanel().getWidth(), map.getMapPanel().getMapPosition().y + map.getMapPanel().getHeight()));
+		client.getInfos(coordsStart.x, coordsStart.y, coordsEnd.x, coordsEnd.y);
 		client.serveCommand();
 	}
 }

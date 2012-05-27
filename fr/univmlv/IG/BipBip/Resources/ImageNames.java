@@ -1,5 +1,8 @@
 package fr.univmlv.IG.BipBip.Resources;
 
+/**
+ * This class declares all name of each resources of classes of the application
+ */
 public class ImageNames {
 	
 	public class General {

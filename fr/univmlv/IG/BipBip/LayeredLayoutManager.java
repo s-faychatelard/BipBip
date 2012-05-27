@@ -5,6 +5,9 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
 
+/**
+ * New LayeredLayoutManager to create be more pratical with LayeredPane
+ */
 public class LayeredLayoutManager implements LayoutManager {
 
 	 @Override

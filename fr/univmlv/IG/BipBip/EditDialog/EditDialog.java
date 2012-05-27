@@ -30,10 +30,8 @@ import fr.univmlv.IG.BipBip.Pin.Pin;
 
 
 /**
- * @author djubeau & sfaychat This class provides method to draw a dialog window
- *         that allow the user to edit a pin (move its location, change the
- *         event type)
- * 
+ * This class provides method to draw a dialog window
+ * that allow the user to edit a pin (move its location, change the event type)
  */
 public class EditDialog extends JDialog implements ActionListener {
 	private static final long serialVersionUID = -2838144934781827987L;
@@ -49,16 +47,42 @@ public class EditDialog extends JDialog implements ActionListener {
 	private final Pin pin;
 	private AnswerEditDialog answer = AnswerEditDialog.BACK;
 
-
+	/**
+	 * Get the answer of the Dialog (Save or Back)
+	 * 
+	 * @return the answer
+	 */
 	public AnswerEditDialog getAnswer() {
 		return answer;
 	}
 
+	/**
+	 * Get the edited event
+	 * 
+	 * @return the edited event
+	 */
 	public Event getEvent() {
 		Event evt = new Event(pin.getType(), pin.getEvent().getX(), pin.getEvent().getY());
 		return evt;
 	}
+	
+	/**
+	 * ActionListener of the Save and Back buttons
+	 */
+	public void actionPerformed(ActionEvent e) {
+		if (saveButton == e.getSource())
+			answer = AnswerEditDialog.SAVE;
 
+		this.setVisible(false);
+	}
+
+	/**
+	 * Create an EditDialog for a specific event
+	 * 
+	 * @param frame where to open the Dialog
+	 * @param event which you want to edit
+	 * @param modal to specify if it is a modal Dialog
+	 */
 	public EditDialog(JFrame frame, Event event, boolean modal) {
 		super(frame, modal);
 		
@@ -177,7 +201,7 @@ public class EditDialog extends JDialog implements ActionListener {
 		panel.add(backButton, gbc);
 
 		/* All listener */
-		map.setSize(500, 260); 						// c'est sale, mais avec un peu de chance ça ne se verra pas... Surtout avec un petit commentaire très discret
+		map.setSize(500, 260);
 
 		pin = new Pin(evt, "Drag'n drop pour déplacer le point", false);
 
@@ -207,6 +231,7 @@ public class EditDialog extends JDialog implements ActionListener {
 
 		pin.setLocation(MapPanel.lon2position(pin.getEvent().getX(), map.getZoom()) - map.getMapPosition().x, MapPanel.lat2position(pin.getEvent().getY(), map.getZoom()) - map.getMapPosition().y);
 
+		/* Listener to drag'n drop the pin */
 		MouseInputListener inputListener = new MouseInputAdapter() {
 
 			@Override
@@ -257,12 +282,5 @@ public class EditDialog extends JDialog implements ActionListener {
 		map.setMapPosition( MapPanel.lon2position(event.getX(), map.getZoom()) - map.getWidth() / 2, MapPanel.lat2position(event.getY(), map.getZoom()) - map.getHeight() / 2);
 
 		this.setVisible(true);
-	}
-
-	public void actionPerformed(ActionEvent e) {
-		if (saveButton == e.getSource())
-			answer = AnswerEditDialog.SAVE;
-
-		this.setVisible(false);
 	}
 }

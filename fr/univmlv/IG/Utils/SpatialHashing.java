@@ -7,66 +7,59 @@ import fr.univmlv.IG.BipBip.Event.Event;
 
 public class SpatialHashing {
 
-   private static final int HASH_LENGHT = 23; // (superficie de la terre : 510 067 420 / (4^21) = 0,115 m² theoriquement pour chaque zone)
+   public static final int HASH_DEFAULT_LENGHT = 17; // (superficie de la terre : 510 067 420 / (4^17) = 0,0296898314 km2 theoriquement pour chaque zone)
    private static final int MAX_LAT = 90;
    private static final int MAX_LNG = 180;
+   
+   public static final String minMask = "000000000000000000000";
+   public static final String maxMask = "333333333333333333333";
 
 
    public static TreeSet<Event> createTree() {
        return new TreeSet<Event> (new Comparator<Event>() {
            @Override
-           public int compare(Event arg0, Event arg1) {
-               return arg0.getSpatialHash().compareTo(arg1.getSpatialHash());
+           public int compare(Event e1, Event e2) {
+               return e1.getSpatialHash().compareTo(e2.getSpatialHash());
            }
        });
-   }
-
-
-   public static void main(String[] args) {
-
-       TreeSet<Event> tree = new TreeSet<Event>(new Comparator<Event>() {
-
-           @Override
-           public int compare(Event arg0, Event arg1) {
-               return arg0.getSpatialHash().compareTo(arg1.getSpatialHash());
-           }
-
-
-       });
-
-//        for(BigDecimal i=new BigDecimal(0); i.compareTo(new BigDecimal(20))<1; i = new BigDecimal(0.0001).add(i)) // en gros chaque point ecarté de 10m
-//            tree.add(new Event(EventType.ACCIDENT, 100000, i.doubleValue(), i.doubleValue()));
-
    }
 
    public static String compute(double lat, double lng) {
-       return computeRec(lat+MAX_LAT, lng+MAX_LNG, MAX_LAT, MAX_LNG, new StringBuffer(), 1);
+	   if((lat > MAX_LAT && lat < -MAX_LAT) || (lng > MAX_LNG  && lng < -MAX_LNG))
+		   throw new IllegalArgumentException();
+	   
+       return computeRec(lat+MAX_LAT, lng+MAX_LNG, MAX_LAT, MAX_LNG, new StringBuffer(), 2, 0);
    }
 
-   private static String computeRec(double lat, double lng, double compLat, double compLng, StringBuffer sb, double level) {
+   private static String computeRec(double lat, double lng, double compLat, double compLng, StringBuffer sb, double level, int counter) {
 
-       if (level >= Math.pow(2,HASH_LENGHT))
+	   
+       if (counter == HASH_DEFAULT_LENGHT)
            return sb.toString();
+       
+       counter++;
 
-       if(lat < compLat) { // NORTH
+       if(lat > compLat) { // NORTH
            if(lng < compLng) { // WEST
                sb.append('0');
-               return computeRec(lat,  lng, compLat-MAX_LAT/level, compLng-MAX_LNG/level,  sb,  level*2);
+               return computeRec(lat,  lng, compLat+MAX_LAT/level, compLng-MAX_LNG/level,  sb,  level*2, counter);
            }
            else { // EAST
+
                sb.append('1');
-               return computeRec(lat,  lng, compLat-MAX_LAT/level, compLng+MAX_LNG/level,  sb,  level*2);
+               return computeRec(lat,  lng, compLat+MAX_LAT/level, compLng+MAX_LNG/level,  sb,  level*2, counter);
            }
        }
 
        else {  // SOUTH
            if(lng < compLng) { // WEST
+
                sb.append('2');
-               return computeRec(lat,  lng, compLat+MAX_LAT/level, compLng-MAX_LNG/level,  sb,  level*2);
+               return computeRec(lat,  lng, compLat-MAX_LAT/level, compLng-MAX_LNG/level,  sb,  level*2, counter);
            }
            else { // EAST
                sb.append('3');
-               return computeRec(lat,  lng, compLat+MAX_LAT/level, compLng+MAX_LNG/level,  sb,  level*2);
+               return computeRec(lat,  lng, compLat-MAX_LAT/level, compLng+MAX_LNG/level,  sb,  level*2, counter);
            }
        }
    }

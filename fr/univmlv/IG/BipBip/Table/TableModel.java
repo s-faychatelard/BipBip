@@ -17,6 +17,9 @@ import fr.univmlv.IG.BipBip.Event.EventModelImpl;
 import fr.univmlv.IG.BipBip.Resources.ImageNames;
 import fr.univmlv.IG.BipBip.Resources.ResourcesManager;
 
+/**
+ * TableModel manage the JTable
+ */
 public class TableModel extends AbstractTableModel {
 	private static final long serialVersionUID = -3121191093975659662L;
 	
@@ -27,6 +30,11 @@ public class TableModel extends AbstractTableModel {
 	private final EventModel events;
 	private final SimpleDateFormat dateFormatter = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
 	
+	/**
+	 * Create a table model with the model of the application
+	 * 
+	 * @param events represent the model of the application
+	 */
 	public TableModel(EventModel events) {
 		this.events = events;
 		
@@ -55,16 +63,29 @@ public class TableModel extends AbstractTableModel {
 		});
 	}
 	
+	/**
+	 * Add a TableListener
+	 * 
+	 * @param listener
+	 */
 	public void addTableListener(TableListener listener) {
 		tableListeners.add(listener);
 	}
 	
+	/**
+	 * Fire a locate event
+	 * 
+	 * @param index of cell in the JTable
+	 */
 	protected void fireLocateEventAtIndex(int index) {
 		for (TableListener listener : tableListeners) {
 			listener.eventLocateEventAtIndex(index);
 		}
 	}
 	
+	/**
+	 * Return the information of edition (Only for ActionCell to permit catch of event in JButton)
+	 */
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
 		if (columns[columnIndex].compareTo("Actions") == 0)
@@ -72,6 +93,9 @@ public class TableModel extends AbstractTableModel {
 		return false;
 	}
 	
+	/**
+	 * Return the value of a specific row and column
+	 */
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		switch (columnIndex) {
@@ -120,21 +144,33 @@ public class TableModel extends AbstractTableModel {
 		return null;
 	}
 	
+	/**
+	 * Return the number of elements in the table
+	 */
 	@Override
 	public int getRowCount() {
 		return events.getEvents().size();
 	}
 	
+	/**
+	 * Return the name of the column
+	 */
 	@Override
 	public String getColumnName(int columnIndex) {
 		return columns[columnIndex];
 	}
 	
+	/**
+	 * Return the number of column
+	 */
 	@Override
 	public int getColumnCount() {
 		return columns.length;
 	}
 	
+	/**
+	 * Return the class of cells in a specific column
+	 */
 	@Override
 	public Class<?> getColumnClass(int columnIndex) {
 		if(columns[columnIndex].compareTo("Type") == 0)
