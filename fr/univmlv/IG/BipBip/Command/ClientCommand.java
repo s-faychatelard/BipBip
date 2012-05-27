@@ -126,7 +126,7 @@ public enum ClientCommand {
         /**
          * A GET_INFO command is supposed to have the following form:
          * 
-         * GET_INFO X Y
+         * GET_INFO Xstart Ystart Xend Yend
          * 
          * where X and Y are double
          */
@@ -223,9 +223,10 @@ public enum ClientCommand {
      * Get all alerts in a specific zone for a specific zoom
      * 
      * @param sc channel of the client
-     * @param x longitude of the client map
-     * @param y latitude of the client map
-     * @param zoom of the client map
+     * @param xStart longitude of the client map top left corner
+     * @param yStart latitude of the client map top left corner
+     * @param xEnd longitude of the client map bottom right corner
+     * @param yEnd latitude of the client map bottom right corner
      * 
      * @throws IOException
      */
