@@ -10,6 +10,7 @@ public class EventModelImpl implements EventModel {
 	private final Collection<EventModelListener> eventModelListeners = new ArrayList<EventModelListener>();
 	private ArrayList<Event> events = new ArrayList<Event>();
 	private ArrayList<Event> allEvents = new ArrayList<Event>();
+	private final Object obj = new Object();
 
 	/**
 	 * Get all valid events
@@ -34,7 +35,9 @@ public class EventModelImpl implements EventModel {
 	 * @param listener
 	 */
 	public void addEventListener(EventModelListener listener) {
-		eventModelListeners.add(listener);
+		synchronized (obj) {
+			eventModelListeners.add(listener);
+		}
 	}
 	
 	/**
@@ -94,11 +97,13 @@ public class EventModelImpl implements EventModel {
 	 */
 	@Override
 	public void addEvent(Event event) {
-		this.allEvents.add(event);
-		/* Do not load if it is already invalid */
-		if (event.getEndDate() != 0)
-			return;
-		this.events.add(event);
+		synchronized (obj) {
+			this.allEvents.add(event);
+			/* Do not load if it is already invalid */
+			if (event.getEndDate() != 0)
+				return;
+			this.events.add(event);
+		}
 		this.fireEventAdded(events.get(events.size()-1));
 	}
 	
@@ -124,8 +129,10 @@ public class EventModelImpl implements EventModel {
 	@Override
 	public void remove(int i) {
 		this.fireEventRemoved(i);
-		this.events.get(i).invalidate();
-		this.events.remove(i);
+		synchronized (obj) {
+			this.events.get(i).invalidate();
+			this.events.remove(i);
+		}
 	}
 	
 	/**
@@ -135,7 +142,9 @@ public class EventModelImpl implements EventModel {
 	public void remove(Event event) {
 		for (Event e : events) {
 			if (e.equals(event)) {
-				this.remove(events.indexOf(e));
+				synchronized (obj) {
+					this.remove(events.indexOf(e));
+				}
 				break;
 			}
 		}
@@ -164,8 +173,11 @@ public class EventModelImpl implements EventModel {
 			if (e.equals(event)) {
 				e.decrementCounter();
 				this.fireEventUnconfirmed(events.indexOf(e));
-				if (e.getEndDate() != 0)
-					this.remove(events.indexOf(e));
+				if (e.getEndDate() != 0) {
+					synchronized (obj) {
+						this.remove(events.indexOf(e));
+					}
+				}
 				break;
 			}
 		}
