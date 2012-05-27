@@ -103,8 +103,8 @@ public class EventModelImpl implements EventModel {
 			if (event.getEndDate() != 0)
 				return;
 			this.events.add(event);
+			this.fireEventAdded(events.get(events.size()-1));
 		}
-		this.fireEventAdded(events.get(events.size()-1));
 	}
 	
 	/**

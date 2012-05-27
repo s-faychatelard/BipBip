@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -99,7 +101,6 @@ public class BipbipServer {
 	 * @param sc channel of the client
 	 */
 	private void serveClient(final SocketChannel sc) {
-
 		/* Push new information on event */
 		events.addEventListener(new EventModelListener() {
 
@@ -190,6 +191,13 @@ public class BipbipServer {
 		/* Center panel */
 		final Map map = new Map(events);
 		map.getMapPanel().setMinimumSize(new Dimension(300, 300));
+		map.getMapPanel().addPropertyChangeListener("mapPosition", new PropertyChangeListener() {
+
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				map.refreshPins();
+			}
+		});
 		
 		/* Left panel */
 		final Table table = new Table(events);

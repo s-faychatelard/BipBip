@@ -3,8 +3,6 @@ package fr.univmlv.IG.BipBip.Map;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -24,7 +22,9 @@ public class Map {
 	
 	private final MapPanel map;
 	private final EventModel events;
+	private final Tooltip tooltipAlert;
 	final ArrayList<Pin> pins = new ArrayList<Pin>();
+	private static final Object obj = new Object();
 	
 	/**
 	 * Create a Map
@@ -40,7 +40,7 @@ public class Map {
         map.setUseAnimations(false);
         
         /* Tooltip to add other alert */
-        final Tooltip tooltipAlert = new Tooltip();
+        tooltipAlert = new Tooltip();
         tooltipAlert.addButton(ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.FIXE), "Radar fixe");
         tooltipAlert.addButton(ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.MOBILE), "Radar mobile");
         tooltipAlert.addButton(ResourcesManager.getRessourceAsImageIcon(ImageNames.Alert.ACCIDENT), "Accident");
@@ -88,12 +88,14 @@ public class Map {
 			
 			@Override
 			public void eventModified(Event previousEvent, Event event) {
-				for (Pin pin : pins) {
-					if (pin.getEvent().getSpatialHash().equals(previousEvent.getSpatialHash())) {
-						map.remove(pin);
-						pins.remove(pin);
-						Map.this.addPin(event);
-						break;
+				synchronized (obj) {
+					for (Pin pin : pins) {
+						if (pin.getEvent().getSpatialHash().equals(previousEvent.getSpatialHash())) {
+							map.remove(pin);
+							pins.remove(pin);
+							Map.this.addPin(event);
+							break;
+						}
 					}
 				}
 				map.repaint();
@@ -101,9 +103,11 @@ public class Map {
 			
 			@Override
 			public void eventRemoved(int index) {
-				map.remove(pins.get(index));
-				pins.remove(index);
-				map.repaint();
+				synchronized (obj) {
+					map.remove(pins.get(index));
+					pins.remove(index);
+					map.repaint();
+				}
 			}
 			
 			@Override
@@ -111,19 +115,6 @@ public class Map {
 			
 			@Override
 			public void eventUnconfirmed(int index) {}
-		});
-		
-		/* Replace pins and tooltip on map position event */
-		map.addPropertyChangeListener("mapPosition", new PropertyChangeListener() {
-			@Override
-			public void propertyChange(PropertyChangeEvent evt) {
-				for(Pin pin : pins) {
-					pin.setLocation(MapPanel.lon2position(pin.getEvent().getX(), map.getZoom()) - map.getMapPosition().x, MapPanel.lat2position(pin.getEvent().getY(), map.getZoom()) - map.getMapPosition().y);
-					pin.repaint();
-				}
-				tooltipAlert.setLocation(MapPanel.lon2position(tooltipAlert.getCoords().x, map.getZoom()) - map.getMapPosition().x, MapPanel.lat2position(tooltipAlert.getCoords().y, map.getZoom()) - map.getMapPosition().y);
-				map.repaint();
-			}
 		});
 		
 		/* Just for clear pins on click outside of anything */
@@ -175,7 +166,10 @@ public class Map {
 		/* Create pin */
 		final Pin pin = new Pin(event, "Cliquez pour valider ou supprimer");
 		pin.setLocation(MapPanel.lon2position(pin.getEvent().getX(), map.getZoom()) - map.getMapPosition().x, MapPanel.lat2position(pin.getEvent().getY(), map.getZoom()) - map.getMapPosition().y);
-        map.add(pin);
+		synchronized (obj) {
+			map.add(pin);
+        	pins.add(index, pin);
+		}
         pin.addPinListener(new PinListener() {
         	@Override
         	public void eventSelected() {
@@ -195,7 +189,6 @@ public class Map {
 				}
 			}
 		});
-        pins.add(index, pin);
 	}
 
 	/**
@@ -205,6 +198,17 @@ public class Map {
 	 */
 	public void addPin(Event event) {
 		this.addPin(event, pins.size());
+	}
+	
+	public void refreshPins() {
+		synchronized (obj) {
+			for(Pin pin : pins) {
+				pin.setLocation(MapPanel.lon2position(pin.getEvent().getX(), map.getZoom()) - map.getMapPosition().x, MapPanel.lat2position(pin.getEvent().getY(), map.getZoom()) - map.getMapPosition().y);
+				pin.repaint();
+			}
+			tooltipAlert.setLocation(MapPanel.lon2position(tooltipAlert.getCoords().x, map.getZoom()) - map.getMapPosition().x, MapPanel.lat2position(tooltipAlert.getCoords().y, map.getZoom()) - map.getMapPosition().y);
+		}
+		map.repaint();
 	}
 	
 	/**

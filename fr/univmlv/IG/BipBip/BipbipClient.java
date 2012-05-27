@@ -8,7 +8,6 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
-import java.nio.charset.Charset;
 import java.util.Scanner;
 
 import javax.swing.JFrame;
@@ -26,7 +25,6 @@ import fr.univmlv.IG.BipBip.Map.Map;
 public class BipbipClient {
 
 	private final InetSocketAddress server;
-	Charset charset = Charset.forName("UTF8");
 	private SocketChannel sc;
 
 	/* Events */
@@ -203,7 +201,7 @@ public class BipbipClient {
 
 		final BipbipClient client = new BipbipClient("localhost", 6996);
 		client.connect();
-		
+
 		map.getMapPanel().addPropertyChangeListener("mapPosition", new PropertyChangeListener() {
 
 			@Override
@@ -215,7 +213,7 @@ public class BipbipClient {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				map.getMapPanel().repaint();
+				map.refreshPins();
 			}
 		});
 
