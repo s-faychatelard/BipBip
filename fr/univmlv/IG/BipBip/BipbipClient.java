@@ -12,7 +12,6 @@ import java.util.Scanner;
 
 import javax.swing.JFrame;
 
-import fr.univmlv.IG.BipBip.Bottombar.BottomBar;
 import fr.univmlv.IG.BipBip.Command.ClientCommand;
 import fr.univmlv.IG.BipBip.Command.NetUtil;
 import fr.univmlv.IG.BipBip.Command.ServerCommand;
@@ -20,6 +19,7 @@ import fr.univmlv.IG.BipBip.Event.Event;
 import fr.univmlv.IG.BipBip.Event.EventModelImpl;
 import fr.univmlv.IG.BipBip.Event.EventModelListener;
 import fr.univmlv.IG.BipBip.Event.EventType;
+import fr.univmlv.IG.BipBip.GlobalComponent.BottomBar;
 import fr.univmlv.IG.BipBip.Map.Map;
 
 public class BipbipClient {

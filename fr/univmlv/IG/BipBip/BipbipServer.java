@@ -26,7 +26,6 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
-import fr.univmlv.IG.BipBip.Bottombar.BottomBar;
 import fr.univmlv.IG.BipBip.Command.ClientCommand;
 import fr.univmlv.IG.BipBip.Command.NetUtil;
 import fr.univmlv.IG.BipBip.Command.ServerCommand;
@@ -34,6 +33,9 @@ import fr.univmlv.IG.BipBip.Event.Event;
 import fr.univmlv.IG.BipBip.Event.EventModelImpl;
 import fr.univmlv.IG.BipBip.Event.EventModelImplTreeAdapter;
 import fr.univmlv.IG.BipBip.Event.EventModelListener;
+import fr.univmlv.IG.BipBip.GlobalComponent.BottomBar;
+import fr.univmlv.IG.BipBip.GlobalComponent.LayeredLayoutManager;
+import fr.univmlv.IG.BipBip.GlobalComponent.SplitPane;
 import fr.univmlv.IG.BipBip.Map.Map;
 import fr.univmlv.IG.BipBip.Map.MapPanel;
 import fr.univmlv.IG.BipBip.Map.TimelineMap;

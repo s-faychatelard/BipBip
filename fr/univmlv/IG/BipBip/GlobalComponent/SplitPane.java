@@ -1,4 +1,4 @@
-package fr.univmlv.IG.BipBip;
+package fr.univmlv.IG.BipBip.GlobalComponent;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;

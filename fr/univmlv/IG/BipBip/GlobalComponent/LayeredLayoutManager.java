@@ -1,4 +1,4 @@
-package fr.univmlv.IG.BipBip;
+package fr.univmlv.IG.BipBip.GlobalComponent;
 
 import java.awt.Component;
 import java.awt.Container;

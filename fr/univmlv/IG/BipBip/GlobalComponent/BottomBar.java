@@ -1,4 +1,4 @@
-package fr.univmlv.IG.BipBip.Bottombar;
+package fr.univmlv.IG.BipBip.GlobalComponent;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
