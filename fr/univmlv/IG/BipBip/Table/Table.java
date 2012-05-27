@@ -40,7 +40,7 @@ public class Table {
 		table.setDefaultRenderer(table.getColumnClass(0), new StringTableCellRenderer());
 		table.setDefaultRenderer(table.getColumnClass(4), new IconTableCellRenderer());
 		table.setDefaultRenderer(table.getColumnClass(5), new JPanelTableCellRenderer());
-		table.setDefaultEditor(table.getColumnClass(4), new JPanelTableCellRenderer());
+		table.setDefaultEditor(table.getColumnClass(5), new JPanelTableCellRenderer());
 		table.getColumnModel().getColumn(0).setPreferredWidth(30);
 		table.getColumnModel().getColumn(1).setPreferredWidth(30);
 		
